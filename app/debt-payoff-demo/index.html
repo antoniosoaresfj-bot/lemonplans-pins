@@ -122,7 +122,7 @@ table.plan td.z{color:var(--muted)}
 </style>
 </head>
 <body>
-<div id="demoBar" class="demo" hidden>Demo with sample data · Your changes stay in this browser · <a id="buyLink" href="#">Get the full app</a></div>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
 <div class="app">
  <nav class="side" aria-label="Main">
   <div class="brand">Debt Payoff<small>by The Lemon Plans</small></div>
@@ -520,7 +520,18 @@ function wire() {
 }
 document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
 document.getElementById("fab").onclick = () => S.debts.length ? payDlg() : debtDlg();
-if (DEMO) { document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL; }
+if (DEMO) {
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
 window.__lp = { simulate, minOnly, neededExtra, plan, csvText, interestOf, get S() { return S; } };
 go("home");
 </script>
