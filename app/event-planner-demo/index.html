@@ -426,7 +426,48 @@ const TPL = {
       ["1 month", 30, ["Make a photo board (all the school years)", "Plan the menu", "Buy favors", "Seating chart"]],
       ["1 week", 7, ["Final head count", "Confirm every vendor", "Pay final balances", "Set up a card box"]],
       ["After the party", -14, ["Log the cards and gifts", "Send thank-you notes"]]] },
-  "holiday-party": { name: "Holiday / Office Party", emoji: "🎄", accent: "berry", blurb: "Team party, gift exchange, raffle",
+  "christmas-party": { name: "Christmas Party", emoji: "🎄", accent: "berry", blurb: "Friends & family party, potluck, gift swap",
+    who: ["Host", "Mia"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Christmas Party" : "Christmas Party",
+    dateLabel: "Party date", sides: ["Friends", "Family", "Neighbors & coworkers"], head: "Head table", honoree: "Host's table", today: "Merry Christmas! 🎄", after: "Merry Christmas! 🎄",
+    tip: "Food and drinks are most of a Christmas party. Make it a potluck: you cover the main and the drinks, guests sign up for the rest, and nobody brings the fourth cheese plate.",
+    budgetPh: 600, goalPh: 25, menu: true, items: ["buffet", "bar", "dessert", "gifts", "photobooth", "dance", "label"],
+    courses: ["Appetizers", "Mains", "Sides", "Desserts & cookies", "Drinks"],
+    cats: [["Food", 30, "🍽️"], ["Drinks", 20, "🍷"], ["Decorations & tree", 15, "🎄"], ["Gift swap / white elephant", 8, "🎁"], ["Games & photo booth", 7, "📸"],
+      ["Supplies (plates, cups)", 7, "🥤"], ["Music", 5, "🎶"], ["Other & Buffer", 8, "🧾"]],
+    when: [
+      ["4 weeks", 28, ["Pick the date (Dec weekends fill fast)", "Set the guest list and the budget", "Pick a theme (ugly sweater?)"]],
+      ["3 weeks", 21, ["Send invites with the potluck sign-up", "Plan the gift swap rules and price limit", "Ask about allergies and diets"]],
+      ["2 weeks", 14, ["Check the sign-up: fill empty courses", "Plan games and a photo spot", "Order decorations"]],
+      ["1 week", 7, ["Make the shopping list", "Make the playlist", "Borrow chairs and serving dishes"]],
+      ["1–2 days", 2, ["Buy drinks and ice", "Set up the room and the buffet", "Send a reminder with what to bring"]],
+      ["After the party", -2, ["Send leftovers home", "Thank everyone"]]] },
+  "cookie-exchange": { name: "Cookie Exchange", emoji: "🍪", accent: "gold", blurb: "Who bakes what, no repeats, boxes to take",
+    who: ["Host", "Emma"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Cookie Exchange" : "Christmas Cookie Exchange",
+    dateLabel: "Swap date", sides: ["Friends", "Family", "Neighbors & coworkers"], head: "Head table", honoree: "Host's table", today: "Happy baking! 🍪", after: "Enjoy the cookies! 🍪",
+    tip: "Each guest bakes one kind of cookie, about a dozen per guest. The sign-up stops two people from baking the same sugar cookie. Spend on boxes, labels and drinks.",
+    budgetPh: 150, goalPh: 10, menu: true, items: ["dessert", "bar", "welcome", "gifts", "label"],
+    courses: ["Cookies", "Drinks & snacks"], need: [[1, 1], [8, 1]],
+    cats: [["Drinks & snacks", 35, "☕"], ["Boxes, tins & labels", 25, "📦"], ["Decorations", 15, "🎀"], ["Baking supplies", 15, "🧈"], ["Other & Buffer", 10, "🧾"]],
+    when: [
+      ["3 weeks", 21, ["Set the date and the guest list", "Send invites: one kind of cookie, a dozen per guest", "Share the sign-up so nobody repeats"]],
+      ["2 weeks", 14, ["Check the sign-up for repeats", "Ask about nut and gluten allergies", "Order boxes, tins and labels"]],
+      ["1 week", 7, ["Print recipe cards", "Plan drinks and savory snacks", "Make the shopping list"]],
+      ["1–2 days", 2, ["Bake your own batch", "Set up the cookie table", "Send a reminder: bring the recipe"]],
+      ["After", -2, ["Share the recipes with everyone", "Thank everyone"]]] },
+  "holiday-potluck": { name: "Holiday Potluck", emoji: "🥘", accent: "sage", blurb: "Who brings what, by course, for any gathering",
+    who: ["Host", "Lena"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Holiday Potluck" : "Holiday Potluck",
+    dateLabel: "Potluck date", sides: ["Family", "Friends", "Coworkers & others"], head: "Head table", honoree: "Host's seat", today: "Happy holidays! 🥘", after: "Thanks for coming! 🥘",
+    tip: "In a potluck the host covers the main, the drinks and the supplies. Fill every course with the sign-up and keep a dish for each diet.",
+    budgetPh: 250, goalPh: 20, menu: true, items: ["buffet", "dessert", "bar", "kids", "welcome", "label"],
+    courses: ["Appetizers", "Mains", "Sides", "Desserts", "Drinks"],
+    cats: [["Main dish", 35, "🍗"], ["Drinks", 20, "🥤"], ["Supplies (plates, foil, to-go boxes)", 15, "🍽️"], ["Decorations", 10, "✨"], ["Rentals (chairs, tables)", 10, "🪑"], ["Other & Buffer", 10, "🧾"]],
+    when: [
+      ["3 weeks", 21, ["Set the date and the guest list", "Send invites with the sign-up link or sheet", "Decide what the host covers"]],
+      ["2 weeks", 14, ["Ask about allergies and diets", "Check the sign-up: fill empty courses", "Fix duplicate dishes"]],
+      ["1 week", 7, ["Make the shopping list", "Borrow tables, chairs and serving spoons", "Plan oven and fridge space"]],
+      ["1–2 days", 2, ["Buy drinks, ice and supplies", "Set up the buffet with labels", "Send a reminder with what's still needed"]],
+      ["After", -2, ["Send leftovers home", "Return borrowed dishes", "Thank everyone"]]] },
+  "holiday-party": { name: "Office Holiday Party", emoji: "🏢", accent: "berry", blurb: "Team party, gift exchange, raffle",
     who: ["Company or host", "Brightline Co."], who2: null, age: null, title: s => s.p1 ? s.p1 + " Holiday Party" : "Holiday Party",
     dateLabel: "Party date", sides: ["Clients & guests", "Plus-ones", "Team"], head: "Head table", honoree: "Host table", today: "It's party night! 🎄", after: "Happy holidays! 🎄",
     tip: "Catering and the bar are about half of an office party. Set a budget per person, and plan rides home (rideshare codes) in the budget.",
@@ -513,9 +554,10 @@ const TPL = {
       ["1 week", 7, ["Confirm every vendor", "Pay final balances"]],
       ["After the event", -14, ["Log the gifts and send thank-you notes"]]] }
 };
-const TPL_ORDER = ["quinceanera", "friendsgiving", "sweet-16", "first-birthday", "kids-birthday", "milestone-birthday", "baby-shower", "graduation", "christmas-dinner", "new-years-eve", "holiday-party", "anniversary", "custom"];
-const tplKey = k => TPL[k] ? k : (k === "sweet16" ? "sweet-16" : k === "milestone" ? "milestone-birthday" : k === "first" ? "first-birthday" : k === "kids" ? "kids-birthday" : k === "baby" ? "baby-shower" : k === "holiday" || k === "office-party" ? "holiday-party" : k === "quince" ? "quinceanera" : k === "thanksgiving" ? "friendsgiving" : k === "christmas" ? "christmas-dinner" : k === "nye" || k === "new-years" ? "new-years-eve" : "");
+const TPL_ORDER = ["christmas-party", "cookie-exchange", "holiday-potluck", "new-years-eve", "quinceanera", "sweet-16", "first-birthday", "kids-birthday", "milestone-birthday", "baby-shower", "graduation", "friendsgiving", "christmas-dinner", "holiday-party", "anniversary", "custom"];
+const tplKey = k => TPL[k] ? k : (k === "sweet16" ? "sweet-16" : k === "milestone" ? "milestone-birthday" : k === "first" ? "first-birthday" : k === "kids" ? "kids-birthday" : k === "baby" ? "baby-shower" : k === "holiday" || k === "office-party" ? "holiday-party" : k === "quince" ? "quinceanera" : k === "thanksgiving" ? "friendsgiving" : k === "christmas" ? "christmas-party" : k === "cookies" ? "cookie-exchange" : k === "potluck" ? "holiday-potluck" : k === "office-holiday-party" ? "holiday-party" : k === "nye" || k === "new-years" ? "new-years-eve" : "");
 const COURSES = ["Appetizers", "Main dish", "Sides", "Desserts", "Drinks"];
+const COURSE_NEED = [[8, 1], [16, 1], [4, 2], [8, 1], [10, 1]]; // dishes per course: max(min, people ÷ n rounded up)
 const DIET_TAGS = ["Vegetarian", "Vegan", "Gluten-free", "Dairy-free", "Nut-free"];
 
 /* ---------- sample events (one per template) ----------
@@ -638,6 +680,42 @@ const SAMPLES = {
     groups: [["Our kids & grandkids", "b", "Family", 1, ["Susan Hayes & guest", "Michael Hayes & guest", "Emily Hayes*", "Jacob Hayes*", "Sophie Hayes*", "Ryan Hayes"]], ["", "p1", "Family", 2, ["Sister Carol Dunn & guest", "Brother Ray Dunn & guest"]], ["", "p2", "Family", 3, ["Cousin Bill Hayes & guest", "Aunt Mae Hayes"]],
       ["Bridge club", "b", "Friends", 4, ["Pat Gordon & guest", "Joyce Ellis & guest", "Frank Lowe & guest"]], ["", "b", "Church", 5, ["Rev. Allen & guest", "Ida Perkins", "Gloria Sims & guest"]], ["", "b", "Neighbors", 0, ["Ken Walsh & guest", "Ruth Nolan", "Dot Fisher;;;I", "Hal Price;;;X"]]],
     rules: [], gifts: [["Bridge club", "Engraved photo frame", 75, 2, false]], done: 7 },
+  "christmas-party": { p1: "Mia", days: 33, budget: 600, goal: 24, room: [40, 28],
+    tables: [["Friends", 8, "round", 8, 8], ["Friends", 8, "round", 8, 20], ["Family", 8, "round", 21, 20]],
+    items: [["buffet", 34, 8, 90, "Potluck buffet", 12, 3], ["bar", 34, 21, 90, "Hot cocoa & drinks", 8, 3], ["dessert", 21, 4, 0, "Cookie table", 8, 3], ["gifts", 21, 10, 0, "White elephant gifts", 6, 2.5], ["photobooth", 28.5, 3, 0, "Ugly sweater photo spot", 4, 4], ["label", 27, 26, 0, "Tree", 6, 2]],
+    vendors: [["Drinks", "Costco", "Wine, beer, cocoa bar", "Booked", 120, 0, 0, 3], ["Decorations & tree", "Target", "Lights, garland, table runners", "Paid in full", 85, 0, 0, 0], ["Supplies (plates, cups)", "Party City", "Plates, cups, napkins", "Paid in full", 32, 0, 0, 0], ["Food", "Costco", "Spiral ham", "Booked", 70, 0, 0, 3], ["Games & photo booth", "Amazon", "Photo props + sweater contest prize", "Booked", 28, 0, 0, 10]],
+    pays: [[4, "Target", 85, "Card", "Decorations"], [3, "Party City", 32, "Card", "Supplies"]],
+    groups: [["", "o", "Friends", 1, ["Ava Stone", "Ben Ruiz", "Chloe Kim;Vegetarian", "Dan Ford & guest", "Eli Moss;;Gluten-free"]], ["", "o", "Friends", 2, ["Fay Lin", "Gus Hart & guest", "Hana Cole;Vegan", "Ivan Diaz"]],
+      ["The Parks", "p2", "Family", 3, ["Jen Park", "Ken Park", "Lily Park*", "Max Park*"]], ["", "p2", "Family", 3, ["Aunt Nora Wells"]], ["", "o", "Neighbors & coworkers", 0, ["Omar Reed", "Pia Grant", "Quinn Shaw;;;I", "Rosa Vega;;;X"]]],
+    rules: [], gifts: [],
+    dishes: [["Mains", "Spiral ham", "Host", 24, "Gluten-free"], ["Drinks", "Hot cocoa bar", "Host", 24, "Vegetarian"], ["Appetizers", "Charcuterie board", "Ava Stone", 15, "Gluten-free"], ["Appetizers", "Spinach dip", "Ben Ruiz", 12, "Vegetarian"],
+      ["Sides", "Mac & cheese", "Chloe Kim", 12, "Vegetarian"], ["Sides", "Mac & cheese", "Fay Lin", 10, "Vegetarian"], ["Sides", "Roasted veggies", "Hana Cole", 10, "Vegan, Gluten-free"], ["Desserts & cookies", "Sugar cookies", "Jen Park", 24, "Vegetarian"],
+      ["Desserts & cookies", "Peppermint bark", "Aunt Nora Wells", 20, "Vegetarian, Gluten-free"], ["Drinks", "Mulled wine", "Gus Hart & guest", 16, "Vegan"]],
+    shop: [["Ice", "3 bags", 9, "", false], ["Marshmallows & peppermints", "", 8, "Hot cocoa bar", false], ["Spiral ham (pick up Fri)", "1", 70, "Spiral ham", false], ["Glaze packet", "", 0, "Spiral ham", true]],
+    done: 4 },
+  "cookie-exchange": { p1: "Emma", days: 31, budget: 150, goal: 10, room: [26, 18],
+    tables: [["Tasting table", 8, "rect", 9, 9]],
+    items: [["dessert", 20, 6, 90, "Cookie swap table", 10, 3], ["bar", 20, 15, 90, "Cocoa & coffee", 5, 2.5], ["welcome", 9, 2, 0, "Boxes & labels", 6, 2], ["label", 9, 16.5, 0, "Recipe cards", 8, 1.5]],
+    vendors: [["Boxes, tins & labels", "Amazon", "12 cookie tins + labels", "Paid in full", 36, 0, 0, 0], ["Drinks & snacks", "Trader Joe's", "Cocoa, coffee, cheese & crackers", "Booked", 45, 0, 0, 2], ["Decorations", "Michaels", "Ribbon, table runner", "Paid in full", 18, 0, 0, 0]],
+    pays: [[6, "Amazon", 36, "Card", "Tins"], [2, "Michaels", 18, "Card", "Ribbon"]],
+    groups: [["", "o", "Friends", 1, ["Ana Brooks", "Beth Lane;;Nut allergy", "Cara Wolfe", "Dina Shah;Vegan", "Erin Moss", "Gwen Hale"]], ["", "p2", "Family", 0, ["Mom (Linda)", "Sis Kate;;;I"]], ["", "o", "Neighbors & coworkers", 0, ["Hope Diaz;;;X"]]],
+    rules: [], gifts: [],
+    dishes: [["Cookies", "Gingerbread men", "Host", 12, "Vegetarian"], ["Cookies", "Sugar cookies", "Ana Brooks", 12, "Vegetarian"], ["Cookies", "Sugar cookies", "Cara Wolfe", 12, "Vegetarian"], ["Cookies", "Snickerdoodles", "Erin Moss", 12, "Vegetarian, Nut-free"],
+      ["Cookies", "Vegan chocolate crinkles", "Dina Shah", 12, "Vegan"], ["Drinks & snacks", "Cocoa & coffee", "Host", 10, "Vegan, Gluten-free"]],
+    shop: [["Ribbon", "2 rolls", 6, "", true], ["Molasses & ginger", "", 7, "Gingerbread men", false], ["Milk & cream", "", 6, "Cocoa & coffee", false]],
+    done: 4 },
+  "holiday-potluck": { p1: "Lena", days: 38, budget: 250, goal: 20, room: [34, 24],
+    tables: [["Long table", 10, "banquet", 13, 7], ["Long table", 10, "banquet", 13, 16], ["Kids' table", 6, "rect", 28, 19]],
+    items: [["buffet", 29, 6, 90, "Potluck buffet", 10, 3], ["dessert", 4, 12, 90, "Desserts", 8, 3], ["bar", 18, 23, 0, "Drinks", 6, 1.8], ["label", 6, 22.5, 0, "Coats", 6, 1.5]],
+    vendors: [["Main dish", "Publix", "Turkey breast + ham", "Booked", 75, 0, 0, 2], ["Drinks", "Costco", "Cider, soda, sparkling water", "Booked", 40, 0, 0, 2], ["Supplies (plates, foil, to-go boxes)", "Dollar Tree", "Plates, foil pans, to-go boxes", "Paid in full", 22, 0, 0, 0]],
+    pays: [[3, "Dollar Tree", 22, "Card", "Supplies"]],
+    groups: [["The Garcias", "p1", "Family", 1, ["Rosa Garcia", "Luis Garcia", "Sofi Garcia*"]], ["", "p1", "Family", 1, ["Tia Marta Ruiz", "Uncle Joe Ruiz;;Gluten-free"]], ["", "p2", "Friends", 2, ["Amy Cho;Vegetarian", "Brett Hale", "Cody Ng", "Dee Wills;Vegan"]],
+      ["The Lees", "p2", "Friends", 2, ["Grace Lee", "Henry Lee", "Ivy Lee*"]], ["", "o", "Coworkers & others", 0, ["Jon Park", "Kim Lowe;;;I"]]],
+    rules: [], gifts: [],
+    dishes: [["Mains", "Roast turkey breast", "Host", 20, "Gluten-free, Dairy-free"], ["Mains", "Tamales", "The Garcias", 24, "Gluten-free"], ["Sides", "Green bean casserole", "Tia Marta Ruiz", 10, "Vegetarian"], ["Sides", "Mashed potatoes", "Amy Cho", 10, "Vegetarian, Gluten-free"],
+      ["Sides", "Mashed potatoes", "Brett Hale", 10, "Vegetarian"], ["Desserts", "Pumpkin pie", "Grace Lee", 8, "Vegetarian"], ["Drinks", "Apple cider", "Host", 20, "Vegan, Gluten-free"]],
+    shop: [["Turkey breast (pick up)", "2", 45, "Roast turkey breast", false], ["Foil pans", "6", 8, "", true], ["Ice", "2 bags", 6, "", false]],
+    done: 3 },
   friendsgiving: { p1: "Jess", days: 17, budget: 350, goal: 14, room: [32, 22],
     tables: [["Big table", 10, "banquet", 13, 9], ["Kids' table", 6, "rect", 13, 17]],
     items: [["buffet", 27, 6, 90, "Potluck buffet", 10, 3], ["dessert", 27, 15.5, 90, "Pie table", 6, 3], ["bar", 4, 18, 90, "Cider & drinks", 6, 2.5], ["entrance", 13, 21.4, 0, "", 6, 1.2]],
@@ -805,7 +883,7 @@ const ITEMS = {
 const SHAPES = { round: "Round", rect: "Rectangle", banquet: "Banquet", head: "Head table" };
 function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
-  return DEMO ? sample("quinceanera") : blank();
+  return DEMO ? sample("christmas-party") : blank();
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
 let S = load();
@@ -1868,7 +1946,7 @@ const normDish = n => String(n).toLowerCase().replace(/&/g, "and").replace(/[^a-
 // How many dishes each course should have for this many people (a starting point, shown as "2 of 3")
 function courseNeed(c, n) {
   const i = tplCourses().indexOf(c);
-  return i < 0 ? 0 : [Math.max(1, Math.ceil(n / 8)), n > 16 ? 2 : 1, Math.max(2, Math.ceil(n / 4)), Math.max(1, Math.ceil(n / 8)), Math.max(1, Math.ceil(n / 10))][i] || 1;
+  const r = i < 0 ? null : (TP().need || COURSE_NEED)[i]; return r ? Math.max(r[1], Math.ceil(n / r[0])) : 0;
 }
 const menuPeople = () => headcount().attending || S.guestGoal || 8;
 // Dietary needs of the guests who are coming (people): from the meal (Vegetarian / Vegan) and the "Dietary needs" text
@@ -2481,7 +2559,7 @@ const hashTpl = () => { const m = /(?:^|[#&])template=([\w-]+)/.exec(location.ha
 if (DEMO) {
   document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
   const ds = document.getElementById("demoTpl"); ds.innerHTML = TPL_ORDER.map(k => `<option value="${k}">${esc(TPL[k].name)}</option>`).join("");
-  S = sample(hashTpl() || "quinceanera"); ds.value = S.tpl;
+  S = sample(hashTpl() || "christmas-party"); ds.value = S.tpl;
   ds.onchange = () => { location.hash = "template=" + ds.value; };
   addEventListener("hashchange", () => { const k = hashTpl(); if (k && k !== S.tpl) { S = sample(k); ds.value = k; SEL = null; VB = null; AUTO = null; go(VIEW === "settings" ? "settings" : VIEW); } });
   // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV/print are only in the full app.
