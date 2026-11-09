@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F5F4A">
+<title>Small Business Bookkeeping App · The Lemon Plans</title>
+<style>
+:root{--bg:#F4F3EE;--card:#FFFFFF;--ink:#1F2937;--muted:#6B7280;--line:#E3E1D8;--soft:#ECF3EF;--accent:#1F5F4A;--accent-ink:#fff;--fill:#2E7D5B;--fill2:#C9A227;--glass:#DCEAE2;--good:#2E7D5B;--warn:#B7791F;--bad:#B91C1C;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--lemon:#F2C94C;--shadow:0 10px 30px rgba(31,41,55,.07);--r:18px}
+:root[data-theme="dark"]{--bg:#0F1613;--card:#17201C;--ink:#E5ECE8;--muted:#9AA8A1;--line:#26332D;--soft:#1D2A24;--accent:#6FCB9F;--accent-ink:#0A1A12;--fill:#3E9B70;--fill2:#C9A227;--glass:#22352C;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="ocean"]{--accent:#1F5A85;--fill:#3B82B8;--glass:#DCE7F1;--soft:#E9F0F6}:root[data-accent="ocean"][data-theme="dark"]{--accent:#7DB8E8;--accent-ink:#0B1622;--fill:#3B7DB0;--glass:#1F2E3B;--soft:#1B2630}
+:root[data-accent="honey"]{--accent:#8A560B;--fill:#D79A2B;--fill2:#2E7D5B;--glass:#F4E8CF;--soft:#F6EFE0}:root[data-accent="honey"][data-theme="dark"]{--accent:#F2C94C;--accent-ink:#1E1606;--fill:#C98F22;--fill2:#3E9B70;--glass:#3A3020;--soft:#2A251B}
+:root[data-accent="plum"]{--accent:#6B4C9A;--fill:#9479C4;--glass:#E9E2F3;--soft:#EEEAF5}:root[data-accent="plum"][data-theme="dark"]{--accent:#B9A0E6;--accent-ink:#170F24;--fill:#7E62AE;--glass:#2E2840;--soft:#231F30}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+nav.side{padding:22px 12px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:18px;padding:0 10px 18px;letter-spacing:-.3px;line-height:1.2}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:17px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:26px 30px 120px;max-width:1180px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:18px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1.4fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2e{grid-template-columns:1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
+.lab{font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:44px;font-weight:850;letter-spacing:-1.6px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.mid{font-size:25px;font-weight:800;letter-spacing:-.6px;margin-top:4px}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-weight:750;font-size:12.5px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}.done{background:var(--good);color:#fff}.plain{background:var(--soft);color:var(--muted)}
+.t-ok{color:var(--good)}.t-short{color:var(--bad)}.t-warn{color:var(--warn)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dt{width:62px;flex:none;font-size:12.5px;font-weight:750;color:var(--muted);line-height:1.2}
+.dt b{display:block;font-size:17px;color:var(--ink)}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.amt.neg{color:var(--bad)}.amt.pos{color:var(--good)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;padding:11px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:13.5px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:34px;height:34px;cursor:pointer;display:grid;place-items:center;font-size:14px;flex:none}
+.bar{height:10px;border-radius:999px;background:var(--glass);overflow:hidden}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.fab{position:fixed;right:26px;bottom:26px;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right;white-space:nowrap}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--ink);font-weight:800}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+.filters select,.filters input{padding:9px 12px;border-radius:11px;border:1px solid var(--line);background:var(--card);min-width:0;max-width:100%}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.t{border-collapse:collapse;width:100%;font-size:13px}
+table.t th,table.t td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t th:first-child,table.t td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+table.t thead th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+table.t tr.sum td{font-weight:800;border-top:2px solid var(--line)}
+table.t tr.hd td{font-weight:800;color:var(--accent);font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;padding-top:14px}
+table.t td.z{color:var(--muted)}
+.sc .ln{width:44px;flex:none;font-weight:800;color:var(--accent);text-align:center}
+.sc .row.tot{background:var(--soft);border-radius:10px;padding-left:4px;padding-right:8px;border-bottom:0;margin:4px 0}
+.chart{width:100%;height:auto;display:block}
+.chart .gi{fill:var(--fill)}.chart .ge{fill:var(--fill2)}.chart text{fill:var(--muted);font-size:11px;font-weight:700}.chart .ax{stroke:var(--line)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);font-weight:700}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.check:last-child{border-bottom:0}
+.check .ck{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:900}
+.check .ck.y{background:var(--good);color:#fff}.check .ck.n{background:var(--warnbg);color:var(--warn)}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(520px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:5px;margin-bottom:12px;min-width:0}
+.field label,.field .fl{font-size:12.5px;font-weight:750;color:var(--muted)}
+.field input,.field select{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tick{display:flex;gap:10px;align-items:center;font-weight:650;cursor:pointer;margin:2px 0 12px}
+.tick input{width:18px;height:18px;accent-color:var(--accent)}
+.catrow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center;margin-bottom:6px}
+.catrow span{font-weight:800;color:var(--accent);text-align:center;font-size:13px}
+.catrow input{width:100%;padding:8px 11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.yearsel{padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:750}
+.flag{color:var(--bad);font-weight:800}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10px;padding:6px 1px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:18px}
+ main{padding:20px 14px 150px}
+ .g2,.g3,.g2e{grid-template-columns:1fr}
+ .big{font-size:36px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .card{padding:15px}
+ .dt{width:50px}
+ .two,.three{grid-template-columns:1fr 1fr}
+ .row.inv{flex-wrap:wrap;row-gap:6px}
+ .row.inv .grow{flex:1 1 calc(100% - 112px)}
+ .row.inv .pill{margin-left:62px}
+ .row.qrow{flex-wrap:wrap;row-gap:6px}
+ .row.qrow .grow{flex:1 1 100%}
+ .row.qrow .amt{margin-right:auto;text-align:left}
+ .row.inv .amt{min-width:0!important;margin-left:auto}
+ .g3 .mid,.g4 .mid{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Bookkeeping<small>Small business · by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">◉</span>Dashboard</button>
+  <button class="navbtn" data-view="income"><span class="i">↓</span>Income</button>
+  <button class="navbtn" data-view="expenses"><span class="i">↑</span>Expenses</button>
+  <button class="navbtn" data-view="mileage"><span class="i">⛟</span>Mileage</button>
+  <button class="navbtn" data-view="invoices"><span class="i">▤</span>Invoices</button>
+  <button class="navbtn" data-view="reports"><span class="i">▥</span>Taxes</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add" title="Add">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/small-business-bookkeeping-app";
+const KEY = DEMO ? "lp-bookkeeping-demo" : "lp-bookkeeping-v1";
+const SAMPLE = {"biz":{"name":"Maple Street Studio","year":2026,"method":"Standard mileage","rate1":0.725,"rdate":"2026-07-01","rate2":0.76,"sqft":120,"pct":25.0,"terms":30},"cats":[["Cost of goods sold","4"],["Advertising & marketing","8"],["Car & truck (actual expenses)","9"],["Parking & tolls","9"],["Commissions & fees","10"],["Contract labor","11"],["Insurance (not health)","15"],["Interest (business loans & cards)","16b"],["Legal & professional","17"],["Office expense","18"],["Equipment rental","20a"],["Rent (office, studio, storage)","20b"],["Repairs & maintenance","21"],["Supplies","22"],["Taxes & licenses","23"],["Travel","24a"],["Meals (50% deductible)","24b"],["Utilities","25"],["Wages","26"],["Software & subscriptions","27a"],["Phone & internet","27a"],["Education & training","27a"],["Other expenses","27a"]],"income":[{"date":"2026-01-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":392.91,"method":"Etsy payout","inv":"","note":""},{"date":"2026-01-03","source":"Bloom Bakery","desc":"Social media graphics (monthly)","cat":"Services","amount":675,"method":"Check","inv":"INV-1001","note":""},{"date":"2026-01-04","source":"Harbor Dental","desc":"Presentation deck","cat":"Services","amount":1450,"method":"Stripe","inv":"INV-1002","note":""},{"date":"2026-01-08","source":"Oak & Pine Realty","desc":"Presentation deck","cat":"Services","amount":2125,"method":"Bank transfer","inv":"INV-1003","note":""},{"date":"2026-01-09","source":"Harbor Dental","desc":"Brochure layout","cat":"Services","amount":1450,"method":"Stripe","inv":"INV-1004","note":""},{"date":"2026-01-10","source":"Summit Law Group","desc":"Signage design","cat":"Services","amount":2300,"method":"Stripe","inv":"INV-1005","note":""},{"date":"2026-01-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":428.76,"method":"Etsy payout","inv":"","note":""},{"date":"2026-01-24","source":"Summit Law Group","desc":"Logo package","cat":"Services","amount":1725,"method":"Stripe","inv":"INV-1007","note":""},{"date":"2026-02-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":325.06,"method":"Etsy payout","inv":"","note":""},{"date":"2026-02-04","source":"Riverbend Yoga","desc":"Event poster series","cat":"Services","amount":600,"method":"Stripe","inv":"INV-1006","note":""},{"date":"2026-02-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":549.37,"method":"Etsy payout","inv":"","note":""},{"date":"2026-02-17","source":"Northside Fitness","desc":"Logo package","cat":"Services","amount":1275,"method":"Check","inv":"INV-1009","note":""},{"date":"2026-02-23","source":"Northside Fitness","desc":"Signage design","cat":"Services","amount":900,"method":"Stripe","inv":"INV-1008","note":""},{"date":"2026-03-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":754.28,"method":"Etsy payout","inv":"","note":""},{"date":"2026-03-06","source":"Oak & Pine Realty","desc":"Signage design","cat":"Services","amount":2250,"method":"Stripe","inv":"INV-1012","note":""},{"date":"2026-03-07","source":"Green Leaf Cafe","desc":"Presentation deck","cat":"Services","amount":450,"method":"Stripe","inv":"INV-1013","note":""},{"date":"2026-03-15","source":"Northside Fitness","desc":"Presentation deck","cat":"Services","amount":975,"method":"Bank transfer","inv":"INV-1010","note":""},{"date":"2026-03-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":691.57,"method":"Etsy payout","inv":"","note":""},{"date":"2026-03-19","source":"Green Leaf Cafe","desc":"Presentation deck","cat":"Services","amount":375,"method":"Check","inv":"INV-1011","note":""},{"date":"2026-03-22","source":"Summit Law Group","desc":"Event poster series","cat":"Services","amount":2300,"method":"Stripe","inv":"INV-1015","note":""},{"date":"2026-03-28","source":"Affiliate program","desc":"Design tool referral commission","cat":"Other business income","amount":84.2,"method":"PayPal","inv":"","note":""},{"date":"2026-03-30","source":"Riverbend Yoga","desc":"Event poster series","cat":"Services","amount":800,"method":"Bank transfer","inv":"INV-1014","note":""},{"date":"2026-04-01","source":"Riverbend Yoga","desc":"Signage design","cat":"Services","amount":775,"method":"Bank transfer","inv":"INV-1016","note":""},{"date":"2026-04-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":431.19,"method":"Etsy payout","inv":"","note":""},{"date":"2026-04-09","source":"Oak & Pine Realty","desc":"Menu redesign","cat":"Services","amount":2175,"method":"Stripe","inv":"INV-1018","note":""},{"date":"2026-04-12","source":"Summit Law Group","desc":"Signage design","cat":"Services","amount":2000,"method":"Bank transfer","inv":"INV-1019","note":""},{"date":"2026-04-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":498.9,"method":"Etsy payout","inv":"","note":""},{"date":"2026-04-17","source":"Harbor Dental","desc":"Social media graphics (monthly)","cat":"Services","amount":1700,"method":"Stripe","inv":"INV-1017","note":""},{"date":"2026-04-20","source":"Green Leaf Cafe","desc":"Brand identity refresh","cat":"Services","amount":475,"method":"Bank transfer","inv":"INV-1021","note":""},{"date":"2026-04-27","source":"Oak & Pine Realty","desc":"Signage design","cat":"Services","amount":2000,"method":"Bank transfer","inv":"INV-1022","note":""},{"date":"2026-04-29","source":"Bloom Bakery","desc":"Event poster series","cat":"Services","amount":750,"method":"Stripe","inv":"INV-1020","note":""},{"date":"2026-05-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":580.35,"method":"Etsy payout","inv":"","note":""},{"date":"2026-05-03","source":"Riverbend Yoga","desc":"Menu redesign","cat":"Services","amount":825,"method":"Stripe","inv":"INV-1023","note":""},{"date":"2026-05-11","source":"Riverbend Yoga","desc":"Email newsletter templates","cat":"Services","amount":625,"method":"Stripe","inv":"INV-1024","note":""},{"date":"2026-05-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":622.82,"method":"Etsy payout","inv":"","note":""},{"date":"2026-05-20","source":"Riverbend Yoga","desc":"Brochure layout","cat":"Services","amount":650,"method":"Stripe","inv":"INV-1026","note":""},{"date":"2026-05-23","source":"Northside Fitness","desc":"Event poster series","cat":"Services","amount":1325,"method":"Check","inv":"INV-1027","note":""},{"date":"2026-06-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":298.25,"method":"Etsy payout","inv":"","note":""},{"date":"2026-06-06","source":"Green Leaf Cafe","desc":"Event poster series","cat":"Services","amount":725,"method":"Bank transfer","inv":"INV-1025","note":""},{"date":"2026-06-13","source":"Summit Law Group","desc":"Brochure layout","cat":"Services","amount":2375,"method":"Stripe","inv":"INV-1029","note":""},{"date":"2026-06-14","source":"Summit Law Group","desc":"Event poster series","cat":"Services","amount":2025,"method":"Stripe","inv":"INV-1028","note":""},{"date":"2026-06-14","source":"Riverbend Yoga","desc":"Menu redesign","cat":"Services","amount":675,"method":"Bank transfer","inv":"INV-1031","note":""},{"date":"2026-06-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":474.01,"method":"Etsy payout","inv":"","note":""},{"date":"2026-06-25","source":"Summit Law Group","desc":"Social media graphics (monthly)","cat":"Services","amount":2500,"method":"Stripe","inv":"INV-1032","note":""},{"date":"2026-06-26","source":"Bloom Bakery","desc":"Signage design","cat":"Services","amount":450,"method":"Stripe","inv":"INV-1030","note":""},{"date":"2026-06-28","source":"Affiliate program","desc":"Design tool referral commission","cat":"Other business income","amount":126.75,"method":"PayPal","inv":"","note":""},{"date":"2026-07-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":571.74,"method":"Etsy payout","inv":"","note":""},{"date":"2026-07-03","source":"Harbor Dental","desc":"Event poster series","cat":"Services","amount":1675,"method":"Stripe","inv":"INV-1033","note":""},{"date":"2026-07-15","source":"Oak & Pine Realty","desc":"Logo package","cat":"Services","amount":2100,"method":"Bank transfer","inv":"INV-1035","note":""},{"date":"2026-07-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":565.15,"method":"Etsy payout","inv":"","note":""},{"date":"2026-07-24","source":"Harbor Dental","desc":"Presentation deck","cat":"Services","amount":1175,"method":"Bank transfer","inv":"INV-1034","note":""},{"date":"2026-07-25","source":"Riverbend Yoga","desc":"Signage design","cat":"Services","amount":700,"method":"Stripe","inv":"INV-1036","note":""},{"date":"2026-08-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":484.54,"method":"Etsy payout","inv":"","note":""},{"date":"2026-08-09","source":"Harbor Dental","desc":"Signage design","cat":"Services","amount":1425,"method":"Bank transfer","inv":"INV-1037","note":""},{"date":"2026-08-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":604.44,"method":"Etsy payout","inv":"","note":""},{"date":"2026-08-19","source":"Green Leaf Cafe","desc":"Logo package","cat":"Services","amount":375,"method":"Stripe","inv":"INV-1039","note":""},{"date":"2026-08-21","source":"Riverbend Yoga","desc":"Logo package","cat":"Services","amount":400,"method":"Bank transfer","inv":"INV-1038","note":""},{"date":"2026-08-23","source":"Bloom Bakery","desc":"Presentation deck","cat":"Services","amount":750,"method":"Bank transfer","inv":"INV-1040","note":""},{"date":"2026-08-31","source":"Oak & Pine Realty","desc":"Social media graphics (monthly)","cat":"Services","amount":1425,"method":"Stripe","inv":"INV-1042","note":""},{"date":"2026-09-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":337.33,"method":"Etsy payout","inv":"","note":""},{"date":"2026-09-12","source":"Green Leaf Cafe","desc":"Brand identity refresh","cat":"Services","amount":425,"method":"Stripe","inv":"INV-1043","note":""},{"date":"2026-09-15","source":"Oak & Pine Realty","desc":"Signage design","cat":"Services","amount":2025,"method":"Bank transfer","inv":"INV-1045","note":""},{"date":"2026-09-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":459.59,"method":"Etsy payout","inv":"","note":""},{"date":"2026-09-16","source":"Northside Fitness","desc":"Website banner set","cat":"Services","amount":925,"method":"Bank transfer","inv":"INV-1041","note":""},{"date":"2026-09-22","source":"Oak & Pine Realty","desc":"Event poster series","cat":"Services","amount":1725,"method":"Check","inv":"INV-1044","note":""},{"date":"2026-09-28","source":"Affiliate program","desc":"Design tool referral commission","cat":"Other business income","amount":98.4,"method":"PayPal","inv":"","note":""},{"date":"2026-10-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":520.61,"method":"Etsy payout","inv":"","note":""},{"date":"2026-10-15","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":747.66,"method":"Etsy payout","inv":"","note":""},{"date":"2026-10-16","source":"Harbor Dental","desc":"Email newsletter templates","cat":"Services","amount":1500,"method":"Stripe","inv":"INV-1049","note":""},{"date":"2026-10-20","source":"Green Leaf Cafe","desc":"Brochure layout","cat":"Services","amount":425,"method":"Stripe","inv":"INV-1050","note":""},{"date":"2026-10-28","source":"Green Leaf Cafe","desc":"Website banner set","cat":"Services","amount":625,"method":"Stripe","inv":"INV-1053","note":""},{"date":"2026-10-31","source":"Riverbend Yoga","desc":"Menu redesign","cat":"Services","amount":600,"method":"Check","inv":"INV-1048","note":""},{"date":"2026-11-01","source":"Etsy","desc":"Digital & print shop payout","cat":"Product sales","amount":400.76,"method":"Etsy payout","inv":"","note":""}],"expenses":[{"date":"2026-01-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-01-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":75,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-10","vendor":"City of Portland","desc":"Business license renewal","cat":"Taxes & licenses","amount":75,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-01-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-01-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-01-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":254.72,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-25","vendor":"The Corner Bistro","desc":"Client lunch: Northside Fitness","cat":"Meals (50% deductible)","amount":72.72,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-26","vendor":"USPS","desc":"Shipping samples to clients","cat":"Office expense","amount":19.05,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-01-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":78.06,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-01-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":201.73,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-02-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-02-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-04","vendor":"USPS","desc":"Shipping samples to clients","cat":"Office expense","amount":21.47,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-06","vendor":"City parking","desc":"Client meeting downtown","cat":"Parking & tolls","amount":8,"pct":null,"method":"Cash","receipt":true,"note":""},{"date":"2026-02-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":45,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-08","vendor":"Amazon","desc":"Mockup paper & foam board","cat":"Supplies","amount":74.68,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-02-14","vendor":"Chase","desc":"Business card interest","cat":"Interest (business loans & cards)","amount":9.56,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-16","vendor":"Skillshare","desc":"Advanced typography course","cat":"Education & training","amount":199,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-02-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":271.07,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-22","vendor":"Pinterest","desc":"Promoted pins","cat":"Advertising & marketing","amount":50,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-02-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":83.07,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-02-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":44.4,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-03-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-03-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":120,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-08","vendor":"Harvest Table","desc":"Client lunch: Bloom Bakery","cat":"Meals (50% deductible)","amount":69.05,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-03-12","vendor":"Hart & Co. CPA","desc":"2025 tax return preparation","cat":"Legal & professional","amount":450,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-03-17","vendor":"USPS","desc":"Shipping samples to clients","cat":"Office expense","amount":17.83,"pct":null,"method":"Business card","receipt":false,"note":""},{"date":"2026-03-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-03-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":448.21,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-24","vendor":"Staples","desc":"Printer ink","cat":"Office expense","amount":37.54,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-26","vendor":"Michaels","desc":"Packaging samples","cat":"Supplies","amount":38.03,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-03-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":137.36,"pct":null,"method":"Etsy payout","receipt":false,"note":""},{"date":"2026-03-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":145.9,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-04-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-04-02","vendor":"Blick Art Materials","desc":"Sketchbooks & pens","cat":"Supplies","amount":61.5,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":120,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-11","vendor":"The Corner Bistro","desc":"Client lunch: Harbor Dental","cat":"Meals (50% deductible)","amount":84.88,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":false,"note":""},{"date":"2026-04-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-04-19","vendor":"City parking","desc":"Client meeting downtown","cat":"Parking & tolls","amount":12,"pct":null,"method":"Cash","receipt":true,"note":""},{"date":"2026-04-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":288.33,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-21","vendor":"Caf\u00e9 Lumen","desc":"Client lunch: Riverbend Yoga","cat":"Meals (50% deductible)","amount":42.04,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-21","vendor":"Jamie Lee Writing","desc":"Website copywriting (subcontract)","cat":"Contract labor","amount":600,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-04-22","vendor":"Pinterest","desc":"Promoted pins","cat":"Advertising & marketing","amount":50,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-04-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":88.36,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-04-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":135.03,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-05-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-05-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-03","vendor":"Amazon","desc":"Mockup paper & foam board","cat":"Supplies","amount":67.83,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":75,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-05-13","vendor":"Delta","desc":"Flight to Design Summit, Austin","cat":"Travel","amount":342.6,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-14","vendor":"Chase","desc":"Business card interest","cat":"Interest (business loans & cards)","amount":22.91,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-15","vendor":"Hotel Van Zandt","desc":"2 nights, Design Summit","cat":"Travel","amount":518.4,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-15","vendor":"Design Summit","desc":"Conference ticket","cat":"Education & training","amount":249,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-05-18","vendor":"Caf\u00e9 Lumen","desc":"Client lunch: Harbor Dental","cat":"Meals (50% deductible)","amount":70.03,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":372.98,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-05-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":114.3,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-05-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":61.8,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-06-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-06-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":90,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":false,"note":""},{"date":"2026-06-14","vendor":"The Corner Bistro","desc":"Client lunch: Summit Law Group","cat":"Meals (50% deductible)","amount":57.62,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-06-19","vendor":"Michaels","desc":"Sketchbooks & pens","cat":"Supplies","amount":84.87,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":239.4,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-22","vendor":"Pinterest","desc":"Promoted pins","cat":"Advertising & marketing","amount":65,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-06-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":73.36,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-06-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":214.05,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-07-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-07-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":120,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-08","vendor":"uBreakiFix","desc":"Laptop screen repair","cat":"Repairs & maintenance","amount":180,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-09","vendor":"Staples","desc":"Printer ink","cat":"Office expense","amount":40.3,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-09","vendor":"City parking","desc":"Client meeting downtown","cat":"Parking & tolls","amount":15,"pct":null,"method":"Cash","receipt":true,"note":""},{"date":"2026-07-11","vendor":"Michaels","desc":"Packaging samples","cat":"Supplies","amount":75.36,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-07-15","vendor":"USPS","desc":"Shipping samples to clients","cat":"Office expense","amount":27.72,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-07-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":352.44,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-25","vendor":"Harvest Table","desc":"Client lunch: Bloom Bakery","cat":"Meals (50% deductible)","amount":87.93,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-27","vendor":"Blick Art Materials","desc":"Packaging samples","cat":"Supplies","amount":34.6,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-07-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":108,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-07-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":69.78,"pct":null,"method":"Business checking","receipt":false,"note":""},{"date":"2026-08-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-08-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":120,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-08-12","vendor":"City parking","desc":"Client meeting downtown","cat":"Parking & tolls","amount":12,"pct":null,"method":"Cash","receipt":true,"note":""},{"date":"2026-08-13","vendor":"Harvest Table","desc":"Client lunch: Northside Fitness","cat":"Meals (50% deductible)","amount":49.38,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-14","vendor":"Chase","desc":"Business card interest","cat":"Interest (business loans & cards)","amount":17.12,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-08-18","vendor":"Blick Art Materials","desc":"Mockup paper & foam board","cat":"Supplies","amount":32.36,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-19","vendor":"Amazon","desc":"Packaging samples","cat":"Supplies","amount":70.31,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-19","vendor":"Jamie Lee Writing","desc":"Brochure copy (subcontract)","cat":"Contract labor","amount":450,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-08-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":337.58,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-22","vendor":"Pinterest","desc":"Promoted pins","cat":"Advertising & marketing","amount":50,"pct":null,"method":"Business card","receipt":false,"note":""},{"date":"2026-08-26","vendor":"Harvest Table","desc":"Client lunch: Summit Law Group","cat":"Meals (50% deductible)","amount":76.09,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-08-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":103.45,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-08-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":53.1,"pct":null,"method":"Business checking","receipt":false,"note":""},{"date":"2026-09-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-09-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":75,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-08","vendor":"Caf\u00e9 Lumen","desc":"Client lunch: Bloom Bakery","cat":"Meals (50% deductible)","amount":60.84,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-09","vendor":"WeWork","desc":"Day pass, client workshop","cat":"Rent (office, studio, storage)","amount":49,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-09-15","vendor":"Michaels","desc":"Packaging samples","cat":"Supplies","amount":34.47,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-16","vendor":"Office Depot","desc":"Desk supplies","cat":"Office expense","amount":46.97,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-09-18","vendor":"Blick Art Materials","desc":"Mockup paper & foam board","cat":"Supplies","amount":44.97,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":247.05,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-09-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":75.71,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-09-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":13.23,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-10-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-10-02","vendor":"Adobe Stock","desc":"Image credits pack","cat":"Software & subscriptions","amount":79.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-05","vendor":"Michaels","desc":"Sketchbooks & pens","cat":"Supplies","amount":29.84,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-07","vendor":"Meta","desc":"Instagram ads","cat":"Advertising & marketing","amount":45,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-09","vendor":"Squarespace","desc":"Portfolio website","cat":"Software & subscriptions","amount":23,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-12","vendor":"Verizon","desc":"Cell phone","cat":"Phone & internet","amount":85,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-10-13","vendor":"Office Depot","desc":"Desk supplies","cat":"Office expense","amount":25.09,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-18","vendor":"Comcast","desc":"Home internet","cat":"Phone & internet","amount":70,"pct":50.0,"method":"Business checking","receipt":true,"note":""},{"date":"2026-10-20","vendor":"Printful","desc":"Print production","cat":"Cost of goods sold","amount":393.16,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-22","vendor":"Pinterest","desc":"Promoted pins","cat":"Advertising & marketing","amount":50,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-10-28","vendor":"Etsy","desc":"Transaction & listing fees","cat":"Commissions & fees","amount":120.49,"pct":null,"method":"Etsy payout","receipt":true,"note":""},{"date":"2026-10-28","vendor":"Stripe","desc":"Card processing fees","cat":"Commissions & fees","amount":74.85,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-11-01","vendor":"Next Insurance","desc":"General liability","cat":"Insurance (not health)","amount":38.5,"pct":null,"method":"Business checking","receipt":true,"note":""},{"date":"2026-11-03","vendor":"Adobe","desc":"Creative Cloud","cat":"Software & subscriptions","amount":59.99,"pct":null,"method":"Business card","receipt":true,"note":""},{"date":"2026-11-05","vendor":"Canva","desc":"Canva Pro","cat":"Software & subscriptions","amount":14.99,"pct":null,"method":"Business card","receipt":true,"note":""}],"trips":[{"date":"2026-01-12","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-01-12","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-01-14","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-01-23","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-01-24","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-01-27","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-02-06","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-02-06","purpose":"Client meeting","from":"Home office","to":"Bloom Bakery","miles":6.4,"rt":true,"note":""},{"date":"2026-02-12","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":5.8,"rt":true,"note":""},{"date":"2026-02-15","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":4.1,"rt":true,"note":""},{"date":"2026-02-16","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-02-22","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-02-23","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":5.8,"rt":true,"note":""},{"date":"2026-03-11","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-03-12","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-03-14","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-03-17","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-03-22","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-03-23","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":5.8,"rt":true,"note":""},{"date":"2026-03-24","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-04-02","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-04-19","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":5.8,"rt":true,"note":""},{"date":"2026-04-20","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-04-22","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-04-22","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-04-25","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-04-26","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":5.8,"rt":true,"note":""},{"date":"2026-05-06","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-05-12","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-05-13","purpose":"Design Summit (airport)","from":"Home office","to":"PDX airport","miles":16.8,"rt":true,"note":""},{"date":"2026-05-16","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-05-16","purpose":"Design Summit (airport)","from":"PDX airport","to":"Home office","miles":16.8,"rt":false,"note":""},{"date":"2026-05-19","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-05-21","purpose":"Client meeting","from":"Home office","to":"Bloom Bakery","miles":6.4,"rt":true,"note":""},{"date":"2026-05-26","purpose":"Client meeting","from":"Home office","to":"Bloom Bakery","miles":6.4,"rt":true,"note":""},{"date":"2026-05-27","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-06-02","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-06-03","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-06-15","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":4.1,"rt":true,"note":""},{"date":"2026-06-17","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-06-18","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-06-24","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-07-06","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-07-10","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-07-10","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-07-13","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-07-13","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-07-16","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-07-18","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":5.8,"rt":true,"note":""},{"date":"2026-08-04","purpose":"Supplies run","from":"Home office","to":"Office Depot","miles":5.8,"rt":true,"note":""},{"date":"2026-08-07","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-08-12","purpose":"Client meeting","from":"Home office","to":"Northside Fitness","miles":8.7,"rt":true,"note":""},{"date":"2026-08-18","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-08-20","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-08-21","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-09-08","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-09-08","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-09-18","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""},{"date":"2026-09-18","purpose":"Client meeting","from":"Home office","to":"Harbor Dental","miles":11.2,"rt":true,"note":""},{"date":"2026-09-22","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-09-26","purpose":"Client meeting","from":"Home office","to":"Riverbend Yoga","miles":5.2,"rt":true,"note":""},{"date":"2026-10-06","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":4.1,"rt":true,"note":""},{"date":"2026-10-12","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-10-14","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-10-17","purpose":"Client meeting","from":"Home office","to":"Summit Law Group","miles":18.3,"rt":true,"note":""},{"date":"2026-10-19","purpose":"Client meeting","from":"Home office","to":"Oak & Pine Realty","miles":14.6,"rt":true,"note":""},{"date":"2026-10-19","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":4.1,"rt":true,"note":""},{"date":"2026-10-26","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-11-03","purpose":"Supplies run","from":"Home office","to":"Blick Art Materials","miles":4.1,"rt":true,"note":""},{"date":"2026-11-03","purpose":"Ship client samples","from":"Home office","to":"Post office","miles":2.6,"rt":true,"note":""},{"date":"2026-11-06","purpose":"Client meeting","from":"Home office","to":"Green Leaf Cafe","miles":3.9,"rt":true,"note":""}],"invoices":[{"no":"INV-1001","client":"Bloom Bakery","desc":"Social media graphics (monthly)","issue":"2025-12-13","amount":675,"paid":"2026-01-03"},{"no":"INV-1002","client":"Harbor Dental","desc":"Presentation deck","issue":"2025-12-17","amount":1450,"paid":"2026-01-04"},{"no":"INV-1003","client":"Oak & Pine Realty","desc":"Presentation deck","issue":"2025-12-19","amount":2125,"paid":"2026-01-08"},{"no":"INV-1004","client":"Harbor Dental","desc":"Brochure layout","issue":"2026-01-01","amount":1450,"paid":"2026-01-09"},{"no":"INV-1005","client":"Summit Law Group","desc":"Signage design","issue":"2026-01-03","amount":2300,"paid":"2026-01-10"},{"no":"INV-1006","client":"Riverbend Yoga","desc":"Event poster series","issue":"2026-01-04","amount":600,"paid":"2026-02-04"},{"no":"INV-1007","client":"Summit Law Group","desc":"Logo package","issue":"2026-01-11","amount":1725,"paid":"2026-01-24"},{"no":"INV-1008","client":"Northside Fitness","desc":"Signage design","issue":"2026-01-26","amount":900,"paid":"2026-02-23"},{"no":"INV-1009","client":"Northside Fitness","desc":"Logo package","issue":"2026-02-01","amount":1275,"paid":"2026-02-17"},{"no":"INV-1010","client":"Northside Fitness","desc":"Presentation deck","issue":"2026-02-10","amount":975,"paid":"2026-03-15"},{"no":"INV-1011","client":"Green Leaf Cafe","desc":"Presentation deck","issue":"2026-02-14","amount":375,"paid":"2026-03-19"},{"no":"INV-1012","client":"Oak & Pine Realty","desc":"Signage design","issue":"2026-02-16","amount":2250,"paid":"2026-03-06"},{"no":"INV-1013","client":"Green Leaf Cafe","desc":"Presentation deck","issue":"2026-02-17","amount":450,"paid":"2026-03-07"},{"no":"INV-1014","client":"Riverbend Yoga","desc":"Event poster series","issue":"2026-02-25","amount":800,"paid":"2026-03-30"},{"no":"INV-1015","client":"Summit Law Group","desc":"Event poster series","issue":"2026-03-04","amount":2300,"paid":"2026-03-22"},{"no":"INV-1016","client":"Riverbend Yoga","desc":"Signage design","issue":"2026-03-05","amount":775,"paid":"2026-04-01"},{"no":"INV-1017","client":"Harbor Dental","desc":"Social media graphics (monthly)","issue":"2026-03-16","amount":1700,"paid":"2026-04-17"},{"no":"INV-1018","client":"Oak & Pine Realty","desc":"Menu redesign","issue":"2026-03-17","amount":2175,"paid":"2026-04-09"},{"no":"INV-1019","client":"Summit Law Group","desc":"Signage design","issue":"2026-03-23","amount":2000,"paid":"2026-04-12"},{"no":"INV-1020","client":"Bloom Bakery","desc":"Event poster series","issue":"2026-04-05","amount":750,"paid":"2026-04-29"},{"no":"INV-1021","client":"Green Leaf Cafe","desc":"Brand identity refresh","issue":"2026-04-07","amount":475,"paid":"2026-04-20"},{"no":"INV-1022","client":"Oak & Pine Realty","desc":"Signage design","issue":"2026-04-13","amount":2000,"paid":"2026-04-27"},{"no":"INV-1023","client":"Riverbend Yoga","desc":"Menu redesign","issue":"2026-04-17","amount":825,"paid":"2026-05-03"},{"no":"INV-1024","client":"Riverbend Yoga","desc":"Email newsletter templates","issue":"2026-04-21","amount":625,"paid":"2026-05-11"},{"no":"INV-1025","client":"Green Leaf Cafe","desc":"Event poster series","issue":"2026-05-06","amount":725,"paid":"2026-06-06"},{"no":"INV-1026","client":"Riverbend Yoga","desc":"Brochure layout","issue":"2026-05-14","amount":650,"paid":"2026-05-20"},{"no":"INV-1027","client":"Northside Fitness","desc":"Event poster series","issue":"2026-05-15","amount":1325,"paid":"2026-05-23"},{"no":"INV-1028","client":"Summit Law Group","desc":"Event poster series","issue":"2026-05-16","amount":2025,"paid":"2026-06-14"},{"no":"INV-1029","client":"Summit Law Group","desc":"Brochure layout","issue":"2026-05-23","amount":2375,"paid":"2026-06-13"},{"no":"INV-1030","client":"Bloom Bakery","desc":"Signage design","issue":"2026-06-03","amount":450,"paid":"2026-06-26"},{"no":"INV-1031","client":"Riverbend Yoga","desc":"Menu redesign","issue":"2026-06-03","amount":675,"paid":"2026-06-14"},{"no":"INV-1032","client":"Summit Law Group","desc":"Social media graphics (monthly)","issue":"2026-06-09","amount":2500,"paid":"2026-06-25"},{"no":"INV-1033","client":"Harbor Dental","desc":"Event poster series","issue":"2026-06-24","amount":1675,"paid":"2026-07-03"},{"no":"INV-1034","client":"Harbor Dental","desc":"Presentation deck","issue":"2026-07-01","amount":1175,"paid":"2026-07-24"},{"no":"INV-1035","client":"Oak & Pine Realty","desc":"Logo package","issue":"2026-07-02","amount":2100,"paid":"2026-07-15"},{"no":"INV-1036","client":"Riverbend Yoga","desc":"Signage design","issue":"2026-07-16","amount":700,"paid":"2026-07-25"},{"no":"INV-1037","client":"Harbor Dental","desc":"Signage design","issue":"2026-07-16","amount":1425,"paid":"2026-08-09"},{"no":"INV-1038","client":"Riverbend Yoga","desc":"Logo package","issue":"2026-08-01","amount":400,"paid":"2026-08-21"},{"no":"INV-1039","client":"Green Leaf Cafe","desc":"Logo package","issue":"2026-08-03","amount":375,"paid":"2026-08-19"},{"no":"INV-1040","client":"Bloom Bakery","desc":"Presentation deck","issue":"2026-08-14","amount":750,"paid":"2026-08-23"},{"no":"INV-1041","client":"Northside Fitness","desc":"Website banner set","issue":"2026-08-17","amount":925,"paid":"2026-09-16"},{"no":"INV-1042","client":"Oak & Pine Realty","desc":"Social media graphics (monthly)","issue":"2026-08-26","amount":1425,"paid":"2026-08-31"},{"no":"INV-1043","client":"Green Leaf Cafe","desc":"Brand identity refresh","issue":"2026-09-02","amount":425,"paid":"2026-09-12"},{"no":"INV-1044","client":"Oak & Pine Realty","desc":"Event poster series","issue":"2026-09-07","amount":1725,"paid":"2026-09-22"},{"no":"INV-1045","client":"Oak & Pine Realty","desc":"Signage design","issue":"2026-09-08","amount":2025,"paid":"2026-09-15"},{"no":"INV-1046","client":"Green Leaf Cafe","desc":"Event poster series","issue":"2026-09-11","amount":725,"paid":null},{"no":"INV-1047","client":"Oak & Pine Realty","desc":"Presentation deck","issue":"2026-09-20","amount":2175,"paid":null},{"no":"INV-1048","client":"Riverbend Yoga","desc":"Menu redesign","issue":"2026-10-02","amount":600,"paid":"2026-10-31"},{"no":"INV-1049","client":"Harbor Dental","desc":"Email newsletter templates","issue":"2026-10-06","amount":1500,"paid":"2026-10-16"},{"no":"INV-1050","client":"Green Leaf Cafe","desc":"Brochure layout","issue":"2026-10-10","amount":425,"paid":"2026-10-20"},{"no":"INV-1051","client":"Northside Fitness","desc":"Social media graphics (monthly)","issue":"2026-10-14","amount":1025,"paid":null},{"no":"INV-1052","client":"Summit Law Group","desc":"Signage design","issue":"2026-10-17","amount":1750,"paid":null},{"no":"INV-1053","client":"Green Leaf Cafe","desc":"Website banner set","issue":"2026-10-23","amount":625,"paid":"2026-10-28"},{"no":"INV-1054","client":"Green Leaf Cafe","desc":"Email newsletter templates","issue":"2026-11-04","amount":750,"paid":null},{"no":"INV-1055","client":"Northside Fitness","desc":"Event poster series","issue":"2026-11-04","amount":750,"paid":null}],"qpaid":[4750,2900,4450,0]};
+// Expense categories and the IRS Schedule C line each one goes to (same list as the Small Business Bookkeeping spreadsheet)
+const CATS = [
+  ["cogs", "Cost of goods sold", "4", "Inventory, materials and printing for the products you sell"],
+  ["ads", "Advertising & marketing", "8", "Ads, promoted posts, business cards, promo items"],
+  ["car", "Car & truck (actual expenses)", "9", "Gas, repairs, car insurance. Only counted when Vehicle method = Actual expenses"],
+  ["park", "Parking & tolls", "9", "Business parking and tolls (counted with either vehicle method)"],
+  ["fees", "Commissions & fees", "10", "Payment processing (Stripe, PayPal, Square) and marketplace fees (Etsy, Amazon)"],
+  ["labor", "Contract labor", "11", "Freelancers and independent contractors you pay"],
+  ["ins", "Insurance (not health)", "15", "Business liability and professional insurance"],
+  ["int", "Interest (business loans & cards)", "16b", "Interest on business credit cards and loans"],
+  ["legal", "Legal & professional", "17", "Accountant, tax preparer, lawyer, bookkeeper"],
+  ["office", "Office expense", "18", "Postage, small office items, printer ink"],
+  ["equip", "Equipment rental", "20a", "Rented or leased machinery and equipment"],
+  ["rent", "Rent (office, studio, storage)", "20b", "Rent for business space (not your home office)"],
+  ["repair", "Repairs & maintenance", "21", "Repairs to business equipment"],
+  ["supplies", "Supplies", "22", "Materials and supplies used up in your work"],
+  ["taxes", "Taxes & licenses", "23", "Business licenses, permits and business taxes"],
+  ["travel", "Travel", "24a", "Flights, hotels and transport on business trips"],
+  ["meals", "Meals (50% deductible)", "24b", "Business meals. The app counts 50% automatically"],
+  ["util", "Utilities", "25", "Utilities for business space outside your home"],
+  ["wages", "Wages", "26", "Pay to employees (not to yourself)"],
+  ["soft", "Software & subscriptions", "27a", "Apps, cloud storage, design tools, website hosting"],
+  ["phone", "Phone & internet", "27a", "Business share of your phone and internet (set Business use %)"],
+  ["edu", "Education & training", "27a", "Courses, books and workshops for your current business"],
+  ["other", "Other expenses", "27a", "Anything else ordinary and necessary for the business"]
+].map(([key, name, line, note]) => ({ key, name, line, note }));
+const INC_CATS = [["services", "Services", "1"], ["products", "Product sales", "1"], ["otherinc", "Other business income", "6"]].map(([key, name, line]) => ({ key, name, line }));
+const PART2 = [["8", "Advertising"], ["9", "Car and truck expenses"], ["10", "Commissions and fees"], ["11", "Contract labor"], ["15", "Insurance (other than health)"], ["16b", "Interest: other"], ["17", "Legal and professional services"], ["18", "Office expense"], ["20a", "Rent or lease: vehicles, machinery, equipment"], ["20b", "Rent or lease: other business property"], ["21", "Repairs and maintenance"], ["22", "Supplies"], ["23", "Taxes and licenses"], ["24a", "Travel"], ["24b", "Deductible meals"], ["25", "Utilities"], ["26", "Wages"], ["27a", "Other expenses"]];
+const INC_METHODS = ["Bank transfer", "Check", "Stripe", "PayPal", "Cash", "Etsy payout", "Other"];
+const EXP_METHODS = ["Business card", "Business checking", "Cash", "PayPal", "Personal card", "Other"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+// IRS estimated-tax periods for a calendar-year filer: income months and due date (month, day, year offset)
+const QUARTERS = [["Q1", "Jan 1 – Mar 31", [1, 2, 3], [4, 15, 0]], ["Q2", "Apr 1 – May 31", [4, 5], [6, 15, 0]], ["Q3", "Jun 1 – Aug 31", [6, 7, 8], [9, 15, 0]], ["Q4", "Sep 1 – Dec 31", [9, 10, 11, 12], [1, 15, 1]]];
+
+/* ---------- dates (local calendar days, ISO yyyy-mm-dd) ---------- */
+const iso = d => { const z = new Date(d); return z.getFullYear() + "-" + String(z.getMonth() + 1).padStart(2, "0") + "-" + String(z.getDate()).padStart(2, "0"); };
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const dayDiff = (a, b) => Math.round((b - a) / 86400000);
+const fmtD = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const fmtS = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+/* ---------- state ---------- */
+function defaultBiz(year) {
+  // 2026 IRS business mileage: 72.5¢ through June 30, 76¢ from July 1 (same as the spreadsheet). Other years: check irs.gov.
+  return year === 2026 ? { name: "", year, method: "Standard mileage", rate1: 0.725, rdate: "2026-07-01", rate2: 0.76, sqft: 0, pct: 25, terms: 30 }
+    : { name: "", year, method: "Standard mileage", rate1: 0.76, rdate: "", rate2: "", sqft: 0, pct: 25, terms: 30 };
+}
+function blank() {
+  return { v: 1, app: "bookkeeping", currency: "$", theme: "auto", accent: "forest", biz: defaultBiz(today().getFullYear()), names: {}, income: [], expenses: [], trips: [], invoices: [], qpaid: {} };
+}
+function valid(s) { return s && s.v === 1 && s.app === "bookkeeping" && s.biz && ["income", "expenses", "trips", "invoices"].every(k => Array.isArray(s[k])); }
+function normalize(s) {
+  const o = Object.assign(blank(), s);
+  o.biz = Object.assign(defaultBiz(Number(s.biz.year) || today().getFullYear()), s.biz); o.biz.year = Number(o.biz.year) || today().getFullYear();
+  if (!o.names || typeof o.names !== "object") o.names = {}; if (!o.qpaid || typeof o.qpaid !== "object") o.qpaid = {};
+  return o;
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
+const uid = () => Math.random().toString(36).slice(2, 9);
+function sample() {
+  const s = blank(), byName = (list, n) => (list.find(c => c.name === n) || list[list.length - 1]).key;
+  s.biz = Object.assign({}, SAMPLE.biz);
+  s.income = SAMPLE.income.map(x => Object.assign({ id: uid() }, x, { cat: byName(INC_CATS, x.cat) }));
+  s.expenses = SAMPLE.expenses.map(x => Object.assign({ id: uid() }, x, { cat: byName(CATS, x.cat) }));
+  s.trips = SAMPLE.trips.map(x => Object.assign({ id: uid() }, x));
+  s.invoices = SAMPLE.invoices.map(x => Object.assign({ id: uid() }, x));
+  s.qpaid = { [s.biz.year]: SAMPLE.qpaid.slice() };
+  return s;
+}
+let S = load();
+
+/* ---------- the math (whole cents, rounded like the spreadsheet: half away from zero) ---------- */
+const cents = v => rh((Number(v) || 0) * 100);
+function rh(x) { const y = Number(Math.abs(x).toPrecision(12)); return (x < 0 ? -1 : 1) * Math.round(y) || 0; }
+const catOf = k => CATS.find(c => c.key === k) || CATS[CATS.length - 1];
+const incCatOf = k => INC_CATS.find(c => c.key === k) || INC_CATS[0];
+const catName = k => S.names[k] || catOf(k).name;
+const incName = k => S.names[k] || incCatOf(k).name;
+const pctOf = e => e.pct === null || e.pct === undefined || e.pct === "" ? 100 : Number(e.pct);
+// Deductible = amount × business use % × 50% for meals, rounded to the cent
+const deductible = e => rh(cents(e.amount) * pctOf(e) / 100 * (e.cat === "meals" ? 0.5 : 1));
+const tripMiles = t => Number(((Number(t.miles) || 0) * (t.rt ? 2 : 1)).toFixed(4));
+const rateFor = (date, b = S.biz) => (b.rdate && b.rate2 !== "" && b.rate2 != null && Number(b.rate2) > 0 && date >= b.rdate) ? Number(b.rate2) : Number(b.rate1) || 0;
+const tripDed = (t, b = S.biz) => rh(tripMiles(t) * rateFor(t.date, b) * 100);
+const homeMonthly = (b = S.biz) => rh(Math.min(Math.max(Number(b.sqft) || 0, 0), 300) * 5 / 12 * 100);
+const inYear = (d, y = S.biz.year) => !!d && d.slice(0, 4) === String(y);
+const monthOf = d => +d.slice(5, 7);
+const dueOf = (inv, b = S.biz) => iso(addDays(parse(inv.issue), Number(b.terms) || 0));
+function invStatus(inv, now = today()) {
+  if (inv.paid) return { k: "paid", t: "Paid", days: 0 };
+  const due = parse(dueOf(inv)), late = dayDiff(due, now);
+  return late > 0 ? { k: "overdue", t: "Overdue " + late + (late === 1 ? " day" : " days"), days: late } : { k: "open", t: late === 0 ? "Due today" : "Due " + fmtS(due), days: late };
+}
+function qDue(q, y) { const [m, d, off] = q[3]; return iso(new Date(y + off, m - 1, d)); }
+// Everything for one tax year, in cents
+function compute(s = S) {
+  const b = s.biz, y = b.year, inc = {}, exp = {}, mi = Array(13).fill(0), home = homeMonthly(b), std = b.method !== "Actual expenses";
+  for (let m = 1; m <= 12; m++) { inc[m] = {}; exp[m] = {}; INC_CATS.forEach(c => inc[m][c.key] = 0); CATS.forEach(c => exp[m][c.key] = 0); }
+  let miles = 0, trips = 0, receipts = 0;
+  s.income.forEach(x => { if (inYear(x.date, y)) inc[monthOf(x.date)][incCatOf(x.cat).key] += cents(x.amount); });
+  s.expenses.forEach(x => { if (inYear(x.date, y)) { exp[monthOf(x.date)][catOf(x.cat).key] += deductible(x); if (!x.receipt) receipts++; } });
+  s.trips.forEach(t => { if (inYear(t.date, y)) { mi[monthOf(t.date)] += tripDed(t, b); miles += tripMiles(t); trips++; } });
+  const months = [];
+  for (let m = 1; m <= 12; m++) {
+    const income = INC_CATS.reduce((a, c) => a + inc[m][c.key], 0);
+    const expenses = CATS.reduce((a, c) => a + (c.key === "car" && std ? 0 : exp[m][c.key]), 0) + (std ? mi[m] : 0) + home;
+    months.push({ m, income, expenses, profit: income - expenses, mileage: std ? mi[m] : 0, home });
+  }
+  const sum = (f) => months.reduce((a, x) => a + f(x), 0), totInc = sum(x => x.income), totExp = sum(x => x.expenses), profit = totInc - totExp;
+  const catTot = {}; CATS.forEach(c => catTot[c.key] = Object.values(exp).reduce((a, mm) => a + mm[c.key], 0));
+  const incTot = {}; INC_CATS.forEach(c => incTot[c.key] = Object.values(inc).reduce((a, mm) => a + mm[c.key], 0));
+  const mileTot = mi.reduce((a, v) => a + v, 0);
+  // Schedule C
+  const L = {}, lineSum = ln => CATS.filter(c => c.line === ln && c.key !== "car").reduce((a, c) => a + catTot[c.key], 0);
+  L["1"] = INC_CATS.filter(c => c.line === "1").reduce((a, c) => a + incTot[c.key], 0);
+  L["4"] = lineSum("4"); L["5"] = L["1"] - L["4"];
+  L["6"] = INC_CATS.filter(c => c.line === "6").reduce((a, c) => a + incTot[c.key], 0); L["7"] = L["5"] + L["6"];
+  PART2.forEach(([ln]) => L[ln] = lineSum(ln));
+  L["9"] += std ? mileTot : catTot.car;
+  L["28"] = PART2.reduce((a, [ln]) => a + L[ln], 0); L["29"] = L["7"] - L["28"]; L["30"] = home * 12; L["31"] = L["29"] - L["30"];
+  const pct = Number(b.pct) || 0, paid = (s.qpaid && s.qpaid[y]) || [];
+  const quarters = QUARTERS.map((q, i) => {
+    const p = q[2].reduce((a, m) => a + months[m - 1].profit, 0), aside = rh(Math.max(0, p) / 100 * pct / 100) * 100, pd = cents(paid[i] || 0), due = qDue(q, y);
+    return { q: q[0], period: q[1], profit: p, aside, paid: pd, due, status: aside <= 0 ? "none" : pd >= aside ? "paid" : due < iso(today()) ? "past" : "due" };
+  });
+  const next = quarters.filter(q => q.status === "past" || q.status === "due").sort((a, c) => a.due.localeCompare(c.due))[0] || null;
+  const unpaid = s.invoices.filter(v => !v.paid), overdue = unpaid.filter(v => invStatus(v).k === "overdue");
+  return { year: y, std, months, inc: incTot, cat: catTot, mileTot, home, totInc, totExp, profit, setAside: rh(Math.max(0, profit) * pct / 100), lines: L, quarters, next,
+    miles: Math.round(miles * 100) / 100, trips, receipts, unpaid: unpaid.reduce((a, v) => a + cents(v.amount), 0), unpaidN: unpaid.length, overdueN: overdue.length, overdueAmt: overdue.reduce((a, v) => a + cents(v.amount), 0),
+    best: months.reduce((a, x) => x.profit > a.profit ? x : a, months[0]) };
+}
+// Expense lines for the P&L and the "top categories" list: categories + mileage row + home office
+function expenseRows(R) {
+  const rows = CATS.filter(c => !(c.key === "car" && R.std)).map(c => ({ key: c.key, name: catName(c.key), line: c.line, total: R.cat[c.key] }));
+  if (R.std) rows.splice(3, 0, { key: "_miles", name: "Mileage (standard rate)", line: "9", total: R.mileTot });
+  rows.push({ key: "_home", name: "Home office (simplified method)", line: "30", total: R.home * 12 });
+  return rows;
+}
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const n = Math.round(Math.abs(v) * 100) / 100, neg = v < 0 && n > 0 ? "-" : "";
+  const d = dec ?? 2;
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(c / 100, dec);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2200); }
+const plural = (n, w) => n.toLocaleString("en-US") + " " + w + (n === 1 ? "" : "s");
+const fmtMiles = n => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+const dateCell = d => { const x = parse(d); return `<div class="dt"><b>${x.getDate()}</b>${MONTHS[x.getMonth()]}${x.getFullYear() !== S.biz.year ? " " + x.getFullYear() : ""}</div>`; };
+const otherYear = d => !inYear(d) ? ` · <span class="flag">not in ${S.biz.year}</span>` : "";
+const empty = () => !S.income.length && !S.expenses.length && !S.trips.length && !S.invoices.length;
+const opts = (list, sel) => list.map(([v, t]) => `<option value="${esc(v)}" ${String(sel) === String(v) ? "selected" : ""}>${esc(t)}</option>`).join("");
+const monthOpts = sel => `<option value="">All months</option>` + MONTHS.map((m, i) => `<option value="${i + 1}" ${+sel === i + 1 ? "selected" : ""}>${m}</option>`).join("");
+const sortDesc = list => list.slice().sort((a, b) => (b.date || b.issue).localeCompare(a.date || a.issue));
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home";
+const M = () => document.getElementById("main");
+function go(v) {
+  VIEW = v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render(); window.scrollTo(0, 0); M().focus({ preventScroll: true });
+}
+function render() { applyTheme(); ({ home, income, expenses, mileage, invoices, reports, settings })[VIEW](); }
+const yearsInData = () => [...new Set([S.biz.year, today().getFullYear(), ...S.income.map(x => x.date), ...S.expenses.map(x => x.date), ...S.trips.map(x => x.date)].map(d => typeof d === "number" ? d : +String(d).slice(0, 4)).filter(Boolean))].sort();
+const yearSel = () => `<select class="yearsel" id="yearSel" aria-label="Tax year">${yearsInData().map(y => `<option ${y === S.biz.year ? "selected" : ""}>${y}</option>`).join("")}</select>`;
+function wireYear() { const y = document.getElementById("yearSel"); if (y) y.onchange = () => { S.biz.year = +y.value; save(); render(); toast("Showing tax year " + S.biz.year); }; }
+
+function welcome() {
+  M().innerHTML = `<h1>Your business books, in one place 👋</h1><p class="sub">Log income, expenses, miles and invoices. The app sorts every expense onto its IRS Schedule C line and works out your profit and what to set aside for taxes.</p>
+  <div class="card" style="max-width:640px;padding:26px">
+   <div class="lab">Step 1</div><div class="mid" style="margin:4px 0 10px">Set up your business</div>
+   <p class="sub" style="margin-bottom:16px">Your business name, tax year, vehicle method and home office size. Then add what came in and what went out.</p>
+   <div class="actions" style="justify-content:flex-start"><button class="btn" id="goSetup">Set up my business</button><button class="btn ghost" id="firstInc">+ Add income</button><button class="btn ghost" id="trySample">Try with sample data</button></div>
+  </div>
+  <p class="meta" style="margin-top:18px;max-width:640px">Bookkeeping tool, not tax advice. Check the numbers with your tax preparer.</p>`;
+  document.getElementById("goSetup").onclick = () => go("settings");
+  document.getElementById("firstInc").onclick = () => incomeDlg();
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); go("home"); toast("Sample year loaded: Maple Street Studio, 2026"); };
+}
+
+function chartSVG(R) {
+  const W = 640, H = 200, pad = 26, max = Math.max(1, ...R.months.map(x => Math.max(x.income, x.expenses))), bw = (W - pad) / 12;
+  const y = v => H - 22 - (H - 40) * Math.max(0, v) / max;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Income and expenses by month">
+   <line class="ax" x1="${pad}" x2="${W}" y1="${H - 22}" y2="${H - 22}"/>
+   ${R.months.map((x, i) => { const x0 = pad + i * bw + bw * .14, w = bw * .34;
+     return `<rect class="gi" x="${x0.toFixed(1)}" y="${y(x.income).toFixed(1)}" width="${w.toFixed(1)}" height="${(H - 22 - y(x.income)).toFixed(1)}" rx="3"><title>${MONTHS[i]} income ${mc(x.income, 0)}</title></rect>
+     <rect class="ge" x="${(x0 + w + 2).toFixed(1)}" y="${y(x.expenses).toFixed(1)}" width="${w.toFixed(1)}" height="${(H - 22 - y(x.expenses)).toFixed(1)}" rx="3"><title>${MONTHS[i]} expenses ${mc(x.expenses, 0)}</title></rect>
+     <text x="${(pad + i * bw + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${MONTHS[i]}</text>`; }).join("")}
+   <text x="0" y="16">${mc(max, 0)}</text></svg>`;
+}
+
+function home() {
+  if (empty()) return welcome();
+  const R = compute(), b = S.biz, top = expenseRows(R).filter(r => r.total > 0).sort((a, c) => c.total - a.total).slice(0, 6), topMax = top.length ? top[0].total : 1;
+  const nx = R.next, now = today(), yearDone = now.getFullYear() > R.year || (now.getMonth() === 11);
+  M().innerHTML = `<div class="tablebar"><div><h1>${esc(b.name || "My business")}</h1><p class="sub" style="margin:0">Tax year ${yearSel()} · ${plural(R.trips, "trip")} · ${plural(S.invoices.length, "invoice")}</p></div><button class="btn ghost" data-go="reports">Schedule C &amp; taxes →</button></div>
+  <div class="grid g4" style="margin-top:14px">
+   <div class="card"><div class="lab">Income</div><div class="mid t-ok" id="dIncome">${mc(R.totInc, 0)}</div><div class="meta">received in ${R.year}</div></div>
+   <div class="card"><div class="lab">Expenses</div><div class="mid" id="dExpenses">${mc(R.totExp, 0)}</div><div class="meta">deductible, with miles &amp; home office</div></div>
+   <div class="card"><div class="lab">Net profit</div><div class="mid ${R.profit < 0 ? "t-short" : ""}" id="dProfit" style="color:${R.profit < 0 ? "" : "var(--accent)"}">${mc(R.profit, 0)}</div><div class="meta">${R.totInc ? Math.round(R.profit / R.totInc * 100) + "% margin" : "Schedule C line 31"}</div></div>
+   <div class="card"><div class="lab">Set aside for taxes</div><div class="mid" id="dAside">${mc(R.setAside, 0)}</div><div class="meta">${b.pct}% of profit (Settings)</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Month by month</h2><div class="legend"><span><i style="background:var(--fill)"></i>Income</span><span><i style="background:var(--fill2)"></i>Expenses</span></div></div>${chartSVG(R)}
+    <div class="meta" style="margin-top:6px">Best month: <b>${MONTHS[R.best.m - 1]}</b>, ${mc(R.best.profit, 0)} profit</div></div>
+   <div class="card"><h2>Next tax payment</h2>${nx ? `<div class="big" id="dNext" style="font-size:38px">${mc(nx.aside - nx.paid, 0)}</div><div style="font-weight:700">${nx.q} estimate · ${nx.status === "past" ? `<span class="t-short">was due ${fmtD(parse(nx.due))}</span>` : "due " + fmtD(parse(nx.due))}</div>` : `<div class="mid" id="dNext">All paid ✓</div><div class="meta">No quarter left to pay for ${R.year}</div>`}
+    <p class="meta" style="margin:12px 0 0">Your set-aside (${b.pct}% of each quarter's profit) minus what you've paid. Form 1040-ES gives your real amount.</p>
+    <div class="kv total" style="margin-top:14px"><span>Unpaid invoices</span><b id="dUnpaid">${mc(R.unpaid, 0)}</b></div>
+    <div class="kv"><span>Overdue</span><b class="${R.overdueN ? "t-short" : ""}">${R.overdueN ? plural(R.overdueN, "invoice") + " · " + mc(R.overdueAmt, 0) : "none"}</b></div>
+    <div class="actions" style="justify-content:flex-start;margin-top:10px"><button class="btn small ghost" data-go="invoices">See invoices</button></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><h2>Where the money went</h2>${top.length ? top.map(r => `<div class="row"><div class="grow"><div class="name">${esc(r.name)}</div><div class="bar" style="margin-top:6px"><i style="width:${(r.total / topMax * 100).toFixed(1)}%"></i></div></div><div class="amt">${mc(r.total, 0)}<div class="meta">line ${r.line}</div></div></div>`).join("") : `<div class="empty">No expenses in ${R.year} yet.</div>`}</div>
+   <div class="card"><h2>${yearDone ? "Closing the year" : "Year-end checklist"}</h2>${closeList(R)}</div>
+  </div>
+  <div class="grid g4" style="margin-top:14px">
+   <div class="card"><div class="lab">Business miles</div><div class="mid" id="dMiles">${fmtMiles(R.miles)}</div><div class="meta">${R.std ? mc(R.mileTot, 0) + " deduction" : "not counted (actual expenses)"}</div></div>
+   <div class="card"><div class="lab">Home office</div><div class="mid">${mc(R.home * 12, 0)}</div><div class="meta">${Math.min(Math.max(+b.sqft || 0, 0), 300)} sq ft × $5, simplified</div></div>
+   <div class="card"><div class="lab">Receipts to find</div><div class="mid ${R.receipts ? "t-warn" : "t-ok"}" id="dReceipts">${R.receipts}</div><div class="meta">${R.receipts ? "expenses without a receipt" : "every receipt is in"}</div></div>
+   <div class="card"><div class="lab">Income sources</div><div class="mid">${new Set(S.income.filter(x => inYear(x.date)).map(x => x.source.trim().toLowerCase())).size}</div><div class="meta">clients and platforms</div></div>
+  </div>
+  <p class="foot">Bookkeeping tool, not tax advice. Line numbers follow IRS Schedule C (Form 1040); check them with your tax preparer.</p>`;
+  wire(); wireYear();
+}
+function closeList(R) {
+  const y = R.year, q4 = R.quarters[3], items = [
+    [R.receipts === 0, R.receipts ? `Find ${plural(R.receipts, "missing receipt")}` : "Every expense has a receipt", "expenses", "missing"],
+    [R.overdueN === 0, R.overdueN ? `Follow up on ${plural(R.overdueN, "overdue invoice")}` : "No overdue invoices", "invoices", "overdue"],
+    [R.quarters.slice(0, 3).every(q => q.status === "none" || q.status === "paid"), "Q1 to Q3 estimated taxes paid", "reports"],
+    [q4.status === "none" || q4.status === "paid", `Q4 estimate (${mc(Math.max(0, q4.aside - q4.paid), 0)}) due ${fmtD(parse(q4.due))}`, "reports"],
+    [R.trips > 0 || !R.std, R.trips ? `Mileage log: ${plural(R.trips, "trip")}, ${fmtMiles(R.miles)} miles` : "Add your business trips to the mileage log", "mileage"],
+    [false, `Export the CSVs and the Schedule C summary for your tax preparer`, "settings"]
+  ];
+  return items.map(([ok, t, v, f]) => `<div class="check"><span class="ck ${ok ? "y" : "n"}">${ok ? "✓" : "!"}</span><span style="flex:1">${t}</span><button class="btn small ghost" data-go="${v}" ${f ? `data-filter="${f}"` : ""}>Open</button></div>`).join("");
+}
+
+let IF = { m: "", cat: "", q: "" };
+function income() {
+  const list = sortDesc(S.income.filter(x => (!IF.m || (inYear(x.date) && monthOf(x.date) === +IF.m)) && (!IF.cat || x.cat === IF.cat) && (!IF.q || (x.source + " " + x.desc + " " + x.inv).toLowerCase().includes(IF.q.toLowerCase()))));
+  const R = compute(), shown = list.filter(x => inYear(x.date)).reduce((a, x) => a + cents(x.amount), 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Income</h1><p class="sub" style="margin:0">Every payment you receive · tax year ${S.biz.year}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvI">⬇ Income CSV</button><button class="btn" id="addInc">+ Add income</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   <div class="card"><div class="lab">Total ${S.biz.year}</div><div class="mid t-ok" id="iTotal">${mc(R.totInc, 0)}</div></div>
+   ${INC_CATS.map(c => `<div class="card"><div class="lab">${esc(incName(c.key))}</div><div class="mid">${mc(R.inc[c.key], 0)}</div><div class="meta">Schedule C line ${c.line}</div></div>`).join("")}
+  </div>
+  <div class="filters"><select id="fm" aria-label="Month">${monthOpts(IF.m)}</select><select id="fc" aria-label="Category"><option value="">All categories</option>${opts(INC_CATS.map(c => [c.key, incName(c.key)]), IF.cat)}</select><input id="fq" type="search" placeholder="Search client, invoice…" value="${esc(IF.q)}" aria-label="Search"><span class="meta">${plural(list.length, "payment")} · ${mc(shown)}</span></div>
+  <div class="card" style="margin-top:10px" id="incList">${list.length ? list.map(x => `<div class="row">${dateCell(x.date)}<div class="grow"><div class="name">${esc(x.source)}</div><div class="meta">${esc(incName(x.cat))}${x.desc ? " · " + esc(x.desc) : ""}${x.inv ? " · " + esc(x.inv) : ""}${x.method ? " · " + esc(x.method) : ""}${otherYear(x.date)}</div></div><div class="amt ${cents(x.amount) < 0 ? "neg" : "pos"}">${mc(cents(x.amount))}</div><button class="icon" data-editinc="${x.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">No income here yet. Add a payment with + Add income.</div>`}</div>`;
+  filt("fm", v => IF.m = v); filt("fc", v => IF.cat = v); search("fq", v => IF.q = v);
+  document.getElementById("addInc").onclick = () => incomeDlg();
+  document.getElementById("csvI").onclick = () => exportCSV("income");
+  wire();
+}
+function filt(id, set) { document.getElementById(id).onchange = e => { set(e.target.value); render(); }; }
+function search(id, set) { const el = document.getElementById(id); el.oninput = () => { set(el.value); clearTimeout(search.h); search.h = setTimeout(() => { render(); const n = document.getElementById(id); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); }; }
+
+let EF = { m: "", cat: "", missing: false, q: "" };
+function expenses() {
+  const list = sortDesc(S.expenses.filter(x => (!EF.m || (inYear(x.date) && monthOf(x.date) === +EF.m)) && (!EF.cat || x.cat === EF.cat) && (!EF.missing || !x.receipt) && (!EF.q || (x.vendor + " " + x.desc).toLowerCase().includes(EF.q.toLowerCase()))));
+  const R = compute(), shown = list.filter(x => inYear(x.date)).reduce((a, x) => a + deductible(x), 0), paidTot = S.expenses.filter(x => inYear(x.date)).reduce((a, x) => a + cents(x.amount), 0), dedTot = S.expenses.filter(x => inYear(x.date)).reduce((a, x) => a + deductible(x), 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Expenses</h1><p class="sub" style="margin:0">Each expense goes on its IRS Schedule C line · tax year ${S.biz.year}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvE">⬇ Expenses CSV</button><button class="btn" id="addExp">+ Add expense</button></div></div>
+  <div class="grid g3" style="margin-top:12px">
+   <div class="card"><div class="lab">Paid</div><div class="mid">${mc(paidTot, 0)}</div><div class="meta">what left your accounts</div></div>
+   <div class="card"><div class="lab">Deductible</div><div class="mid t-ok" id="eDed">${mc(dedTot, 0)}</div><div class="meta">after business use % and 50% meals${R.std && R.cat.car ? " · car costs not counted (standard mileage)" : ""}</div></div>
+   <button class="card" id="missBtn" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><div class="lab">Receipts to find</div><div class="mid ${R.receipts ? "t-warn" : "t-ok"}">${R.receipts}</div><div class="meta">${EF.missing ? "showing only these · tap to show all" : "tap to show only these"}</div></button>
+  </div>
+  <div class="filters"><select id="fm" aria-label="Month">${monthOpts(EF.m)}</select><select id="fc" aria-label="Category"><option value="">All categories</option>${opts(CATS.map(c => [c.key, catName(c.key) + " · line " + c.line]), EF.cat)}</select><input id="fq" type="search" placeholder="Search vendor…" value="${esc(EF.q)}" aria-label="Search"><span class="meta">${plural(list.length, "expense")} · ${mc(shown)} deductible</span></div>
+  <div class="card" style="margin-top:10px" id="expList">${list.length ? list.map(x => { const d = deductible(x), a = cents(x.amount);
+    return `<div class="row">${dateCell(x.date)}<div class="grow"><div class="name">${esc(x.vendor)}${x.receipt ? "" : ` <span class="pill tight">no receipt</span>`}</div><div class="meta">${esc(catName(x.cat))} · line ${catOf(x.cat).line}${x.desc ? " · " + esc(x.desc) : ""}${pctOf(x) !== 100 ? " · " + pctOf(x) + "% business" : ""}${otherYear(x.date)}</div></div><div class="amt">${mc(a)}${d !== a ? `<div class="meta">${mc(d)} deductible</div>` : ""}</div><button class="icon" data-editexp="${x.id}" aria-label="Edit">✎</button></div>`; }).join("") : `<div class="empty">No expenses here. Add one with + Add expense.</div>`}</div>`;
+  filt("fm", v => EF.m = v); filt("fc", v => EF.cat = v); search("fq", v => EF.q = v);
+  document.getElementById("missBtn").onclick = () => { EF.missing = !EF.missing; render(); };
+  document.getElementById("addExp").onclick = () => expenseDlg();
+  document.getElementById("csvE").onclick = () => exportCSV("expenses");
+  wire();
+}
+
+let MF = { m: "" };
+function mileage() {
+  const b = S.biz, R = compute(), list = sortDesc(S.trips.filter(t => !MF.m || (inYear(t.date) && monthOf(t.date) === +MF.m)));
+  const rates = b.rdate && Number(b.rate2) > 0 ? `${(b.rate1 * 100).toFixed(1).replace(/\.0$/, "")}¢ a mile until ${fmtD(addDays(parse(b.rdate), -1))}, then ${(b.rate2 * 100).toFixed(1).replace(/\.0$/, "")}¢` : `${(b.rate1 * 100).toFixed(1).replace(/\.0$/, "")}¢ a mile`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Mileage log</h1><p class="sub" style="margin:0">Business trips by car · ${rates} (Settings)</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvM">⬇ Mileage CSV</button><button class="btn" id="addTrip">+ Add trip</button></div></div>
+  <div class="grid g3" style="margin-top:12px">
+   <div class="card"><div class="lab">Business miles ${R.year}</div><div class="mid" id="mMiles">${fmtMiles(R.miles)}</div><div class="meta">${plural(R.trips, "trip")}</div></div>
+   <div class="card"><div class="lab">Mileage deduction</div><div class="mid t-ok" id="mDed">${mc(R.mileTot)}</div><div class="meta">miles × IRS standard rate</div></div>
+   <div class="card"><div class="lab">Vehicle method</div><div class="mid" style="font-size:20px">${esc(b.method)}</div><div class="meta">${R.std ? "Counted in your profit (Schedule C line 9)" : "<span class='t-warn'>Not counted: you deduct actual car costs instead</span>"}</div></div>
+  </div>
+  <div class="filters"><select id="fm" aria-label="Month">${monthOpts(MF.m)}</select><span class="meta">${plural(list.length, "trip")}</span></div>
+  <div class="card" style="margin-top:10px" id="tripList">${list.length ? list.map(t => `<div class="row">${dateCell(t.date)}<div class="grow"><div class="name">${esc(t.purpose)}</div><div class="meta">${esc(t.from)}${t.to ? " → " + esc(t.to) : ""}${t.rt ? " · round trip" : ""} · ${(rateFor(t.date) * 100).toFixed(1).replace(/\.0$/, "")}¢${otherYear(t.date)}</div></div><div class="amt">${fmtMiles(tripMiles(t))} mi<div class="meta">${mc(tripDed(t))}</div></div><button class="icon" data-edittrip="${t.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">No trips yet. Log each business drive: date, purpose, where to and the miles.</div>`}</div>
+  <p class="hint" style="margin-top:14px">💡 The IRS wants a log written at the time: date, business purpose, where you went and the miles. Commuting from home to a regular workplace doesn't count.</p>`;
+  filt("fm", v => MF.m = v);
+  document.getElementById("addTrip").onclick = () => tripDlg();
+  document.getElementById("csvM").onclick = () => exportCSV("mileage");
+  wire();
+}
+
+let VF = "";
+function invoices() {
+  const all = S.invoices.map(v => [v, invStatus(v)]), list = all.filter(([, s]) => !VF || s.k === VF || (VF === "unpaid" && s.k !== "paid")).sort((a, b) => b[0].issue.localeCompare(a[0].issue) || b[0].no.localeCompare(a[0].no));
+  const R = compute(), paidY = S.invoices.filter(v => v.paid && inYear(v.paid)).reduce((a, v) => a + cents(v.amount), 0), cnt = k => all.filter(([, s]) => s.k === k).length;
+  M().innerHTML = `<div class="tablebar"><div><h1>Invoices</h1><p class="sub" style="margin:0">What you've billed and who still owes you · due ${S.biz.terms} days after the invoice date</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvV">⬇ Invoices CSV</button><button class="btn" id="addInv">+ New invoice</button></div></div>
+  <div class="grid g3" style="margin-top:12px">
+   <div class="card"><div class="lab">Unpaid</div><div class="mid" id="vUnpaid">${mc(R.unpaid, 0)}</div><div class="meta">${plural(R.unpaidN, "invoice")} open</div></div>
+   <div class="card"><div class="lab">Overdue</div><div class="mid ${R.overdueN ? "t-short" : "t-ok"}" id="vOverdue">${R.overdueN}</div><div class="meta">${R.overdueN ? mc(R.overdueAmt, 0) + " past the due date" : "nothing late"}</div></div>
+   <div class="card"><div class="lab">Paid in ${S.biz.year}</div><div class="mid t-ok">${mc(paidY, 0)}</div><div class="meta">${plural(S.invoices.filter(v => v.paid && inYear(v.paid)).length, "invoice")}</div></div>
+  </div>
+  <div class="filters"><div class="chips">${[["", "All " + all.length], ["unpaid", "Unpaid " + R.unpaidN], ["overdue", "Overdue " + cnt("overdue")], ["open", "Not due yet " + cnt("open")], ["paid", "Paid " + cnt("paid")]].map(([k, t]) => `<button class="chip" data-vf="${k}" aria-pressed="${VF === k}">${t}</button>`).join("")}</div></div>
+  <div class="card" style="margin-top:10px" id="invList">${list.length ? list.map(([v, s]) => `<div class="row inv">${dateCell(v.issue)}<div class="grow"><div class="name">${esc(v.no)} · ${esc(v.client)}</div><div class="meta">${v.desc ? esc(v.desc) + " · " : ""}${v.paid ? "paid " + fmtD(parse(v.paid)) : "due " + fmtD(parse(dueOf(v)))}</div></div><span class="pill ${s.k === "paid" ? "ok" : s.k === "overdue" ? "short" : "plain"}">${s.t}</span><div class="amt" style="min-width:84px">${mc(cents(v.amount))}</div>${v.paid ? "" : `<button class="btn small" data-paid="${v.id}">Mark paid</button>`}<button class="icon" data-editinv="${v.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">No invoices here.</div>`}</div>
+  <p class="hint" style="margin-top:14px">💡 “Mark paid” can add the payment to Income for you, so the money is counted once, on the day it arrives.</p>`;
+  M().querySelectorAll("[data-vf]").forEach(b => b.onclick = () => { VF = b.dataset.vf; render(); });
+  M().querySelectorAll("[data-paid]").forEach(b => b.onclick = () => paidDlg(b.dataset.paid));
+  document.getElementById("addInv").onclick = () => invoiceDlg();
+  document.getElementById("csvV").onclick = () => exportCSV("invoices");
+  wire();
+}
+
+function reports() {
+  const R = compute(), L = R.lines, rows = expenseRows(R), b = S.biz;
+  const cell = c => c ? `<td>${mc(c, 0)}</td>` : `<td class="z">–</td>`, sline = (ln, t, v, tot) => `<div class="row ${tot ? "tot" : ""}"><span class="ln">${ln}</span><div class="grow"><div class="name" style="font-weight:${tot ? 800 : 650}">${t}</div></div><div class="amt ${v < 0 ? "neg" : ""}" id="L${ln}">${mc(v, 0)}</div></div>`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Taxes &amp; reports</h1><p class="sub" style="margin:0">${esc(b.name || "My business")} · tax year ${yearSel()}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvS">⬇ Schedule C CSV</button><button class="btn ghost" id="csvP">⬇ Profit &amp; Loss CSV</button></div></div>
+  <div class="grid g2e" style="margin-top:12px">
+   <div class="card sc"><h2>Schedule C summary</h2>
+    <div class="lab" style="margin:4px 0">Part I · Income</div>
+    ${sline("1", "Gross receipts or sales", L["1"])}${sline("4", "Cost of goods sold", L["4"])}${sline("5", "Gross profit", L["5"], 1)}${sline("6", "Other income", L["6"])}${sline("7", "Gross income", L["7"], 1)}
+    <div class="lab" style="margin:14px 0 4px">Part II · Expenses</div>
+    ${PART2.map(([ln, t]) => sline(ln, t + (ln === "9" ? (R.std ? ` <span class="meta">(${fmtMiles(R.miles)} miles + parking)</span>` : ` <span class="meta">(actual costs + parking)</span>`) : ""), L[ln])).join("")}
+    ${sline("28", "Total expenses", L["28"], 1)}${sline("29", "Tentative profit (or loss)", L["29"], 1)}${sline("30", "Business use of home (simplified)", L["30"])}${sline("31", "Net profit (or loss)", L["31"], 1)}
+    <p class="meta" style="margin:10px 0 0">${L["31"] === R.profit ? "✓ Matches the net profit in Profit &amp; Loss." : "⚠ Differs from Profit &amp; Loss"} Line 31 goes to Schedule 1 and Schedule SE. Line 27a: list those costs in Part V.</p></div>
+   <div>
+    <div class="card"><h2>Quarterly estimated taxes</h2><p class="meta" style="margin:-6px 0 10px">Set aside ${b.pct}% of each period's profit. Type what you paid to the IRS.</p>
+     <form id="qf">${R.quarters.map((q, i) => `<div class="row qrow"><div class="grow"><div class="name">${q.q} · ${q.period}</div><div class="meta">profit ${mc(q.profit, 0)} · due ${fmtD(parse(q.due))}</div></div><div class="amt" style="min-width:70px">${mc(q.aside, 0)}<div class="meta">set aside</div></div><input name="q${i}" type="number" min="0" step="1" inputmode="decimal" value="${q.paid ? q.paid / 100 : ""}" placeholder="Paid" aria-label="${q.q} paid" style="width:92px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg)"><span class="pill ${q.status === "paid" ? "ok" : q.status === "past" ? "short" : "plain"}" id="qs${i}" style="min-width:86px;justify-content:center">${{ paid: "✓ Paid", past: "Past due", due: "Due " + fmtS(parse(q.due)), none: "Nothing due" }[q.status]}</span></div>`).join("")}
+      <div class="actions"><button class="btn small">Save payments</button></div></form>
+     <p class="meta" style="margin:8px 0 0">Due dates move to the next business day on weekends and holidays. This is a simple share of profit, not your actual tax: your tax preparer or Form 1040-ES gives the real amount.</p></div>
+    <div class="card" style="margin-top:14px"><h2>Year at a glance</h2>
+     <div class="kv"><span>Income</span><b>${mc(R.totInc)}</b></div><div class="kv"><span>Expenses</span><b>${mc(R.totExp)}</b></div><div class="kv total"><span>Net profit</span><b id="rProfit">${mc(R.profit)}</b></div>
+     <div class="kv"><span>Set aside for taxes (${b.pct}%)</span><b>${mc(R.setAside)}</b></div><div class="kv"><span>Estimated payments made</span><b>${mc(R.quarters.reduce((a, q) => a + q.paid, 0))}</b></div></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>Profit &amp; Loss, month by month</h2><div class="scroll"><table class="t" id="plTable"><thead><tr><th>${R.year}</th>${MONTHS.map(m => `<th>${m}</th>`).join("")}<th>Year</th></tr></thead><tbody>
+   <tr class="hd"><td colspan="14">Income</td></tr>
+   ${INC_CATS.map(c => { const v = R.months.map(x => 0); S.income.forEach(x => { if (inYear(x.date) && incCatOf(x.cat).key === c.key) v[monthOf(x.date) - 1] += cents(x.amount); }); return `<tr><td>${esc(incName(c.key))}</td>${v.map(cell).join("")}${cell(R.inc[c.key])}</tr>`; }).join("")}
+   <tr class="sum"><td>Total income</td>${R.months.map(x => cell(x.income)).join("")}${cell(R.totInc)}</tr>
+   <tr class="hd"><td colspan="14">Expenses (deductible)</td></tr>
+   ${rows.map(r => { const v = monthly(r.key, R); return `<tr><td>${esc(r.name)}</td>${v.map(cell).join("")}${cell(r.total)}</tr>`; }).join("")}
+   <tr class="sum"><td>Total expenses</td>${R.months.map(x => cell(x.expenses)).join("")}${cell(R.totExp)}</tr>
+   <tr class="sum"><td>Net profit</td>${R.months.map(x => `<td class="${x.profit < 0 ? "t-short" : ""}">${mc(x.profit, 0)}</td>`).join("")}<td>${mc(R.profit, 0)}</td></tr>
+  </tbody></table></div></div>
+  <p class="foot">Bookkeeping tool, not tax advice. Line numbers follow IRS Schedule C (Form 1040). Check everything with your tax preparer before you file.</p>`;
+  const f = document.getElementById("qf");
+  f.onsubmit = e => { e.preventDefault(); S.qpaid[R.year] = [0, 1, 2, 3].map(i => Math.max(0, +f["q" + i].value || 0)); save(); render(); toast("Payments saved"); };
+  document.getElementById("csvS").onclick = () => exportCSV("schedule-c");
+  document.getElementById("csvP").onclick = () => exportCSV("profit-loss");
+  wire(); wireYear();
+}
+function monthly(key, R) {
+  const v = Array(12).fill(0);
+  if (key === "_miles") S.trips.forEach(t => { if (inYear(t.date)) v[monthOf(t.date) - 1] += tripDed(t); });
+  else if (key === "_home") v.fill(R.home);
+  else S.expenses.forEach(x => { if (inYear(x.date) && catOf(x.cat).key === key) v[monthOf(x.date) - 1] += deductible(x); });
+  return v;
+}
+
+function settings() {
+  const b = S.biz;
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then.</p>
+  <div class="grid g2e">
+   <div class="card"><h2>Your business</h2><form id="bizF">
+    <div class="two"><div class="field"><label for="bName">Business name</label><input id="bName" name="name" value="${esc(b.name)}" placeholder="Maple Street Studio"></div><div class="field"><label for="bYear">Tax year</label><input id="bYear" name="year" type="number" min="2000" max="2100" value="${b.year}"></div></div>
+    <div class="field"><label for="bMethod">Vehicle method</label><select id="bMethod" name="method">${opts([["Standard mileage", "Standard mileage (miles × IRS rate)"], ["Actual expenses", "Actual expenses (gas, repairs, insurance…)"]], b.method)}</select><small>Pick one per car. Parking and tolls count with either.</small></div>
+    <div class="three"><div class="field"><label for="bR1">Mileage rate ($/mile)</label><input id="bR1" name="rate1" type="number" step="0.001" min="0" value="${b.rate1}"></div><div class="field"><label for="bRd">New rate from</label><input id="bRd" name="rdate" type="date" value="${esc(b.rdate || "")}"></div><div class="field"><label for="bR2">New rate</label><input id="bR2" name="rate2" type="number" step="0.001" min="0" value="${b.rate2 ?? ""}"></div></div>
+    <small class="meta" style="display:block;margin:-6px 0 12px">2026: 72.5¢ through June 30 and 76¢ from July 1. Leave the new rate blank if it didn't change. Check irs.gov for your year.</small>
+    <div class="three"><div class="field"><label for="bSq">Home office (sq ft)</label><input id="bSq" name="sqft" type="number" min="0" step="1" value="${b.sqft}"><small>$5/sq ft, up to 300</small></div><div class="field"><label for="bPct">Set aside for taxes (%)</label><input id="bPct" name="pct" type="number" min="0" max="100" step="0.5" value="${b.pct}"></div><div class="field"><label for="bTerms">Invoice terms (days)</label><input id="bTerms" name="terms" type="number" min="0" step="1" value="${b.terms}"></div></div>
+    <div class="field"><label for="bCur">Currency symbol</label><input id="bCur" name="currency" maxlength="3" value="${esc(S.currency)}" style="max-width:120px"></div>
+    <button class="btn" id="saveBiz">Save</button></form></div>
+   <div>
+    <div class="card"><h2>Look</h2>
+     <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+     <div class="field"><span class="fl">Color</span><div class="chips">${[["forest", "Forest"], ["ocean", "Ocean"], ["honey", "Honey"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
+    <div class="card" style="margin-top:14px"><h2>For your tax preparer</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel, Google Sheets and most tax software.</p>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" id="cS">⬇ Schedule C CSV</button><button class="btn ghost small" id="cP">⬇ Profit &amp; Loss CSV</button><button class="btn ghost small" id="cI">⬇ Income CSV</button><button class="btn ghost small" id="cE">⬇ Expenses CSV</button><button class="btn ghost small" id="cM">⬇ Mileage CSV</button><button class="btn ghost small" id="cV">⬇ Invoices CSV</button></div></div>
+    <div class="card" style="margin-top:14px"><h2>Backup</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+     <h2 style="margin-top:20px">Start over</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>Category names</h2><p class="meta" style="margin:-6px 0 12px">Rename a category to suit your business. The Schedule C line stays the same.</p><form id="catF">
+   <div class="grid g2e" style="gap:0 18px">${CATS.map(c => `<div class="catrow"><span>${c.line}</span><input name="${c.key}" value="${esc(catName(c.key))}" aria-label="Name for line ${c.line}: ${esc(c.name)}" title="${esc(c.note)}"></div>`).join("")}${INC_CATS.map(c => `<div class="catrow"><span>${c.line}</span><input name="${c.key}" value="${esc(incName(c.key))}" aria-label="Income category, line ${c.line}"></div>`).join("")}</div>
+   <div class="actions"><button type="button" class="btn ghost" id="resetCats">Reset names</button><button class="btn" id="saveCats">Save names</button></div></form></div>
+  <p class="foot">Small Business Bookkeeping App v1.0 · © The Lemon Plans · Bookkeeping tool for your own business, not tax advice. Schedule C line numbers follow IRS Form 1040 Schedule C; check with your tax preparer.</p>`;
+  M().querySelectorAll("button[data-theme]").forEach(x => x.onclick = () => { S.theme = x.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(x => x.onclick = () => { S.accent = x.dataset.accent; save(); render(); });
+  const f = document.getElementById("bizF");
+  f.onsubmit = e => { e.preventDefault(); const n = k => f[k].value === "" ? "" : Number(f[k].value);
+    Object.assign(S.biz, { name: f.name.value.trim(), year: Math.round(n("year")) || today().getFullYear(), method: f.method.value, rate1: Math.max(0, n("rate1") || 0), rdate: f.rdate.value, rate2: f.rate2.value === "" ? "" : Math.max(0, n("rate2")), sqft: Math.max(0, n("sqft") || 0), pct: Math.min(100, Math.max(0, n("pct") || 0)), terms: Math.max(0, Math.round(n("terms") || 0)) });
+    S.currency = f.currency.value.trim() || "$"; save(); render(); toast("Saved"); };
+  const cf = document.getElementById("catF");
+  cf.onsubmit = e => { e.preventDefault(); S.names = {}; [...CATS, ...INC_CATS].forEach(c => { const v = cf[c.key].value.trim(); if (v && v !== c.name) S.names[c.key] = v; }); save(); render(); toast("Names saved"); };
+  document.getElementById("resetCats").onclick = () => { S.names = {}; save(); render(); toast("Names reset"); };
+  const csv = { cS: "schedule-c", cP: "profit-loss", cI: "income", cE: "expenses", cM: "mileage", cV: "invoices" };
+  Object.entries(csv).forEach(([id, k]) => document.getElementById(id).onclick = () => exportCSV(k));
+  document.getElementById("exp").onclick = () => { download("bookkeeping-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Bookkeeping backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with a sample year (Maple Street Studio, 2026). Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes all your income, expenses, trips and invoices from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n\r]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f2 = c => (c / 100).toFixed(2);
+const asc = list => list.slice().sort((a, b) => (a.date || a.issue).localeCompare(b.date || b.issue));
+function csvText(kind) {
+  const R = compute(), out = (head, rows) => [head, ...rows].map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
+  if (kind === "income") return out(["Date", "Client / source", "Description", "Category", "Schedule C line", "Amount", "Paid by", "Invoice #", "Notes", "In tax year"], asc(S.income).map(x => [x.date, x.source, x.desc, incName(x.cat), incCatOf(x.cat).line, f2(cents(x.amount)), x.method, x.inv, x.note, inYear(x.date) ? "Yes" : "No"]));
+  if (kind === "expenses") return out(["Date", "Vendor", "Description", "Category", "Schedule C line", "Amount", "Business use %", "Deductible", "Paid with", "Receipt", "Notes", "In tax year"], asc(S.expenses).map(x => [x.date, x.vendor, x.desc, catName(x.cat), catOf(x.cat).line, f2(cents(x.amount)), pctOf(x), f2(deductible(x)), x.method, x.receipt ? "Yes" : "No", x.note, inYear(x.date) ? "Yes" : "No"]));
+  if (kind === "mileage") return out(["Date", "Purpose", "From", "To", "Miles (one way)", "Round trip", "Total miles", "Rate", "Deduction", "Notes", "In tax year"], asc(S.trips).map(t => [t.date, t.purpose, t.from, t.to, t.miles, t.rt ? "Yes" : "No", tripMiles(t), rateFor(t.date).toFixed(3), f2(tripDed(t)), t.note, inYear(t.date) ? "Yes" : "No"]));
+  if (kind === "invoices") return out(["Invoice #", "Client", "Description", "Invoice date", "Due date", "Amount", "Paid on", "Status"], S.invoices.slice().sort((a, b) => a.issue.localeCompare(b.issue) || a.no.localeCompare(b.no)).map(v => [v.no, v.client, v.desc, v.issue, dueOf(v), f2(cents(v.amount)), v.paid || "", invStatus(v).t]));
+  if (kind === "profit-loss") {
+    const rows = [["Income"], ...INC_CATS.map(c => { const v = Array(12).fill(0); S.income.forEach(x => { if (inYear(x.date) && incCatOf(x.cat).key === c.key) v[monthOf(x.date) - 1] += cents(x.amount); }); return [incName(c.key), ...v.map(f2), f2(R.inc[c.key])]; }),
+      ["Total income", ...R.months.map(x => f2(x.income)), f2(R.totInc)], ["Expenses (deductible)"], ...expenseRows(R).map(r => [r.name, ...monthly(r.key, R).map(f2), f2(r.total)]),
+      ["Total expenses", ...R.months.map(x => f2(x.expenses)), f2(R.totExp)], ["Net profit", ...R.months.map(x => f2(x.profit)), f2(R.profit)]];
+    return out([String(R.year), ...MONTHS, "Year"], rows);
+  }
+  const L = R.lines, rows = [["1", "Gross receipts or sales"], ["4", "Cost of goods sold"], ["5", "Gross profit"], ["6", "Other income"], ["7", "Gross income"], ...PART2, ["28", "Total expenses"], ["29", "Tentative profit (or loss)"], ["30", "Business use of home (simplified method)"], ["31", "Net profit (or loss)"]].map(([ln, t]) => [ln, t, f2(L[ln])]);
+  rows.push([], ["Quarter", "Income period", "Profit", "Set aside", "Due date", "Paid", "Status"]);
+  R.quarters.forEach(x => rows.push([x.q, x.period, f2(x.profit), f2(x.aside), x.due, f2(x.paid), { paid: "Paid", past: "Past due", due: "Due", none: "Nothing to set aside" }[x.status]]));
+  rows.push([], ["", (S.biz.name || "My business") + " · tax year " + R.year + " · from The Lemon Plans Bookkeeping App. Not tax advice."]);
+  return out(["Line", "Schedule C (Form 1040)", "Amount"], rows);
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { download("bookkeeping-" + kind + "-" + S.biz.year + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=checkbox]),select"); first && first.focus();
+}
+const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+const num = (fd, k) => { const v = fd.get(k); return v === "" || v === null ? null : Number(v); };
+const dlist = (id, vals) => `<datalist id="${id}">${[...new Set(vals.filter(Boolean))].slice(0, 60).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`;
+function delWire(listKey, id, what) { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S[listKey] = S[listKey].filter(x => x.id !== id); save(); D().close(); render(); toast(what + " deleted"); }; }
+
+function incomeDlg(id, pre) {
+  const x = S.income.find(v => v.id === id) || Object.assign({ date: iso(today()), source: "", desc: "", cat: "services", amount: "", method: "", inv: "", note: "" }, pre || {});
+  openDlg(`<h2>${id ? "Edit income" : "Add income"}</h2>
+   <div class="two"><div class="field"><label>Date received</label><input name="date" type="date" required value="${x.date}"></div><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" inputmode="decimal" required value="${x.amount}" style="font-weight:800"><small>A refund you gave: negative</small></div></div>
+   <div class="field"><label>Client / source</label><input name="source" required list="dlSrc" value="${esc(x.source)}" placeholder="Client name, Etsy, Stripe…">${dlist("dlSrc", S.income.map(v => v.source))}</div>
+   <div class="two"><div class="field"><label>Category</label><select name="cat">${opts(INC_CATS.map(c => [c.key, incName(c.key) + " (line " + c.line + ")"]), x.cat)}</select></div><div class="field"><label>Paid by</label><select name="method"><option value=""></option>${opts(INC_METHODS.map(v => [v, v]), x.method)}</select></div></div>
+   <div class="two"><div class="field"><label>Description</label><input name="desc" value="${esc(x.desc)}" placeholder="Logo package"></div><div class="field"><label>Invoice # (optional)</label><input name="inv" value="${esc(x.inv)}"></div></div>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: x.id || uid(), date: fd.get("date"), source: fd.get("source").trim(), desc: fd.get("desc").trim(), cat: fd.get("cat"), amount: Math.round((num(fd, "amount") || 0) * 100) / 100, method: fd.get("method"), inv: fd.get("inv").trim(), note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    if (id) S.income[S.income.findIndex(v => v.id === id)] = o; else S.income.push(o);
+    toast(id ? "Income updated" : "Income added" + (inYear(o.date) ? "" : " (not in tax year " + S.biz.year + ")"));
+  }, () => delWire("income", id, "Income"));
+}
+function expenseDlg(id) {
+  const x = S.expenses.find(v => v.id === id) || { date: iso(today()), vendor: "", desc: "", cat: "supplies", amount: "", pct: null, method: "", receipt: true, note: "" };
+  openDlg(`<h2>${id ? "Edit expense" : "Add expense"}</h2>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" required value="${x.date}"></div><div class="field"><label>Amount paid</label><input name="amount" type="number" step="0.01" inputmode="decimal" required value="${x.amount}" style="font-weight:800"></div></div>
+   <div class="field"><label>Vendor</label><input name="vendor" required list="dlVen" value="${esc(x.vendor)}" placeholder="Adobe, Staples, Delta…">${dlist("dlVen", S.expenses.map(v => v.vendor))}</div>
+   <div class="field"><label>Category (Schedule C line)</label><select name="cat" id="ecat">${opts(CATS.map(c => [c.key, catName(c.key) + " · line " + c.line]), x.cat)}</select><small id="catNote"></small></div>
+   <div class="two"><div class="field"><label>Business use %</label><input name="pct" type="number" min="0" max="100" step="1" value="${x.pct ?? ""}" placeholder="100"><small>Blank = 100%. Phone used half for work: 50</small></div><div class="field"><label>Paid with</label><select name="method"><option value=""></option>${opts(EXP_METHODS.map(v => [v, v]), x.method)}</select></div></div>
+   <div class="field"><label>Description</label><input name="desc" value="${esc(x.desc)}"></div>
+   <label class="tick"><input type="checkbox" name="receipt" ${x.receipt ? "checked" : ""}> I have the receipt</label>
+   <p class="hint" id="dedPrev" style="margin:0 0 10px"></p>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const p = num(fd, "pct"), o = { id: x.id || uid(), date: fd.get("date"), vendor: fd.get("vendor").trim(), desc: fd.get("desc").trim(), cat: fd.get("cat"), amount: Math.round((num(fd, "amount") || 0) * 100) / 100, pct: p === null || p === 100 ? null : Math.min(100, Math.max(0, p)), method: fd.get("method"), receipt: fd.get("receipt") === "on", note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    if (id) S.expenses[S.expenses.findIndex(v => v.id === id)] = o; else S.expenses.push(o);
+    toast(id ? "Expense updated" : "Expense added" + (inYear(o.date) ? "" : " (not in tax year " + S.biz.year + ")"));
+  }, () => {
+    const f = F(), p = document.getElementById("dedPrev"), n = document.getElementById("catNote");
+    const chk = () => { const c = catOf(f.cat.value), e = { amount: f.amount.value, pct: f.pct.value === "" ? null : f.pct.value, cat: f.cat.value }; n.textContent = c.note;
+      p.innerHTML = c.key === "car" && S.biz.method !== "Actual expenses" ? "⚠ You use standard mileage, so car costs aren't counted (only miles). Switch the vehicle method in Settings." : `Deductible: <b>${mc(deductible(e))}</b> on Schedule C line ${c.line}`; };
+    ["amount", "pct", "cat"].forEach(k => f[k].oninput = chk); f.cat.onchange = chk; chk();
+    delWire("expenses", id, "Expense");
+  });
+}
+function tripDlg(id) {
+  const x = S.trips.find(v => v.id === id) || { date: iso(today()), purpose: "", from: (S.trips[S.trips.length - 1] || {}).from || "", to: "", miles: "", rt: true, note: "" };
+  openDlg(`<h2>${id ? "Edit trip" : "Add a trip"}</h2>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" required value="${x.date}"></div><div class="field"><label>Miles (one way)</label><input name="miles" type="number" step="0.1" min="0.1" inputmode="decimal" required value="${x.miles}" style="font-weight:800"></div></div>
+   <label class="tick"><input type="checkbox" name="rt" ${x.rt ? "checked" : ""}> Round trip (counts the miles twice)</label>
+   <div class="field"><label>Business purpose</label><input name="purpose" required list="dlPur" value="${esc(x.purpose)}" placeholder="Client meeting, supplies run…">${dlist("dlPur", S.trips.map(v => v.purpose))}</div>
+   <div class="two"><div class="field"><label>From</label><input name="from" list="dlPl" value="${esc(x.from)}"></div><div class="field"><label>To</label><input name="to" list="dlPl" value="${esc(x.to)}">${dlist("dlPl", S.trips.flatMap(v => [v.from, v.to]))}</div></div>
+   <p class="hint" id="tPrev" style="margin:0 0 10px"></p>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: x.id || uid(), date: fd.get("date"), purpose: fd.get("purpose").trim(), from: fd.get("from").trim(), to: fd.get("to").trim(), miles: Math.round((num(fd, "miles") || 0) * 10) / 10, rt: fd.get("rt") === "on", note: fd.get("note").trim() };
+    if (!o.miles) { toast("Enter the miles"); return false; }
+    if (id) S.trips[S.trips.findIndex(v => v.id === id)] = o; else S.trips.push(o);
+    toast(id ? "Trip updated" : "Trip added");
+  }, () => {
+    const f = F(), p = document.getElementById("tPrev"), chk = () => { const t = { miles: +f.miles.value || 0, rt: f.rt.checked, date: f.date.value }; p.innerHTML = `${fmtMiles(tripMiles(t))} miles × ${(rateFor(t.date) * 100).toFixed(1).replace(/\.0$/, "")}¢ = <b>${mc(tripDed(t))}</b>`; };
+    f.miles.oninput = chk; f.rt.onchange = chk; f.date.oninput = chk; chk();
+    delWire("trips", id, "Trip");
+  });
+}
+function nextInvNo() {
+  const nums = S.invoices.map(v => /^(.*?)(\d+)$/.exec(v.no || "")).filter(Boolean);
+  if (!nums.length) return "INV-1001";
+  const last = nums.sort((a, b) => +a[2] - +b[2])[nums.length - 1];
+  return last[1] + String(+last[2] + 1).padStart(last[2].length, "0");
+}
+function invoiceDlg(id) {
+  const x = S.invoices.find(v => v.id === id) || { no: nextInvNo(), client: "", desc: "", issue: iso(today()), amount: "", paid: null };
+  openDlg(`<h2>${id ? "Edit invoice" : "New invoice"}</h2>
+   <div class="two"><div class="field"><label>Invoice #</label><input name="no" required value="${esc(x.no)}"></div><div class="field"><label>Invoice date</label><input name="issue" type="date" required value="${x.issue}"><small id="duePrev"></small></div></div>
+   <div class="field"><label>Client</label><input name="client" required list="dlCl" value="${esc(x.client)}">${dlist("dlCl", [...S.invoices.map(v => v.client), ...S.income.map(v => v.source)])}</div>
+   <div class="two"><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" min="0" inputmode="decimal" required value="${x.amount}" style="font-weight:800"></div><div class="field"><label>Paid on (blank = unpaid)</label><input name="paid" type="date" value="${x.paid || ""}"></div></div>
+   <div class="field"><label>Description</label><input name="desc" value="${esc(x.desc)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: x.id || uid(), no: fd.get("no").trim(), client: fd.get("client").trim(), desc: fd.get("desc").trim(), issue: fd.get("issue"), amount: Math.round((num(fd, "amount") || 0) * 100) / 100, paid: fd.get("paid") || null };
+    if (id) S.invoices[S.invoices.findIndex(v => v.id === id)] = o; else S.invoices.push(o);
+    toast(id ? "Invoice updated" : "Invoice " + o.no + " added");
+  }, () => {
+    const f = F(), p = document.getElementById("duePrev"), chk = () => { p.textContent = f.issue.value ? "Due " + fmtD(parse(dueOf({ issue: f.issue.value }))) + " (" + S.biz.terms + " days)" : ""; };
+    f.issue.oninput = chk; chk(); delWire("invoices", id, "Invoice");
+  });
+}
+function paidDlg(id) {
+  const v = S.invoices.find(x => x.id === id), has = S.income.some(x => x.inv && x.inv === v.no);
+  openDlg(`<h2>Mark ${esc(v.no)} paid</h2><p class="sub">${esc(v.client)} · ${mc(cents(v.amount))}</p>
+   <div class="two"><div class="field"><label>Paid on</label><input name="paid" type="date" required value="${iso(today())}"></div><div class="field"><label>Paid by</label><select name="method"><option value=""></option>${opts(INC_METHODS.map(x => [x, x]), "Bank transfer")}</select></div></div>
+   <label class="tick"><input type="checkbox" name="addinc" ${has ? "" : "checked"}> Also add ${mc(cents(v.amount))} to Income (Services)</label>
+   ${has ? `<p class="hint" style="margin:0 0 10px">Income already has a payment with ${esc(v.no)}.</p>` : ""}
+   ${btns(false)}`, fd => {
+    v.paid = fd.get("paid");
+    if (fd.get("addinc") === "on") S.income.push({ id: uid(), date: v.paid, source: v.client, desc: v.desc, cat: "services", amount: v.amount, method: fd.get("method"), inv: v.no, note: "" });
+    toast(v.no + " paid" + (fd.get("addinc") === "on" ? " · added to Income" : ""));
+  });
+}
+function addChooser() {
+  openDlg(`<h2>Add</h2><div class="grid g2e" style="margin-bottom:6px">${[["inc", "↓ Income", "a payment you received"], ["exp", "↑ Expense", "something you paid for"], ["trip", "⛟ Trip", "business miles"], ["inv", "▤ Invoice", "a bill you sent"]].map(([k, t, s]) => `<button type="button" class="card" data-add="${k}" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><div style="font-weight:800;font-size:17px">${t}</div><div class="meta">${s}</div></button>`).join("")}</div><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button></div>`, () => false,
+    () => F().querySelectorAll("[data-add]").forEach(b => b.onclick = () => { D().close(); ({ inc: incomeDlg, exp: expenseDlg, trip: tripDlg, inv: invoiceDlg })[b.dataset.add](); }));
+}
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  M().querySelectorAll("[data-editinc]").forEach(b => b.onclick = () => incomeDlg(b.dataset.editinc));
+  M().querySelectorAll("[data-editexp]").forEach(b => b.onclick = () => expenseDlg(b.dataset.editexp));
+  M().querySelectorAll("[data-edittrip]").forEach(b => b.onclick = () => tripDlg(b.dataset.edittrip));
+  M().querySelectorAll("[data-editinv]").forEach(b => b.onclick = () => invoiceDlg(b.dataset.editinv));
+  M().querySelectorAll("[data-go]").forEach(b => b.onclick = () => { const f = b.dataset.filter; if (f === "missing") EF = { m: "", cat: "", missing: true, q: "" }; if (f === "overdue") VF = "overdue"; go(b.dataset.go); });
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => ({ income: incomeDlg, expenses: expenseDlg, mileage: tripDlg, invoices: invoiceDlg })[VIEW]?.() ?? addChooser();
+if (DEMO) {
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
+window.__lp = { compute, deductible, tripDed, tripMiles, rateFor, homeMonthly, invStatus, dueOf, csvText, sample, rh, get S() { return S; }, set S(v) { S = v; } };
+go("home");
+</script>
+</body>
+</html>
