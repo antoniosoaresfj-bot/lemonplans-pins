@@ -175,7 +175,11 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .gtools{margin-bottom:12px}.gtools .chip{display:inline-flex;align-items:center;gap:2px}
 .mrows{display:grid;gap:6px}.mrow{display:flex;gap:6px;align-items:center}.mrow input{flex:1}
 .rlist .row,.hlist .row{padding:9px 0}.rlist .pill{flex:none}
-.wrapbtns .btn{white-space:normal}.segw label{white-space:normal}
+.wrapbtns .btn{white-space:normal}
+.isdemo .planbox::after,.isdemo .tables::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='280'%3E%3Ctext x='180' y='115' transform='rotate%28-28 180 115%29' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='21' font-weight='700' fill='%23A4506A' fill-opacity='.24'%3EDEMO %C2%B7 thelemonplans.com%3C/text%3E%3C/svg%3E");background-size:480px 280px}
+.isdemo .tables{position:relative}
+:root[data-theme="dark"].isdemo .planbox::after,:root[data-theme="dark"].isdemo .tables::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='280'%3E%3Ctext x='180' y='115' transform='rotate%28-28 180 115%29' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='21' font-weight='700' fill='%23E8A2B8' fill-opacity='.24'%3EDEMO %C2%B7 thelemonplans.com%3C/text%3E%3C/svg%3E")}
+.locknote{color:var(--muted)}.segw label{white-space:normal}
 .autores{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 12px;margin:0 0 10px;border-radius:12px;background:var(--goodbg);color:var(--good);font-weight:650;font-size:14px}.autores .grow{flex:1;min-width:0}
 .el.autofill .tb{fill:var(--goodbg)}.tcard.autofill{box-shadow:0 0 0 2px var(--good)}
 .ppool input{width:100%;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);margin-bottom:10px}
@@ -527,6 +531,19 @@ function seating() {
   const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table)).reduce((s, g) => s + people(g), 0);
   return { seats, seated, need, over: S.tables.filter(t => tableSeated(t) > (Number(t.seats) || 0)).length, used: S.tables.filter(t => tableSeated(t) > 0).length };
 }
+/* ---------- demo limits (the full app has none) ---------- */
+// The demo can't become the real plan: sample guest, group, table and couple names are locked, at most 10 new guests
+const SAMPLE_G = DEMO ? new Set(sample().guests.map(g => g.id)) : new Set(), SAMPLE_H = DEMO ? new Set(sample().households.map(h => h.id)) : new Set(), DEMO_MAX = 10;
+const lockedG = g => DEMO && !!g && SAMPLE_G.has(g.id), lockedH = h => DEMO && !!h && SAMPLE_H.has(h.id);
+const demoLeft = () => DEMO_MAX - S.guests.filter(g => !SAMPLE_G.has(g.id)).length;
+function limitDlg() {
+  const left = Math.max(0, demoLeft()); if (D().open) D().close();
+  openDlg(`<h2>Demo limit</h2><p class="sub">The demo is limited to 10 new guests — get the full app to add your whole list.${left ? ` You can add ${plural(left, "more guest")} here.` : ""}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Close</button><a class="btn" id="limitBuy" href="${BUY_URL}" target="_blank" rel="noopener">Get the full app</a></div>`, () => false);
+}
+// true when n more guests fit in the demo (always true in the full app)
+function demoRoom(n) { if (!DEMO || n <= demoLeft()) return true; limitDlg(); return false; }
+const lockNote = `<small class="locknote">Editing names is in the full app</small>`;
+
 /* ---------- groups (households / parties) and seating rules ---------- */
 const hhOf = id => S.households.find(h => h.id === id);
 const gOf = id => S.guests.find(g => g.id === id);
@@ -741,11 +758,11 @@ function render() {
 }
 
 function detailsForm(id) {
-  return `<form id="${id}"><div class="two"><div class="field"><label for="${id}p1">Partner 1</label><input id="${id}p1" name="p1" value="${esc(S.p1)}" placeholder="Emma"></div><div class="field"><label for="${id}p2">Partner 2</label><input id="${id}p2" name="p2" value="${esc(S.p2)}" placeholder="James"></div></div>
+  return `<form id="${id}"><div class="two"><div class="field"><label for="${id}p1">Partner 1</label><input id="${id}p1" name="p1" value="${esc(S.p1)}" placeholder="Emma"${DEMO ? " readonly" : ""}>${DEMO ? lockNote : ""}</div><div class="field"><label for="${id}p2">Partner 2</label><input id="${id}p2" name="p2" value="${esc(S.p2)}" placeholder="James"${DEMO ? " readonly" : ""}>${DEMO ? lockNote : ""}</div></div>
    <div class="three"><div class="field"><label for="${id}date">Wedding date</label><input id="${id}date" name="date" type="date" value="${esc(S.date)}"></div><div class="field"><label for="${id}budget">Total budget</label><input id="${id}budget" name="budget" type="number" min="0" step="0.01" inputmode="decimal" value="${S.budget || ""}" placeholder="30000"></div><div class="field"><label for="${id}goal">Guest count goal</label><input id="${id}goal" name="guestGoal" type="number" min="0" step="1" value="${S.guestGoal || ""}" placeholder="120"></div></div>
    <button class="btn" id="${id}save">Save</button></form>`;
 }
-function readDetails(f) { S.p1 = f.p1.value.trim(); S.p2 = f.p2.value.trim(); S.date = f.date.value; S.budget = Math.max(0, +f.budget.value || 0); S.guestGoal = Math.max(0, Math.round(+f.guestGoal.value || 0)); }
+function readDetails(f) { if (!DEMO) { S.p1 = f.p1.value.trim(); S.p2 = f.p2.value.trim(); } S.date = f.date.value; S.budget = Math.max(0, +f.budget.value || 0); S.guestGoal = Math.max(0, Math.round(+f.guestGoal.value || 0)); }
 
 function welcome() {
   M().innerHTML = `<h1>Let's plan your wedding 💍</h1><p class="sub">Budget, vendors, guests, seating and your checklist, all in one place. Start with the basics.</p>
@@ -859,7 +876,7 @@ function guestsV() {
   const h = headcount(), m = meals();
   const list = S.guests.filter(g => (!GF.rsvp || g.rsvp === GF.rsvp) && (!GF.side || g.side === GF.side) && (!GF.hh || (GF.hh === "-" ? !g.hh : g.hh === GF.hh)) && (!GF.q || (g.name + " " + g.group + " " + (hhOf(g.hh) ? hhOf(g.hh).name : "")).toLowerCase().includes(GF.q.toLowerCase())));
   const cl = clashes(), mk = clashMarks(cl), inRule = new Set(S.rules.flatMap(r => r.m));
-  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button><button class="btn ghost" id="addH">+ Add a family</button><button class="btn" id="addG">+ Add a guest</button></div></div>
+  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button>${DEMO && S.guests.some(g => SAMPLE_G.has(g.id)) ? `<button class="btn ghost" id="clearSample">Clear sample guests</button>` : ""}<button class="btn ghost" id="addH">+ Add a family</button><button class="btn" id="addG">+ Add a guest</button></div></div>
   <div class="grid g4" style="margin-top:12px">
    <div class="card"><div class="lab">Attending</div><div class="mid t-ok" id="gAtt">${h.attending}</div><div class="meta">${S.guestGoal ? Math.round(h.attending / S.guestGoal * 100) + "% of your goal" : "people"}</div></div>
    <div class="card"><div class="lab">Waiting to hear</div><div class="mid" id="gWait">${h.awaiting}</div><div class="meta">invited, no reply yet</div></div>
@@ -883,6 +900,8 @@ function guestsV() {
   document.getElementById("gs").onchange = e => { GF.side = e.target.value; render(); };
   const gh = document.getElementById("gh"); if (gh) gh.onchange = e => { GF.hh = e.target.value; render(); };
   document.getElementById("addH").onclick = () => groupDlg();
+  const cs = document.getElementById("clearSample"); if (cs) cs.onclick = () => confirmDlg("Clear the sample guests?", "This removes the sample guests from the demo so you can try your own (up to 10). Reload the page to get them back.", "Clear sample guests", () => {
+    const n = S.guests.filter(g => SAMPLE_G.has(g.id)).length; S.guests = S.guests.filter(g => !SAMPLE_G.has(g.id)); S.households = S.households.filter(h => !SAMPLE_H.has(h.id) || membersOf(h.id).length); tidyRules(S); AUTO = null; save(); render(); toast(plural(n, "sample guest") + " cleared"); });
   document.getElementById("manageH").onclick = () => groupsDlg();
   document.getElementById("rulesBtn").onclick = () => rulesDlg();
   M().querySelectorAll("[data-edith]").forEach(b => b.onclick = () => groupDlg(b.dataset.edith));
@@ -1585,10 +1604,11 @@ function payDlg(id, vendor) {
   }, () => delBtn(() => { S.pays = S.pays.filter(x => x.id !== id); save(); D().close(); render(); toast("Payment deleted"); }));
 }
 function guestDlg(id) {
+  if (!id && DEMO && demoLeft() <= 0) return limitDlg();
   const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "", hh: null };
   const groups = [...new Set(["Family", "Friends", "Work", ...S.guests.map(x => x.group).filter(Boolean)])];
   openDlg(`<h2>${id ? "Edit guest" : "Add a guest"}</h2>
-   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"></div>
+   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"${lockedG(g) ? " readonly" : ""}>${lockedG(g) ? `<small class="locknote">Editing guest names is in the full app</small>` : ""}</div>
    <div class="field"><span class="fl">Side</span><div class="seg">${["p1", "p2", "both"].map(s => `<label><input type="radio" name="side" value="${s}" ${g.side === s ? "checked" : ""}>${esc(sideName(s))}</label>`).join("")}</div></div>
    <div class="two"><div class="field"><label for="gHh">Group (family / party)</label><select id="gHh" name="hh"><option value="">No group</option>${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}" ${g.hh === h.id ? "selected" : ""}>${esc(h.name)}</option>`).join("")}<option value="__new">+ New group…</option></select></div><div class="field"><label for="gHhNew">New group name</label><input id="gHhNew" name="hhnew" placeholder="The Carter family" disabled></div></div>
    <div class="three"><div class="field"><label>Category</label><input name="group" list="grpList" value="${esc(g.group)}" placeholder="Family"><datalist id="grpList">${groups.map(x => `<option value="${esc(x)}">`).join("")}</datalist></div><div class="field"><label>Party size</label><input name="size" type="number" min="1" max="20" step="1" value="${people(g)}"></div>
@@ -1598,7 +1618,8 @@ function guestDlg(id) {
    <div class="two"><div class="field"><label for="gApart">Keep apart from</label><select id="gApart" name="apart"><option value="">Nobody</option>${S.households.length ? `<optgroup label="Groups">${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}">${esc(h.name)}</option>`).join("")}</optgroup>` : ""}<optgroup label="Guests">${S.guests.filter(x => x.id !== g.id).sort((a, b) => a.name.localeCompare(b.name)).map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</optgroup></select>${id && ruleNotes(g, clashes()) ? `<small>${esc(ruleNotes(g, clashes()))}</small>` : ""}</div><div class="field"><span class="fl">Auto-seat</span><label class="checkline"><input type="checkbox" name="head" ${g.head ? "checked" : ""}> Head table</label></div></div>
    <div class="two"><div class="field"><label>Dietary needs</label><input name="diet" value="${esc(g.diet)}" placeholder="Gluten-free, nut allergy…"></div><div class="field"><label>Address / notes</label><input name="notes" value="${esc(g.notes)}" placeholder="Plus-one, address…"></div></div>
    ${btns(!!id)}`, fd => {
-    const o = Object.assign({}, g, { id: g.id || uid(), name: fd.get("name").trim() || "Guest", side: fd.get("side") || "both", group: fd.get("group").trim(), size: Math.max(1, Math.min(20, Math.round(+fd.get("size") || 1))), rsvp: fd.get("rsvp"),
+    if (!id && !demoRoom(1)) return false;
+    const o = Object.assign({}, g, { id: g.id || uid(), name: lockedG(g) ? g.name : fd.get("name").trim() || "Guest", side: fd.get("side") || "both", group: fd.get("group").trim(), size: Math.max(1, Math.min(20, Math.round(+fd.get("size") || 1))), rsvp: fd.get("rsvp"),
       meal: fd.get("meal") || "", table: fd.get("table") || null, gift: fd.get("gift").trim(), thanks: fd.get("thanks") === "on", notes: fd.get("notes").trim(), diet: fd.get("diet").trim() });
     if (fd.get("head") === "on") o.head = true; else delete o.head;
     const ap = fd.get("apart") || "";
@@ -1655,6 +1676,7 @@ function bulkDlg() {
    ${btns(false)}`, fd => {
     const rows = parseList(fd.get("names")), all = String(fd.get("hh") || "").trim();
     if (!rows.length) { toast("Type at least one name"); return false; }
+    if (!demoRoom(rows.length)) return false;
     const made = new Set(S.households.map(h => h.id));
     rows.forEach(([n, grp]) => { const gname = grp || all; S.guests.push(newGuest(n, { side: fd.get("side"), group: fd.get("group").trim(), rsvp: fd.get("rsvp"), hh: gname ? hhByName(gname, true).id : null })); });
     const ng = S.households.filter(h => !made.has(h.id)).length;
@@ -1668,9 +1690,9 @@ function bulkDlg() {
 // add or take out members (they stay on the guest list), or ungroup it (everyone stays, the group goes)
 function groupDlg(id) {
   const h = hhOf(id), mem = h ? membersOf(id) : [], loose = S.guests.filter(g => !g.hh).sort((a, b) => a.name.localeCompare(b.name)), first = mem[0];
-  const row = (name, gid) => `<div class="mrow"${gid ? ` data-gid="${gid}"` : ""}><input name="m" value="${esc(name)}" placeholder="Name" aria-label="Member name" autocomplete="off"><button type="button" class="icon" data-rm aria-label="${gid ? "Take out of the group" : "Remove this row"}" title="${gid ? "Take out of the group (stays on your guest list)" : "Remove"}">✕</button></div>`;
+  const row = (name, gid) => `<div class="mrow"${gid ? ` data-gid="${gid}"` : ""}><input name="m" value="${esc(name)}" placeholder="Name" aria-label="Member name" autocomplete="off"${lockedG(gOf(gid)) ? " readonly" : ""}><button type="button" class="icon" data-rm aria-label="${gid ? "Take out of the group" : "Remove this row"}" title="${gid ? "Take out of the group (stays on your guest list)" : "Remove"}">✕</button></div>`;
   openDlg(`<h2>${h ? "Edit group" : "Add a family or group"}</h2><p class="sub" style="margin-bottom:12px">${h ? "Rename it, add people or take them out. Taking someone out keeps them on your guest list." : "Everyone in a group can be seated together with one drag. Paste several names at once, one per line."}</p>
-   <div class="field"><label for="hName">Group name</label><input id="hName" name="hname" required value="${esc(h ? h.name : "")}" placeholder="The Smith family"></div>
+   <div class="field"><label for="hName">Group name</label><input id="hName" name="hname" required value="${esc(h ? h.name : "")}" placeholder="The Smith family"${lockedH(h) ? " readonly" : ""}>${lockedH(h) || mem.some(lockedG) ? lockNote : ""}</div>
    <div class="field"><span class="fl">Members</span><div class="mrows" id="hRows">${mem.map(g => row(g.name, g.id)).join("") || row("") + row("") + row("")}</div></div>
    <div class="actions" style="justify-content:flex-start;margin:-6px 0 14px"><button type="button" class="btn small ghost" id="addM">+ Add member</button></div>
    ${loose.length ? `<div class="field"><label for="hAdd">Add someone already on your list</label><select id="hAdd"><option value="">Choose a guest…</option>${loose.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join("")}</select></div>` : ""}
@@ -1681,9 +1703,10 @@ function groupDlg(id) {
     const other = hhByName(name); if (other && other !== h) { toast("There's already a group called " + other.name); return false; }
     const rows = [...F().querySelectorAll(".mrow")].map(r => [r.querySelector("input").value.trim(), r.dataset.gid || ""]).filter(([n, gid]) => n || gid);
     if (!rows.some(([n]) => n)) { toast("Add at least one name"); return false; }
-    const grp = h || { id: uid(), name }; grp.name = name; if (!h) S.households.push(grp);
+    if (!demoRoom(rows.filter(([n, gid]) => n && !gOf(gid)).length)) return false;
+    const grp = h || { id: uid(), name }; if (!lockedH(grp)) grp.name = name; if (!h) S.households.push(grp);
     const keep = new Set();
-    rows.forEach(([n, gid]) => { const g = gid && gOf(gid); if (g) { if (n) g.name = n; g.hh = grp.id; keep.add(g.id); } else if (n) { const ng = newGuest(n, { side: fd.get("side"), group: String(fd.get("group") || "").trim(), rsvp: fd.get("rsvp"), hh: grp.id }); S.guests.push(ng); keep.add(ng.id); } });
+    rows.forEach(([n, gid]) => { const g = gid && gOf(gid); if (g) { if (n && !lockedG(g)) g.name = n; g.hh = grp.id; keep.add(g.id); } else if (n) { const ng = newGuest(n, { side: fd.get("side"), group: String(fd.get("group") || "").trim(), rsvp: fd.get("rsvp"), hh: grp.id }); S.guests.push(ng); keep.add(ng.id); } });
     mem.forEach(g => { if (!keep.has(g.id)) g.hh = null; });
     const n = membersOf(grp.id).length;
     toast(h ? "Group updated · " + plural(n, "member") : `${name} added · ${plural(n, "member")}`);
@@ -1741,11 +1764,11 @@ function rulesDlg() {
 function tableDlg(id) {
   const t = tabOf(id) || { name: "", seats: 8, shape: "round", rot: 0 };
   openDlg(`<h2>${id ? "Edit table " + tableNo(id) : "Add a table"}</h2>
-   <div class="two"><div class="field"><label for="tdName">Name (optional)</label><input id="tdName" name="name" value="${esc(t.name)}" placeholder="Close family, Head table…"></div><div class="field"><label for="tdSeats">Seats</label><input id="tdSeats" name="seats" type="number" min="1" max="24" step="1" required value="${t.seats}"></div></div>
+   <div class="two"><div class="field"><label for="tdName">Name (optional)</label><input id="tdName" name="name" value="${esc(t.name)}" placeholder="Close family, Head table…"${DEMO ? " readonly" : ""}>${DEMO ? lockNote : ""}</div><div class="field"><label for="tdSeats">Seats</label><input id="tdSeats" name="seats" type="number" min="1" max="24" step="1" required value="${t.seats}"></div></div>
    <div class="two"><div class="field"><label for="tdShape">Shape</label><select id="tdShape" name="shape">${Object.entries(SHAPES).map(([k, v]) => `<option value="${k}" ${t.shape === k ? "selected" : ""}>${v}</option>`).join("")}</select></div><div class="field"><label for="tdRot">Turn (degrees)</label><input id="tdRot" name="rot" type="number" min="-360" max="360" step="15" value="${Math.round(t.rot || 0)}"></div></div>
    <p class="meta" style="margin:-4px 0 10px">Round: 6 seats fit a 48" table, 8 a 60", 10 a 72". Banquet tables seat both long sides; a head table seats one side.</p>
    ${btns(!!id)}`, fd => {
-    const o = { name: fd.get("name").trim(), seats: Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8))), shape: SHAPES[fd.get("shape")] ? fd.get("shape") : "round", rot: (((Math.round(+fd.get("rot") || 0)) % 360) + 360) % 360 };
+    const o = { name: DEMO ? t.name : fd.get("name").trim(), seats: Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8))), shape: SHAPES[fd.get("shape")] ? fd.get("shape") : "round", rot: (((Math.round(+fd.get("rot") || 0)) % 360) + 360) % 360 };
     if (id) Object.assign(t, o);
     else { const n = Object.assign({ id: uid() }, o), b = bboxOf(n), [cx, cy] = viewCenter(); [n.x, n.y] = findFree(S, b.w, b.h, VIEW === "seating" && SEATMODE === "plan" ? cx : null, cy); S.tables.push(n); }
     toast(id ? "Table updated" : "Table " + S.tables.length + " added");
@@ -1845,7 +1868,7 @@ function wire() {
 document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
 document.getElementById("fab").onclick = () => VIEW === "guests" || VIEW === "seating" ? guestDlg() : VIEW === "checklist" ? taskDlg() : payDlg();
 if (DEMO) {
-  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  document.getElementById("demoBar").hidden = false; document.documentElement.classList.add("isdemo"); document.getElementById("buyLink").href = BUY_URL;
   // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV/print are only in the full app.
   try { localStorage.removeItem(KEY); } catch (e) {}
   save = function () {};
@@ -1856,7 +1879,7 @@ if (DEMO) {
     }
   }, true);
 }
-window.__lp = { autoSeat, runAuto, get AUTO() { return AUTO; }, placeUI, clashes, wouldClash, ruleNotes, parseList, listFromFile, catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
+window.__lp = { demoLeft, autoSeat, runAuto, get AUTO() { return AUTO; }, placeUI, clashes, wouldClash, ruleNotes, parseList, listFromFile, catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
 go("home");
 </script>
 </body>
