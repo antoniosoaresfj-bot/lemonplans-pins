@@ -178,7 +178,7 @@ const fmtM = d => d.toLocaleDateString("en-US", { month: "short", year: "numeric
 
 /* ---------- state ---------- */
 function blank() {
-  return { v: 1, app: "savings-goals", currency: "$", theme: "auto", accent: "lagoon", freq: "biweekly", goals: [], tx: [],
+  return { v: 1, app: "savings-goals", currency: "$", theme: "light", accent: "lagoon", freq: "biweekly", goals: [], tx: [],
     c52: { step: 1, reverse: false, done: [] }, c100: { mult: 1, done: [] },
     ef: { months: 6, goal: null, costs: [["Rent or mortgage", 0], ["Utilities", 0], ["Groceries", 0], ["Insurance", 0], ["Transportation", 0], ["Phone & internet", 0], ["Minimum debt payments", 0], ["Other must-pays", 0]].map(([name, amount]) => ({ name, amount })) } };
 }
@@ -290,7 +290,9 @@ function ringSVG(pct, big, small, size = 132) {
 
 /* ---------- theme ---------- */
 function applyTheme() {
-  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  // the app starts light. "auto" was the old default, so it becomes light; "device" is the Auto chosen in Settings.
+  if (!["light", "dark", "device"].includes(S.theme)) S.theme = "light";
+  const dark = S.theme === "dark" || (S.theme === "device" && matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   document.documentElement.dataset.accent = S.accent;
   paintThemeToggle();
@@ -501,7 +503,7 @@ function settings() {
   M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this device. Download a backup now and then.</p>
   <div class="grid g2e">
    <div class="card"><h2>Look</h2>
-    <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
     <div class="field"><span class="fl">Color</span><div class="chips">${[["lagoon", "Lagoon"], ["honey", "Honey"], ["rose", "Rose"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
     <form id="prefF"><div class="two"><div class="field"><label>I get paid</label><select name="freq">${Object.entries(FREQ).map(([k, t]) => `<option value="${k}" ${S.freq === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
      <div class="field"><label>Currency symbol</label><input name="currency" maxlength="3" value="${esc(S.currency)}"></div></div>

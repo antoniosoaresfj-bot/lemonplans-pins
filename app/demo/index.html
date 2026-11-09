@@ -146,7 +146,7 @@ const fmtDW = d => d.toLocaleDateString("en-US", { weekday: "short", month: "sho
 
 /* ---------- state ---------- */
 function blank() {
-  return { v: 1, setup: false, currency: "$", theme: "auto", accent: "green",
+  return { v: 1, setup: false, currency: "$", theme: "light", accent: "green",
     pay: { freq: "biweekly", next: iso(addDays(today(), 7)), amount: 0, semi2: 15 },
     savingsPer: 0, bills: [], tx: [], goals: [], paid: {}, actual: {} };
 }
@@ -260,7 +260,9 @@ function toast(m) { const t = document.getElementById("toast"); t.textContent = 
 
 /* ---------- theme ---------- */
 function applyTheme() {
-  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  // the app starts light. "auto" was the old default, so it becomes light; "device" is the Auto chosen in Settings.
+  if (!["light", "dark", "device"].includes(S.theme)) S.theme = "light";
+  const dark = S.theme === "dark" || (S.theme === "device" && matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   document.documentElement.dataset.accent = S.accent;
   paintThemeToggle();
@@ -439,7 +441,7 @@ function settings() {
     <div class="field"><label>Currency symbol</label><input name="currency" maxlength="3" value="${esc(S.currency)}"></div>
     <div class="actions"><button class="btn">Save</button></div></form></div>
    <div class="card"><h2>Look</h2>
-    <div class="field"><label>Theme</label><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><label>Theme</label><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
     <div class="field"><label>Color</label><div class="chips">${[["green", "Sage"], ["rose", "Rose"], ["blue", "Blue"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
     <h2 style="margin-top:22px">Backup</h2>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
