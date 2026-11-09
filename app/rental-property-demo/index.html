@@ -226,7 +226,7 @@ function defaultSet(year) {
     : { owner: "", year, asof: "", grace: 5, rate1: 0.76, rdate: "", rate2: "", remind: 60 };
 }
 function blank() {
-  return { v: 1, app: "rental", currency: "$", theme: "auto", accent: "forest", set: defaultSet(today().getFullYear()), names: {}, props: [], leases: [], pays: [], expenses: [], trips: [], work: [] };
+  return { v: 1, app: "rental", currency: "$", theme: "light", accent: "forest", set: defaultSet(today().getFullYear()), names: {}, props: [], leases: [], pays: [], expenses: [], trips: [], work: [] };
 }
 const LISTS = ["props", "leases", "pays", "expenses", "trips", "work"];
 function valid(s) { return s && s.v === 1 && s.app === "rental" && s.set && LISTS.every(k => Array.isArray(s[k])); }
@@ -234,6 +234,8 @@ function normalize(s) {
   const o = Object.assign(blank(), s);
   o.set = Object.assign(defaultSet(Number(s.set.year) || today().getFullYear()), s.set); o.set.year = Number(o.set.year) || today().getFullYear();
   if (!o.names || typeof o.names !== "object") o.names = {};
+  // The app always starts light. "auto" was the old default, so it becomes light; "device" is the Auto chosen in Settings.
+  if (!["light", "dark", "device"].includes(o.theme)) o.theme = "light";
   return o;
 }
 function load() {
@@ -381,7 +383,7 @@ const statusPill = t => `<span class="pill ${/^Ends in|settle/.test(t) ? "tight"
 
 /* ---------- theme ---------- */
 function applyTheme() {
-  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  const dark = S.theme === "dark" || (S.theme === "device" && matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   document.documentElement.dataset.accent = S.accent;
   paintThemeToggle();
@@ -659,7 +661,7 @@ function settings() {
     <button class="btn" id="saveSet">Save</button></form></div>
    <div>
     <div class="card"><h2>Look</h2>
-     <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+     <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${n}</button>`).join("")}</div></div>
      <div class="field"><span class="fl">Color</span><div class="chips">${[["forest", "Forest"], ["ocean", "Ocean"], ["clay", "Clay"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
     <div class="card" style="margin-top:14px"><h2>For your tax preparer</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel, Google Sheets and most tax software.</p>
      <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" id="cS">⬇ Schedule E CSV</button><button class="btn ghost small" id="cMo">⬇ Monthly CSV</button><button class="btn ghost small" id="cR">⬇ Rent log CSV</button><button class="btn ghost small" id="cE">⬇ Expenses CSV</button><button class="btn ghost small" id="cM">⬇ Mileage CSV</button><button class="btn ghost small" id="cL">⬇ Leases CSV</button><button class="btn ghost small" id="cW">⬇ Repairs CSV</button></div></div>
