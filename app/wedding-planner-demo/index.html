@@ -58,6 +58,10 @@ h2{font-size:19px;margin:0 0 12px;letter-spacing:-.2px}
 .themetog svg{width:18px;height:18px;display:block}
 main h1{padding-right:48px}
 @media (max-width:860px){.themetog{top:14px;right:14px;width:36px;height:36px}}
+/* Wedding: espaço para a chave quando a tela não começa com título (Home) e nos botões do cabeçalho no desktop */
+main>:first-child:not(h1):not(.tablebar){margin-top:44px}
+@media (min-width:861px){main>.tablebar:first-child{padding-right:52px}}
+@media (max-width:860px){main>:first-child:not(h1):not(.tablebar){margin-top:40px}}
 .empty{color:var(--muted);text-align:center;padding:22px 10px}
 .hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink)}
 .kv{display:flex;justify-content:space-between;padding:7px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right}
