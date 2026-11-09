@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17646C">
+<title>Savings Goals &amp; Sinking Funds App · The Lemon Plans</title>
+<style>
+:root{--bg:#F5F3EC;--card:#FFFFFF;--ink:#1D2A30;--muted:#66727A;--line:#E4E0D4;--soft:#EBF2F1;--accent:#17646C;--accent-ink:#fff;--fill:#3E9AA2;--glass:#DCE9E8;--good:#2E7D5B;--warn:#B7791F;--bad:#C0392B;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--lemon:#F2C94C;--shadow:0 10px 30px rgba(29,42,48,.08);--r:18px}
+:root[data-theme="dark"]{--bg:#0F1719;--card:#172124;--ink:#E6EDEE;--muted:#98A6AB;--line:#263337;--soft:#1E2B2E;--accent:#62C6CE;--accent-ink:#0B1A1C;--fill:#3E9AA2;--glass:#22363A;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="honey"]{--accent:#9A5F0C;--fill:#E0A93A;--glass:#F4E8CF;--soft:#F6EFE0}:root[data-accent="honey"][data-theme="dark"]{--accent:#F2C94C;--accent-ink:#1E1606;--fill:#C98F22;--glass:#3A3020;--soft:#2A251B}
+:root[data-accent="rose"]{--accent:#A4506A;--fill:#D98AA2;--glass:#F3E1E6;--soft:#F5EAED}:root[data-accent="rose"][data-theme="dark"]{--accent:#E39AB0;--accent-ink:#22101A;--fill:#B8607C;--glass:#3A2830;--soft:#2A2026}
+:root[data-accent="plum"]{--accent:#6B4C9A;--fill:#A58BD0;--glass:#E9E2F3;--soft:#EEEAF5}:root[data-accent="plum"][data-theme="dark"]{--accent:#B9A0E6;--accent-ink:#170F24;--fill:#7E62AE;--glass:#2E2840;--soft:#231F30}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav.side{padding:22px 14px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:19px;padding:0 10px 18px;letter-spacing:-.3px;line-height:1.2}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:18px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:28px 32px 120px;max-width:1100px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:28px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:19px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1.3fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g2e{grid-template-columns:1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);min-width:0}
+.hero{padding:28px}
+.lab{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:56px;font-weight:850;letter-spacing:-2px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.mid{font-size:28px;font-weight:800;letter-spacing:-.6px}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-weight:750;font-size:13px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}.done{background:var(--good);color:#fff}
+.t-ok{color:var(--good)}.t-short{color:var(--bad)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.amt.neg{color:var(--bad)}.amt.pos{color:var(--good)}
+.emo{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:20px;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 18px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:14px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:15px;flex:none}
+.bar{height:12px;border-radius:999px;background:var(--glass);overflow:hidden}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.fab{position:fixed;right:26px;bottom:26px;width:62px;height:62px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.empty{color:var(--muted);text-align:center;padding:24px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:7px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;color:var(--ink);font-weight:800}
+.jars{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.jarcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 14px 14px;box-shadow:var(--shadow);cursor:pointer;text-align:center;min-width:0;color:inherit;font:inherit;display:block;width:100%}
+.jarcard:hover{border-color:var(--accent)}
+.jarcard .name{font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:6px}
+.jar{display:block;margin:0 auto}
+.jar .glass{fill:var(--glass)}.jar .liq{fill:var(--fill)}.jar .lid{fill:var(--accent)}.jar .pct{fill:var(--ink);font-weight:800;font-size:22px;paint-order:stroke;stroke:var(--card);stroke-width:5px;stroke-linejoin:round}.jar .shine{fill:#fff;opacity:.35}
+.ring circle{fill:none;stroke-width:12}.ring .tr{stroke:var(--glass)}.ring .pr{stroke:var(--fill);stroke-linecap:round;transition:stroke-dashoffset .4s}
+.ring text{fill:var(--ink);font-weight:850;font-size:26px}.ring .rs{fill:var(--muted);font-size:12px;font-weight:700}
+.ringrow{display:flex;gap:18px;align-items:center}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:6px}
+.cells.env{grid-template-columns:repeat(auto-fill,minmax(46px,1fr))}
+.cell{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 2px;cursor:pointer;font-weight:700;font-size:13px;line-height:1.15;text-align:center;min-width:0}
+.cell small{display:block;font-size:10px;color:var(--muted);font-weight:650}
+.cell[aria-pressed="true"]{background:var(--fill);border-color:var(--fill);color:#fff}
+.cell[aria-pressed="true"] small{color:#fff;opacity:.85}
+.cell.pick{outline:3px solid var(--lemon);outline-offset:1px}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(470px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:6px;margin-bottom:14px;min-width:0}
+.field label,.field .fl{font-size:13px;font-weight:750;color:var(--muted)}
+.field input,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.emopick{display:flex;flex-wrap:wrap;gap:6px}
+.emopick label{cursor:pointer}
+.emopick input{position:absolute;opacity:0;width:1px;height:1px}
+.emopick span{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--soft);font-size:20px;border:2px solid transparent}
+.emopick input:checked+span{border-color:var(--accent)}
+.emopick input:focus-visible+span{outline:2px solid var(--accent)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--soft);padding:4px;border-radius:14px}
+.seg label{text-align:center;padding:9px;border-radius:10px;cursor:pointer;font-weight:750}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label:has(input:checked){background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.costrow{display:grid;grid-template-columns:1fr 120px 36px;gap:8px;align-items:center;margin-bottom:8px}
+.costrow input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.back{border:0;background:none;color:var(--muted);font-weight:700;cursor:pointer;padding:0;margin-bottom:10px}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat3 div{background:var(--soft);border-radius:14px;padding:12px}
+.stat3 b{display:block;font-size:20px;letter-spacing:-.3px}
+.stat3 span{font-size:12px;color:var(--muted);font-weight:700}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10.5px;padding:6px 2px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:19px}
+ main{padding:20px 16px 150px}
+ .g2,.g3,.g2e{grid-template-columns:1fr}
+ .big{font-size:44px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .hero{padding:22px}
+ .card{padding:16px}
+ .jars{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .stat3 b{font-size:17px}
+ .costrow{grid-template-columns:1fr 96px 36px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Your changes stay in this browser · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Savings Goals<small>Sinking funds · by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">◉</span>Home</button>
+  <button class="navbtn" data-view="goals"><span class="i">▥</span>Goals</button>
+  <button class="navbtn" data-view="history"><span class="i">≡</span>History</button>
+  <button class="navbtn" data-view="challenges"><span class="i">◆</span>Challenges</button>
+  <button class="navbtn" data-view="emergency"><span class="i">☂</span>Emergency</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add a deposit" title="Add a deposit">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/savings-goals-app";
+const KEY = DEMO ? "lp-savings-goals-demo" : "lp-savings-goals-v1";
+const EMOJI = ["💰", "🛟", "🏝️", "✈️", "🎄", "🎁", "🚗", "🏠", "🎓", "💻", "💍", "👶", "🐾", "🩺", "🛡️", "🎉"];
+const FREQ = { weekly: "Every week", biweekly: "Every 2 weeks", semimonthly: "Twice a month", monthly: "Once a month" };
+const KIND = { goal: "Savings goal", sinking: "Sinking fund" };
+
+/* ---------- dates (local calendar days, ISO yyyy-mm-dd) ---------- */
+const iso = d => { const z = new Date(d); return z.getFullYear() + "-" + String(z.getMonth() + 1).padStart(2, "0") + "-" + String(z.getDate()).padStart(2, "0"); };
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const addMonths = (d, n) => { const t = new Date(d.getFullYear(), d.getMonth() + n, 1), last = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate(); return new Date(t.getFullYear(), t.getMonth(), Math.min(d.getDate(), last)); };
+const dayDiff = (a, b) => Math.round((b - a) / 86400000); // calendar days from a to b
+// Whole calendar months from a to b (Jan 15 → Mar 14 is 1 month, → Mar 15 is 2)
+const monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + b.getMonth() - a.getMonth() - (b.getDate() < a.getDate() ? 1 : 0);
+const fmtD = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const fmtM = d => d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+
+/* ---------- state ---------- */
+function blank() {
+  return { v: 1, app: "savings-goals", currency: "$", theme: "auto", accent: "lagoon", freq: "biweekly", goals: [], tx: [],
+    c52: { step: 1, reverse: false, done: [] }, c100: { mult: 1, done: [] },
+    ef: { months: 6, goal: null, costs: [["Rent or mortgage", 0], ["Utilities", 0], ["Groceries", 0], ["Insurance", 0], ["Transportation", 0], ["Phone & internet", 0], ["Minimum debt payments", 0], ["Other must-pays", 0]].map(([name, amount]) => ({ name, amount })) } };
+}
+function valid(s) { return s && s.v === 1 && s.app === "savings-goals" && Array.isArray(s.goals) && Array.isArray(s.tx); }
+function normalize(s) {
+  const b = blank(), o = Object.assign(b, s);
+  o.c52 = Object.assign(blank().c52, s.c52 || {}); o.c100 = Object.assign(blank().c100, s.c100 || {}); o.ef = Object.assign(blank().ef, s.ef || {});
+  if (!Array.isArray(o.c52.done)) o.c52.done = []; if (!Array.isArray(o.c100.done)) o.c100.done = []; if (!Array.isArray(o.ef.costs)) o.ef.costs = [];
+  return o;
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
+const uid = () => Math.random().toString(36).slice(2, 9);
+let S = load();
+
+function sample() {
+  const s = blank(), t = today(), m = n => iso(addMonths(t, n)), ago = n => iso(addDays(t, -n));
+  s.goals = [
+    ["Emergency Fund", "goal", "🛟", 10485, m(14), 2400, ago(150)],
+    ["Hawaii Trip", "goal", "🏝️", 4200, m(9), 300, ago(120)],
+    ["Christmas 2027", "sinking", "🎄", 1200, iso(new Date(t.getFullYear() + 1, 11, 1)), 0, ago(90)],
+    ["Car Insurance", "sinking", "🚗", 960, m(5), 120, ago(100)],
+    ["New Laptop", "goal", "💻", 1400, m(4), 0, ago(60)],
+    ["Home Down Payment", "goal", "🏠", 30000, m(48), 6500, ago(150)]
+  ].map(([name, kind, emoji, target, date, start, created]) => ({ id: uid(), name, kind, emoji, target, date, start, created }));
+  const id = n => s.goals.find(g => g.name === n).id;
+  const plan = [["Emergency Fund", 400, "Monthly transfer"], ["Hawaii Trip", 210, "Monthly transfer"], ["Christmas 2027", 70, ""], ["Car Insurance", 95, "Auto-save"], ["New Laptop", 240, ""], ["Home Down Payment", 450, "Monthly transfer"]];
+  for (let k = 4; k >= 0; k--) plan.forEach(([n, a, note], j) => { if (n === "New Laptop" && k > 1) return; if (n === "Christmas 2027" && k > 2) return; s.tx.push({ id: uid(), goal: id(n), amount: a, date: ago(k * 30 + 2 + j), note }); });
+  s.tx.push({ id: uid(), goal: id("Emergency Fund"), amount: 600, date: ago(48), note: "Tax refund" });
+  s.tx.push({ id: uid(), goal: id("Emergency Fund"), amount: -420, date: ago(20), note: "Vet bill" });
+  s.tx.push({ id: uid(), goal: id("Hawaii Trip"), amount: 150, date: ago(9), note: "Sold old bike" });
+  s.c52.done = Array.from({ length: 30 }, (_, i) => i + 1);
+  s.c100.done = [3, 7, 12, 15, 18, 21, 25, 28, 30, 33, 37, 40, 42, 45, 50, 52, 55, 58, 61, 64, 66, 70, 73, 75, 77, 80, 84, 88, 90, 93, 95, 99];
+  s.ef = { months: 3, goal: id("Emergency Fund"), costs: [["Rent or mortgage", 1500], ["Utilities", 220], ["Groceries", 550], ["Insurance", 180], ["Transportation", 300], ["Phone & internet", 120], ["Minimum debt payments", 525], ["Other must-pays", 100]].map(([name, amount]) => ({ name, amount })) };
+  return s;
+}
+
+/* ---------- the math (whole cents; amounts to save are rounded UP to the cent so you never fall short) ---------- */
+const cents = v => Math.round((Number(v) || 0) * 100);
+const ceilDiv = (a, b) => Math.ceil(a / b - 1e-9);
+const savedOf = (g, tx = S.tx) => cents(g.start) + tx.filter(t => t.goal === g.id).reduce((s, t) => s + cents(t.amount), 0);
+// How many paychecks land in `days` days (from today, today excluded) for each pay frequency
+function paychecks(freq, days, months) {
+  if (freq === "weekly") return Math.floor(days / 7);
+  if (freq === "biweekly") return Math.floor(days / 14);
+  if (freq === "semimonthly") return months * 2 + (days - months * 30.44 >= 15 ? 1 : 0);
+  return months;
+}
+// g: {target, date, start, created}; saved in cents; now: Date. Everything returned in cents.
+function needs(g, saved, now, freq) {
+  const target = cents(g.target), left = Math.max(0, target - saved), r = { target, saved, left, reached: target > 0 && saved >= target, pct: target > 0 ? Math.max(0, Math.min(1, saved / target)) : 0 };
+  if (!g.date) return Object.assign(r, { status: target <= 0 ? "none" : r.reached ? "reached" : "nodate" });
+  const end = parse(g.date), days = dayDiff(now, end), months = Math.max(0, monthsBetween(now, end));
+  r.days = days; r.months = months; r.weeks = Math.max(0, Math.floor(days / 7)); r.pays = Math.max(0, paychecks(freq, Math.max(0, days), months));
+  if (r.reached || left === 0) { r.perMonth = r.perWeek = r.perPay = 0; r.status = target <= 0 ? "none" : "reached"; return r; }
+  if (days < 0) { r.perMonth = r.perWeek = r.perPay = left; r.status = "past"; return r; }
+  r.perMonth = ceilDiv(left, Math.max(1, months)); r.perWeek = ceilDiv(left, Math.max(1, r.weeks)); r.perPay = ceilDiv(left, Math.max(1, r.pays));
+  // On track = at least where you'd be saving evenly from the start date to the target date
+  const st = parse(g.created || iso(now)), span = dayDiff(st, end), frac = span <= 0 ? 1 : Math.max(0, Math.min(1, dayDiff(st, now) / span));
+  const base = cents(g.start), expected = Math.round(base + (target - base) * frac);
+  r.expected = expected; r.behind = Math.max(0, expected - saved);
+  r.status = saved >= expected - 50 ? "ontrack" : "behind";
+  return r;
+}
+const info = g => needs(g, savedOf(g), today(), S.freq);
+const c52Amount = (w, st = S.c52) => cents(st.step) * (st.reverse ? 53 - w : w);
+const c52Total = (st = S.c52) => cents(st.step) * 1378;
+const c52Saved = (st = S.c52) => st.done.reduce((s, w) => s + c52Amount(w, st), 0);
+const c100Total = (st = S.c100) => cents(st.mult) * 5050;
+const c100Saved = (st = S.c100) => st.done.reduce((s, n) => s + n * cents(st.mult), 0);
+const efMonthly = (ef = S.ef) => ef.costs.reduce((s, c) => s + Math.max(0, cents(c.amount)), 0);
+const efTarget = (ef = S.ef) => efMonthly(ef) * (Number(ef.months) || 0);
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const n = Math.round(Math.abs(v) * 100) / 100, neg = v < 0 && n > 0 ? "-" : "";
+  const d = dec ?? (Math.round(n * 100) % 100 ? 2 : 0);
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(c / 100, dec);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2000); }
+const goalOf = id => S.goals.find(g => g.id === id);
+const goalName = id => (goalOf(id) || { name: "Deleted goal" }).name;
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+function statusPill(r) {
+  return { reached: `<span class="pill done">✓ Reached</span>`, ontrack: `<span class="pill ok">On track</span>`, behind: `<span class="pill tight">Behind by ${mc(r.behind, 0)}</span>`,
+    past: `<span class="pill short">Past due</span>`, nodate: `<span class="pill ok">No date</span>`, none: `` }[r.status] || "";
+}
+const statusText = r => ({ reached: "Reached", ontrack: "On track", behind: "Behind by " + mc(r.behind, 0), past: "Past due", nodate: "No target date", none: "" })[r.status] || "";
+
+/* ---------- visuals ---------- */
+let _jid = 0;
+function jarSVG(pct, size = 120, label = true) {
+  const id = "j" + (++_jid), h = size * 1.2, p = Math.max(0, Math.min(1, pct)), top = 22, bot = 136, lv = bot - (bot - top) * p;
+  const body = "M22 30 Q22 22 30 22 L70 22 Q78 22 78 30 L78 34 Q86 40 86 52 L86 124 Q86 136 74 136 L26 136 Q14 136 14 124 L14 52 Q14 40 22 34 Z";
+  return `<svg class="jar" viewBox="0 0 100 144" width="${size}" height="${h}" role="img" aria-label="${Math.round(p * 100)}% saved"><defs><clipPath id="${id}"><path d="${body}"/></clipPath></defs>
+   <path class="glass" d="${body}"/><g clip-path="url(#${id})"><path class="liq" d="M0 ${lv} Q25 ${lv - 4} 50 ${lv} T100 ${lv} V144 H0 Z"/></g>
+   <rect class="lid" x="24" y="10" width="52" height="13" rx="4"/><rect class="shine" x="20" y="56" width="6" height="50" rx="3"/>
+   ${label ? `<text class="pct" x="50" y="92" text-anchor="middle">${Math.round(p * 100)}%</text>` : ""}</svg>`;
+}
+function ringSVG(pct, big, small, size = 132) {
+  const r = 52, c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
+  return `<svg class="ring" viewBox="0 0 132 132" width="${size}" height="${size}" role="img" aria-label="${Math.round(p * 100)}% done"><circle class="tr" cx="66" cy="66" r="${r}"/><circle class="pr" cx="66" cy="66" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - p)).toFixed(1)}" transform="rotate(-90 66 66)"/><text x="66" y="70" text-anchor="middle">${big}</text><text class="rs" x="66" y="90" text-anchor="middle">${small}</text></svg>`;
+}
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home", GID = null;
+const M = () => document.getElementById("main");
+function go(v, gid) {
+  VIEW = v; if (gid !== undefined) GID = gid;
+  const nav = v === "goal" ? "goals" : v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === nav) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render(); window.scrollTo(0, 0);
+  M().focus({ preventScroll: true });
+}
+function render() {
+  applyTheme();
+  if (VIEW === "goal" && !goalOf(GID)) VIEW = "goals";
+  ({ home, goals: goalsV, goal: goalV, history, challenges, emergency, settings })[VIEW]();
+}
+const active = () => S.goals.filter(g => !info(g).reached);
+
+function welcome() {
+  M().innerHTML = `<h1>Every savings goal, in jars 👋</h1><p class="sub">Add a goal or a sinking fund and see exactly what to set aside each month, week or paycheck.</p>
+  <div class="card hero" style="max-width:580px">
+   <div class="lab">Step 1</div><div class="mid" style="margin:4px 0 10px">Add your first goal</div>
+   <p class="sub" style="margin-bottom:16px">A name, how much you need and when you need it. An emergency fund, a trip, Christmas, car insurance, a new laptop…</p>
+   <div class="actions" style="justify-content:flex-start"><button class="btn" id="firstGoal">+ Add a goal</button><button class="btn ghost" id="trySample">Try with sample data</button></div>
+  </div>`;
+  document.getElementById("firstGoal").onclick = () => goalDlg();
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); go("home"); };
+}
+
+function jarCard(g) {
+  const r = info(g);
+  return `<button class="jarcard" data-open="${g.id}">${jarSVG(r.pct, 96)}<div class="name">${esc(g.emoji || "💰")} ${esc(g.name)}</div><div class="meta">${mc(r.saved, 0)} of ${mc(r.target, 0)}</div><div style="margin-top:6px">${statusPill(r)}</div></button>`;
+}
+
+function home() {
+  if (!S.goals.length) return welcome();
+  const rs = S.goals.map(info), saved = rs.reduce((s, r) => s + Math.max(0, r.saved), 0), target = rs.reduce((s, r) => s + r.target, 0);
+  const perMonth = rs.reduce((s, r) => s + (r.status === "ontrack" || r.status === "behind" ? r.perMonth : 0), 0), perPay = rs.reduce((s, r) => s + (r.status === "ontrack" || r.status === "behind" ? r.perPay : 0), 0);
+  const cnt = k => rs.filter(r => r.status === k).length, mt = thisMonthNet();
+  const efG = goalOf(S.ef.goal), efM = efMonthly(), cover = efG && efM ? savedOf(efG) / efM : null;
+  M().innerHTML = `<h1>Home</h1><p class="sub">${plural(S.goals.length, "goal")} · ${cnt("ontrack")} on track${cnt("behind") ? " · " + cnt("behind") + " behind" : ""}${cnt("reached") ? " · " + cnt("reached") + " reached 🎉" : ""}${cnt("past") ? " · " + cnt("past") + " past due" : ""}</p>
+  <div class="grid g2">
+   <div class="card hero"><div class="lab">Total saved</div>
+    <div class="ringrow"><div style="flex:1;min-width:0"><div class="big" id="totalSaved">${mc(saved, 0)}</div>
+     <div style="font-weight:700">of ${mc(target, 0)} across all goals</div></div>${ringSVG(target ? saved / target : 0, Math.round(target ? saved / target * 100 : 0) + "%", "of all goals", 116)}</div>
+    <div class="stat3"><div><span>Per month</span><b id="needMonth">${mc(perMonth)}</b></div><div><span>Per paycheck</span><b>${mc(perPay)}</b></div><div><span>This month</span><b class="${mt < 0 ? "t-short" : ""}">${mc(mt, 0)}</b></div></div>
+    <p class="meta" style="margin:10px 0 0">To reach every goal on time · paid ${FREQ[S.freq].toLowerCase()}</p>
+   </div>
+   <div class="card"><h2>Next up</h2>${nextUp(rs)}</div>
+  </div>
+  <div class="tablebar" style="margin-top:22px"><h2 style="margin:0">Your jars</h2><button class="btn small ghost" id="addGoal2">+ Add a goal</button></div>
+  <div class="jars">${S.goals.map(jarCard).join("")}</div>
+  <div class="grid g3" style="margin-top:16px">
+   <button class="jarcard" data-go="challenges" style="text-align:left"><div class="lab">52-week challenge</div><div class="ringrow" style="margin-top:8px">${ringSVG(c52Saved() / c52Total(), S.c52.done.length, "of 52 weeks", 84)}<div><div class="mid">${mc(c52Saved(), 0)}</div><div class="meta">of ${mc(c52Total(), 0)}</div></div></div></button>
+   <button class="jarcard" data-go="challenges" style="text-align:left"><div class="lab">100 envelopes</div><div class="ringrow" style="margin-top:8px">${ringSVG(c100Saved() / c100Total(), S.c100.done.length, "of 100", 84)}<div><div class="mid">${mc(c100Saved(), 0)}</div><div class="meta">of ${mc(c100Total(), 0)}</div></div></div></button>
+   <button class="jarcard" data-go="emergency" style="text-align:left"><div class="lab">Emergency fund</div><div class="mid" style="margin-top:12px">${cover == null ? "Set it up" : cover.toFixed(1) + " months"}</div><div class="meta">${cover == null ? "Work out your safety net" : "of essentials covered · goal " + S.ef.months + " months"}</div>${cover == null ? "" : `<div class="bar" style="margin-top:10px"><i style="width:${Math.min(100, cover / (S.ef.months || 1) * 100)}%"></i></div>`}</button>
+  </div>`;
+  document.getElementById("addGoal2").onclick = () => goalDlg();
+  wire();
+}
+function nextUp(rs) {
+  const list = S.goals.map((g, i) => [g, rs[i]]).filter(([, r]) => r.status === "ontrack" || r.status === "behind" || r.status === "past").sort((a, b) => a[0].date.localeCompare(b[0].date)).slice(0, 5);
+  if (!list.length) return `<div class="empty">Every goal is reached or has no date. 🎉</div>`;
+  return list.map(([g, r]) => `<div class="row"><div class="emo">${esc(g.emoji || "💰")}</div><div class="grow"><div class="name">${esc(g.name)}</div><div class="meta">${r.status === "past" ? "was due " + fmtD(parse(g.date)) : "by " + fmtD(parse(g.date))} · ${mc(r.left, 0)} left</div></div><div class="amt">${mc(r.perMonth)}<div class="meta">${r.status === "past" ? "now" : "/ month"}</div></div></div>`).join("");
+}
+function thisMonthNet() { const k = iso(today()).slice(0, 7); return S.tx.filter(t => t.date.slice(0, 7) === k).reduce((s, t) => s + cents(t.amount), 0); }
+
+function goalsV() {
+  const rs = S.goals.map(info), saved = rs.reduce((s, r) => s + r.saved, 0), target = rs.reduce((s, r) => s + r.target, 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Goals &amp; sinking funds</h1><p class="sub" style="margin:0">${plural(S.goals.length, "goal")} · ${mc(saved, 0)} saved of ${mc(target, 0)}</p></div><button class="btn" id="addGoal">+ Add a goal</button></div>
+  <div class="card" style="margin-top:12px">${S.goals.length ? S.goals.map((g, i) => { const r = rs[i];
+    return `<div class="row"><div class="emo">${esc(g.emoji || "💰")}</div><div class="grow" data-open="${g.id}" style="cursor:pointer"><div class="name">${esc(g.name)} <span class="meta">· ${KIND[g.kind] || KIND.goal}</span></div>
+     <div class="meta">${g.date ? "by " + fmtD(parse(g.date)) : "no date"} · ${r.status === "ontrack" || r.status === "behind" ? mc(r.perMonth) + "/mo · " + mc(r.perWeek) + "/wk · " + mc(r.perPay) + "/paycheck" : r.status === "past" ? mc(r.left, 0) + " still to save" : r.status === "reached" ? "goal reached" : ""}</div>
+     <div class="bar" style="margin-top:6px;max-width:360px"><i style="width:${r.pct * 100}%"></i></div></div>
+     <div class="amt">${mc(r.saved, 0)}<div class="meta">of ${mc(r.target, 0)}</div><div style="margin-top:4px">${statusPill(r)}</div></div><button class="icon" data-editgoal="${g.id}" aria-label="Edit ${esc(g.name)}">✎</button></div>`; }).join("") : `<div class="empty">No goals yet. Add your first one.</div>`}</div>
+  <div class="grid g2e" style="margin-top:16px">
+   <div class="card"><h2>Goal or sinking fund?</h2><p class="meta" style="font-size:14px;margin:0">A <b>savings goal</b> is something you're saving up for once: a trip, a down payment. A <b>sinking fund</b> is money you set aside for a bill you know is coming: car insurance, Christmas, vet visits. Spend from it with a withdrawal when the bill arrives.</p></div>
+   <div class="card"><h2>How "on track" works</h2><p class="meta" style="font-size:14px;margin:0">To save per month = what's left ÷ whole months until the target date, rounded up to the cent. <b>On track</b> means you've saved at least what you'd have saving evenly from the start date to the target date.</p></div>
+  </div>`;
+  document.getElementById("addGoal").onclick = () => goalDlg();
+  wire();
+}
+
+function goalV() {
+  const g = goalOf(GID), r = info(g), list = S.tx.filter(t => t.goal === g.id).sort((a, b) => a.date.localeCompare(b.date) || 0);
+  let run = cents(g.start); const bal = {}; list.forEach(t => { run += cents(t.amount); bal[t.id] = run; });
+  const shown = list.slice().reverse(), dep = list.filter(t => t.amount > 0).reduce((s, t) => s + cents(t.amount), 0), wd = list.filter(t => t.amount < 0).reduce((s, t) => s - cents(t.amount), 0);
+  const open = r.status === "ontrack" || r.status === "behind";
+  M().innerHTML = `<button class="back" data-go="goals">← All goals</button>
+  <div class="tablebar"><div><h1>${esc(g.emoji || "💰")} ${esc(g.name)}</h1><p class="sub" style="margin:0">${KIND[g.kind] || KIND.goal}${g.date ? " · target date " + fmtD(parse(g.date)) : ""}</p></div><button class="btn ghost" data-editgoal="${g.id}">✎ Edit</button></div>
+  <div class="grid g2" style="margin-top:12px">
+   <div class="card hero"><div class="ringrow"><div>${jarSVG(r.pct, 130)}</div><div style="flex:1;min-width:0"><div class="lab">Saved</div><div class="big" id="goalSaved">${mc(r.saved)}</div><div style="font-weight:700">of ${mc(r.target)} · ${mc(r.left)} left</div><div style="margin-top:8px">${statusPill(r)}</div></div></div>
+    <div class="actions" style="justify-content:flex-start;margin-top:18px"><button class="btn" id="dep">+ Deposit</button><button class="btn ghost" id="wd">− Withdraw</button></div></div>
+   <div class="card"><h2>To get there on time</h2>
+    ${open ? `<div class="kv"><span>Per month <small>(${plural(Math.max(1, r.months), "month")} left)</small></span><b id="perMonth">${mc(r.perMonth)}</b></div>
+    <div class="kv"><span>Per week <small>(${plural(Math.max(1, r.weeks), "week")})</small></span><b id="perWeek">${mc(r.perWeek)}</b></div>
+    <div class="kv"><span>Per paycheck <small>(${plural(Math.max(1, r.pays), "paycheck")}, ${FREQ[S.freq].toLowerCase()})</small></span><b id="perPay">${mc(r.perPay)}</b></div>
+    <div class="kv total"><span>${r.status === "behind" ? "Behind schedule by" : "Ahead of schedule"}</span><span class="${r.status === "behind" ? "t-short" : "t-ok"}">${mc(r.status === "behind" ? r.behind : Math.max(0, r.saved - r.expected))}</span></div>`
+    : r.status === "past" ? `<p class="hint" style="margin:0" id="perMonth">The target date has passed and ${mc(r.left)} is still missing. Edit the goal to pick a new date and get a new monthly amount.</p>`
+    : r.status === "reached" ? `<p class="hint" style="margin:0" id="perMonth">🎉 You reached this goal${r.saved > r.target ? ", with " + mc(r.saved - r.target) + " extra" : ""}. Nothing more to save.</p>` : `<p class="hint" style="margin:0">Add a target and a target date to see how much to save.</p>`}
+    <div class="kv" style="margin-top:8px"><span>Starting balance</span><b>${mc(cents(g.start))}</b></div>
+    <div class="kv"><span>Deposits</span><b class="t-ok">+${mc(dep)}</b></div><div class="kv"><span>Withdrawals</span><b class="t-short">−${mc(wd)}</b></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:16px"><h2>History</h2>${shown.length ? shown.map(t => txRow(t, bal[t.id], false)).join("") : `<div class="empty">No deposits yet. Tap + Deposit when you move money into this goal.</div>`}</div>`;
+  document.getElementById("dep").onclick = () => txDlg(null, g.id, "deposit");
+  document.getElementById("wd").onclick = () => txDlg(null, g.id, "withdraw");
+  wire();
+}
+function txRow(t, bal, showGoal = true) {
+  const g = goalOf(t.goal);
+  return `<div class="row"><div class="emo">${t.amount < 0 ? "↑" : "↓"}</div><div class="grow"><div class="name">${showGoal ? esc((g && g.emoji ? g.emoji + " " : "") + goalName(t.goal)) : t.amount < 0 ? "Withdrawal" : "Deposit"}</div><div class="meta">${fmtD(parse(t.date))}${t.note ? " · " + esc(t.note) : ""}${bal != null ? " · balance " + mc(bal) : ""}</div></div><div class="amt ${t.amount < 0 ? "neg" : "pos"}">${t.amount < 0 ? "−" : "+"}${money(Math.abs(t.amount))}</div><button class="icon" data-edittx="${t.id}" aria-label="Edit">✎</button></div>`;
+}
+
+let HF = "";
+function history() {
+  const list = S.tx.filter(t => !HF || t.goal === HF).slice().sort((a, b) => b.date.localeCompare(a.date));
+  const dep = list.filter(t => t.amount > 0).reduce((s, t) => s + cents(t.amount), 0), wd = list.filter(t => t.amount < 0).reduce((s, t) => s - cents(t.amount), 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>History</h1><p class="sub" style="margin:0">Every deposit and withdrawal.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvH">⬇ Export CSV</button><button class="btn" id="addTx">+ Add</button></div></div>
+  <div class="grid g3" style="margin-top:12px">
+   <div class="card"><div class="lab">Deposits</div><div class="mid t-ok">+${mc(dep, 0)}</div></div>
+   <div class="card"><div class="lab">Withdrawals</div><div class="mid t-short">−${mc(wd, 0)}</div></div>
+   <div class="card"><div class="field" style="margin:0"><label for="hf">Show</label><select id="hf"><option value="">All goals</option>${S.goals.map(g => `<option value="${g.id}" ${HF === g.id ? "selected" : ""}>${esc(g.name)}</option>`).join("")}</select></div></div>
+  </div>
+  <div class="card" style="margin-top:16px" id="txList">${list.length ? list.map(t => txRow(t)).join("") : `<div class="empty">Nothing here yet. Tap + after you move money into a goal.</div>`}</div>`;
+  document.getElementById("hf").onchange = e => { HF = e.target.value; render(); };
+  document.getElementById("addTx").onclick = () => txDlg(null, HF || undefined);
+  document.getElementById("csvH").onclick = () => S.tx.length ? exportCSV("history") : toast("No deposits yet");
+  wire();
+}
+
+let PICK = null;
+function challenges() {
+  const a = S.c52, b = S.c100, nx = Array.from({ length: 52 }, (_, i) => i + 1).find(w => !a.done.includes(w));
+  M().innerHTML = `<h1>Savings challenges</h1><p class="sub">Tick a box each time you put the money aside. Tap it again to untick.</p>
+  <div class="grid g2e">
+   <div class="card" id="c52"><div class="tablebar"><h2 style="margin:0">52-week challenge</h2><span class="pill ok">${a.done.length} of 52</span></div>
+    <div class="ringrow" style="margin:6px 0 14px">${ringSVG(c52Saved() / c52Total(), Math.round(c52Saved() / c52Total() * 100) + "%", "saved", 104)}<div><div class="mid" id="c52saved">${mc(c52Saved())}</div><div class="meta">of <b id="c52total">${mc(c52Total())}</b> · ${nx ? "next: week " + nx + ", " + mc(c52Amount(nx)) : "challenge done 🎉"}</div></div></div>
+    <form id="c52f" class="two"><div class="field"><label>Week 1 amount</label><input name="step" type="number" min="0.01" step="0.01" inputmode="decimal" value="${a.step}"></div>
+     <div class="field"><label>Order</label><select name="order"><option value="n">Normal (small first)</option><option value="r" ${a.reverse ? "selected" : ""}>Reverse (big first)</option></select></div></form>
+    <div class="cells" role="group" aria-label="52 weeks">${Array.from({ length: 52 }, (_, i) => i + 1).map(w => `<button class="cell" data-w="${w}" aria-pressed="${a.done.includes(w)}" aria-label="Week ${w}, ${mc(c52Amount(w))}"><small>wk ${w}</small>${mc(c52Amount(w), 0)}</button>`).join("")}</div>
+    <div class="actions"><button class="btn small ghost" id="r52">Reset</button></div></div>
+   <div class="card" id="c100"><div class="tablebar"><h2 style="margin:0">100-envelope challenge</h2><span class="pill ok">${b.done.length} of 100</span></div>
+    <div class="ringrow" style="margin:6px 0 14px">${ringSVG(c100Saved() / c100Total(), Math.round(c100Saved() / c100Total() * 100) + "%", "saved", 104)}<div><div class="mid" id="c100saved">${mc(c100Saved())}</div><div class="meta">of <b id="c100total">${mc(c100Total())}</b> · envelope 1 = ${mc(cents(b.mult))} … envelope 100 = ${mc(cents(b.mult) * 100, 0)}</div></div></div>
+    <form id="c100f" class="inline" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap"><div class="field" style="margin:0;flex:1;min-width:140px"><label>Dollars per number</label><select name="mult">${[[0.5, "Half: $2,525"], [1, "Classic: $5,050"], [2, "Double: $10,100"]].map(([v, t]) => `<option value="${v}" ${Number(b.mult) === v ? "selected" : ""}>${t}</option>`).join("")}</select></div><button type="button" class="btn ghost" id="pick">🎲 Pick an envelope</button></form>
+    <div class="cells env" role="group" aria-label="100 envelopes" style="margin-top:14px">${Array.from({ length: 100 }, (_, i) => i + 1).map(n => `<button class="cell ${PICK === n ? "pick" : ""}" data-e="${n}" aria-pressed="${b.done.includes(n)}" aria-label="Envelope ${n}">${n}</button>`).join("")}</div>
+    <div class="actions"><button class="btn small ghost" id="r100">Reset</button></div></div>
+  </div>
+  <p class="hint" style="margin-top:16px">💡 Want the money to count toward a goal too? Add it as a deposit with the + button, like “52-week challenge, week 12”.</p>`;
+  M().querySelectorAll("[data-w]").forEach(x => x.onclick = () => { const w = +x.dataset.w, i = a.done.indexOf(w); if (i < 0) a.done.push(w); else a.done.splice(i, 1); a.done.sort((p, q) => p - q); save(); render(); if (i < 0 && a.done.length === 52) toast("52 weeks done! 🎉"); });
+  M().querySelectorAll("[data-e]").forEach(x => x.onclick = () => { const n = +x.dataset.e, i = b.done.indexOf(n); if (i < 0) b.done.push(n); else b.done.splice(i, 1); b.done.sort((p, q) => p - q); if (PICK === n) PICK = null; save(); render(); if (i < 0 && b.done.length === 100) toast("All 100 envelopes! 🎉"); });
+  const f = document.getElementById("c52f"); f.onchange = () => { a.step = Math.max(0.01, Math.round((+f.step.value || 1) * 100) / 100); a.reverse = f.order.value === "r"; save(); render(); };
+  f.onsubmit = e => { e.preventDefault(); f.onchange(); };
+  const g = document.getElementById("c100f"); g.mult.onchange = () => { b.mult = +g.mult.value || 1; save(); render(); };
+  document.getElementById("pick").onclick = () => { const left = Array.from({ length: 100 }, (_, i) => i + 1).filter(n => !b.done.includes(n)); if (!left.length) return toast("Every envelope is done 🎉"); PICK = left[Math.floor(Math.random() * left.length)]; render(); toast("Envelope " + PICK + ": save " + mc(PICK * cents(b.mult))); };
+  document.getElementById("r52").onclick = () => confirmDlg("Reset the 52-week challenge?", "This unticks all 52 weeks.", "Reset", () => { a.done = []; save(); render(); });
+  document.getElementById("r100").onclick = () => confirmDlg("Reset the 100 envelopes?", "This unticks all 100 envelopes.", "Reset", () => { b.done = []; PICK = null; save(); render(); });
+}
+
+function emergency() {
+  const ef = S.ef, mo = efMonthly(), tgt = efTarget(), g = goalOf(ef.goal), sv = g ? savedOf(g) : 0, cover = g && mo ? sv / mo : null;
+  M().innerHTML = `<h1>Emergency fund</h1><p class="sub">How big should your safety net be? Add up the costs you can't skip in a month.</p>
+  <div class="grid g2">
+   <div class="card"><h2>Essential monthly costs</h2><form id="eff">
+    <div id="costs">${ef.costs.map((c, i) => costRow(c, i)).join("")}</div>
+    <div class="actions" style="justify-content:space-between"><button type="button" class="btn small ghost" id="addCost">+ Add a cost</button><button class="btn" id="saveEf">Save</button></div>
+    <div class="field" style="margin-top:16px"><span class="fl">Months to cover</span><div class="chips">${[3, 4, 5, 6, 9, 12].map(n => `<button type="button" class="chip" data-months="${n}" aria-pressed="${+ef.months === n}">${n}</button>`).join("")}</div>
+     <small>3 months: steady job, two incomes. 6: the most common target. 9 to 12: self-employed, one income or commission pay.</small></div>
+   </form></div>
+   <div class="card hero"><div class="lab">Your emergency fund target</div><div class="big" id="efTarget">${mc(tgt, 0)}</div>
+    <div style="font-weight:700">${mc(mo, 0)} a month × ${ef.months} months</div>
+    ${cover != null ? `<div style="margin-top:18px" class="ringrow">${jarSVG(tgt ? sv / tgt : 0, 84)}<div><div class="mid" id="efCover">${cover.toFixed(1)} months</div><div class="meta">covered by ${esc(g.name)} (${mc(sv, 0)})</div></div></div>` : ""}
+    <div class="field" style="margin-top:18px"><label for="efGoal">Your emergency fund goal</label><select id="efGoal"><option value="">— none —</option>${S.goals.map(x => `<option value="${x.id}" ${ef.goal === x.id ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></div>
+    <div class="actions" style="justify-content:flex-start">${g ? `<button class="btn" id="useTarget" ${cents(g.target) === tgt || !tgt ? "disabled style=opacity:.5" : ""}>Set ${esc(g.name)} target to ${mc(tgt, 0)}</button>` : `<button class="btn" id="mkGoal" ${tgt ? "" : "disabled style=opacity:.5"}>+ Create an Emergency Fund goal</button>`}</div>
+    <p class="hint" style="margin:14px 0 0">💡 Starting from zero? Aim for a $1,000 starter fund first, then build up month by month.</p>
+   </div>
+  </div>`;
+  const f = document.getElementById("eff");
+  const read = () => { ef.costs = [...f.querySelectorAll(".costrow")].map(r => ({ name: r.querySelector("[name=cname]").value.trim(), amount: Math.max(0, +r.querySelector("[name=camount]").value || 0) })).filter(c => c.name || c.amount); };
+  f.onsubmit = e => { e.preventDefault(); read(); save(); render(); toast("Saved"); };
+  document.getElementById("addCost").onclick = () => { read(); ef.costs.push({ name: "", amount: 0 }); render(); const ins = M().querySelectorAll("[name=cname]"); ins[ins.length - 1].focus(); };
+  M().querySelectorAll("[data-delcost]").forEach(b => b.onclick = () => { read(); ef.costs.splice(+b.dataset.delcost, 1); save(); render(); });
+  M().querySelectorAll("[data-months]").forEach(b => b.onclick = () => { read(); ef.months = +b.dataset.months; save(); render(); });
+  document.getElementById("efGoal").onchange = e => { ef.goal = e.target.value || null; save(); render(); };
+  const u = document.getElementById("useTarget"); if (u) u.onclick = () => { g.target = tgt / 100; save(); render(); toast(g.name + " target updated"); };
+  const mk = document.getElementById("mkGoal"); if (mk) mk.onclick = () => { const n = { id: uid(), name: "Emergency Fund", kind: "goal", emoji: "🛟", target: tgt / 100, date: iso(addMonths(today(), 12)), start: 0, created: iso(today()) }; S.goals.push(n); ef.goal = n.id; save(); render(); toast("Emergency Fund goal created"); };
+}
+const costRow = (c, i) => `<div class="costrow"><input name="cname" value="${esc(c.name)}" placeholder="Cost" aria-label="Cost name"><input name="camount" type="number" min="0" step="0.01" inputmode="decimal" value="${c.amount || ""}" placeholder="0" aria-label="${esc(c.name || "Cost")} per month"><button type="button" class="icon" data-delcost="${i}" aria-label="Remove ${esc(c.name || "cost")}">✕</button></div>`;
+
+function settings() {
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this device. Download a backup now and then.</p>
+  <div class="grid g2e">
+   <div class="card"><h2>Look</h2>
+    <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><span class="fl">Color</span><div class="chips">${[["lagoon", "Lagoon"], ["honey", "Honey"], ["rose", "Rose"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
+    <form id="prefF"><div class="two"><div class="field"><label>I get paid</label><select name="freq">${Object.entries(FREQ).map(([k, t]) => `<option value="${k}" ${S.freq === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+     <div class="field"><label>Currency symbol</label><input name="currency" maxlength="3" value="${esc(S.currency)}"></div></div>
+     <button class="btn ghost">Save</button></form>
+   </div>
+   <div class="card"><h2>Backup</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+    <h2 style="margin-top:22px">Export</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvG">⬇ Goals (CSV)</button><button class="btn ghost" id="csvH2">⬇ History (CSV)</button></div>
+    <h2 style="margin-top:22px">Start over</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div>
+   </div>
+  </div>
+  <p class="foot">Savings Goals &amp; Sinking Funds App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
+  M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
+  const pf = document.getElementById("prefF"); pf.onsubmit = e => { e.preventDefault(); S.currency = pf.currency.value.trim() || "$"; S.freq = pf.freq.value; save(); toast("Saved"); render(); };
+  document.getElementById("exp").onclick = () => { download("savings-goals-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Savings Goals backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("csvG").onclick = () => S.goals.length ? exportCSV("goals") : toast("Add a goal first");
+  document.getElementById("csvH2").onclick = () => S.tx.length ? exportCSV("history") : toast("No deposits yet");
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with 6 sample goals. Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes all your goals, deposits and challenges from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f2 = c => (c / 100).toFixed(2);
+function csvText(kind) {
+  if (kind === "goals") {
+    const L = [["Goal", "Type", "Target", "Saved", "Left", "Target date", "Save per month", "Save per week", "Save per paycheck", "Status"].join(",")];
+    S.goals.forEach(g => { const r = info(g), open = r.status === "ontrack" || r.status === "behind" || r.status === "past"; L.push([g.name, KIND[g.kind] || KIND.goal, f2(r.target), f2(r.saved), f2(r.left), g.date || "", open ? f2(r.perMonth) : "0.00", open ? f2(r.perWeek) : "0.00", open ? f2(r.perPay) : "0.00", statusText(r)].map(q).join(",")); });
+    return L.join("\r\n") + "\r\n";
+  }
+  const L = [["Date", "Goal", "Type", "Amount", "Balance after", "Note"].join(",")], run = {};
+  S.goals.forEach(g => run[g.id] = cents(g.start));
+  S.tx.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(t => { run[t.goal] = (run[t.goal] || 0) + cents(t.amount); L.push([t.date, goalName(t.goal), t.amount < 0 ? "Withdrawal" : "Deposit", f2(cents(t.amount)), f2(run[t.goal]), t.note || ""].map(q).join(",")); });
+  return L.join("\r\n") + "\r\n";
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { download("savings-" + kind + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=radio]),select"); first && first.focus();
+}
+const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+
+function goalDlg(id) {
+  const g = goalOf(id) || { name: "", kind: "goal", emoji: "💰", target: "", date: iso(addMonths(today(), 12)), start: "", created: iso(today()) };
+  openDlg(`<h2>${id ? "Edit goal" : "Add a goal"}</h2>
+   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Emergency fund, vacation, Christmas…"></div>
+   <div class="field"><span class="fl">Type</span><div class="seg"><label><input type="radio" name="kind" value="goal" ${g.kind !== "sinking" ? "checked" : ""}>Savings goal</label><label><input type="radio" name="kind" value="sinking" ${g.kind === "sinking" ? "checked" : ""}>Sinking fund</label></div></div>
+   <div class="two"><div class="field"><label>Target amount</label><input name="target" type="number" step="0.01" min="1" inputmode="decimal" required value="${g.target}"></div>
+   <div class="field"><label>Target date</label><input name="date" type="date" required value="${g.date}"></div></div>
+   <div class="two"><div class="field"><label>Already saved</label><input name="start" type="number" step="0.01" min="0" inputmode="decimal" value="${g.start}" placeholder="0"></div>
+   <div class="field"><label>Started saving on</label><input name="created" type="date" value="${g.created || iso(today())}"></div></div>
+   <div class="field"><span class="fl">Icon</span><div class="emopick">${EMOJI.map(e => `<label><input type="radio" name="emoji" value="${e}" ${g.emoji === e ? "checked" : ""}><span>${e}</span></label>`).join("")}</div></div>
+   <p id="gprev" class="hint" style="margin:0 0 10px"></p>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, g, { id: g.id || uid(), name: fd.get("name").trim() || "Goal", kind: fd.get("kind") === "sinking" ? "sinking" : "goal", emoji: fd.get("emoji") || "💰", target: Math.max(0, +fd.get("target") || 0), date: fd.get("date") || "", start: Math.max(0, +fd.get("start") || 0), created: fd.get("created") || iso(today()) });
+    if (id) S.goals[S.goals.findIndex(x => x.id === id)] = o; else S.goals.push(o);
+    toast(id ? "Goal updated" : "Goal added");
+  }, () => {
+    const f = F(), p = document.getElementById("gprev");
+    const chk = () => { const tmp = { id: g.id || "_new", target: +f.target.value || 0, date: f.date.value, start: +f.start.value || 0, created: f.created.value };
+      if (!tmp.target || !tmp.date) { p.textContent = "Enter a target and a date to see how much to save."; return; }
+      const r = needs(tmp, savedOf(tmp), today(), S.freq);
+      p.innerHTML = r.status === "reached" ? "🎉 Already reached." : r.status === "past" ? "⚠ That date has passed. Pick a future date." : `Save <b>${mc(r.perMonth)}</b> a month, <b>${mc(r.perWeek)}</b> a week or <b>${mc(r.perPay)}</b> a paycheck.`; };
+    ["target", "date", "start", "created"].forEach(n => f[n].oninput = chk); chk();
+    const del = document.getElementById("delBtn"); if (del) del.onclick = () => { D().close(); const n = S.tx.filter(t => t.goal === id).length; confirmDlg("Delete " + esc(g.name) + "?", `This also deletes its ${plural(n, "deposit")} and withdrawals. It can't be undone.`, "Delete", () => { S.goals = S.goals.filter(x => x.id !== id); S.tx = S.tx.filter(t => t.goal !== id); if (S.ef.goal === id) S.ef.goal = null; save(); go("goals"); toast("Goal deleted"); }); };
+  });
+}
+function txDlg(id, goal, kind) {
+  if (!S.goals.length) { toast("Add a goal first"); goalDlg(); return; }
+  const t = S.tx.find(x => x.id === id) || { goal: goal || (VIEW === "goal" ? GID : S.goals[0].id), amount: "", date: iso(today()), note: "" };
+  const k = id ? (t.amount < 0 ? "withdraw" : "deposit") : kind || "deposit";
+  openDlg(`<h2>${id ? "Edit" : k === "withdraw" ? "Withdraw" : "Add a deposit"}</h2>
+   <div class="field"><span class="fl">Type</span><div class="seg"><label><input type="radio" name="kind" value="deposit" ${k === "deposit" ? "checked" : ""}>+ Deposit</label><label><input type="radio" name="kind" value="withdraw" ${k === "withdraw" ? "checked" : ""}>− Withdraw</label></div></div>
+   <div class="field"><label>Goal</label><select name="goal">${S.goals.map(g => `<option value="${g.id}" ${t.goal === g.id ? "selected" : ""}>${esc(g.emoji || "")} ${esc(g.name)} (${mc(savedOf(g))})</option>`).join("")}</select></div>
+   <div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" min="0.01" inputmode="decimal" required value="${t.amount === "" ? "" : Math.abs(t.amount)}" style="font-size:28px;font-weight:800"></div>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" value="${t.date}"></div><div class="field"><label>Note (optional)</label><input name="note" value="${esc(t.note)}" placeholder="Payday, tax refund…"></div></div>
+   ${btns(!!id)}`, fd => {
+    const amt = cents(Math.abs(+fd.get("amount") || 0)), w = fd.get("kind") === "withdraw", gid = fd.get("goal");
+    if (!amt) { toast("Enter an amount"); return false; }
+    const o = { id: t.id || uid(), goal: gid, amount: (w ? -amt : amt) / 100, date: fd.get("date") || iso(today()), note: fd.get("note").trim() };
+    const others = S.tx.filter(x => x.id !== o.id), g = goalOf(gid), bal = savedOf(g, others);
+    if (w && amt > bal) { toast("Only " + mc(bal) + " in " + g.name); return false; }
+    if (id) S.tx[S.tx.findIndex(x => x.id === id)] = o; else S.tx.push(o);
+    const r = info(g); toast(w ? "Withdrawal saved" : r.reached ? g.name + " reached! 🎉" : "Deposit saved");
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S.tx = S.tx.filter(x => x.id !== id); save(); D().close(); render(); toast("Deleted"); }; });
+}
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  M().querySelectorAll("[data-editgoal]").forEach(b => b.onclick = e => { e.stopPropagation(); goalDlg(b.dataset.editgoal); });
+  M().querySelectorAll("[data-open]").forEach(b => b.onclick = () => go("goal", b.dataset.open));
+  M().querySelectorAll("[data-edittx]").forEach(b => b.onclick = () => txDlg(b.dataset.edittx));
+  M().querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => S.goals.length ? txDlg() : goalDlg();
+if (DEMO) { document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL; }
+window.__lp = { needs, monthsBetween, paychecks, c52Total, c52Saved, c52Amount, c100Total, c100Saved, efTarget, efMonthly, savedOf, info, csvText, sample, get S() { return S; } };
+go("home");
+</script>
+</body>
+</html>
