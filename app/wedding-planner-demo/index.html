@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#A4506A">
+<title>Wedding Planner App · The Lemon Plans</title>
+<style>
+:root{--bg:#FAF6F3;--card:#FFFFFF;--ink:#2B2326;--muted:#7A6C71;--line:#EBE0DC;--soft:#F7EAEE;--accent:#A4506A;--accent-ink:#fff;--fill:#D98AA2;--glass:#F2DFE5;--good:#2E7D5B;--warn:#B7791F;--bad:#C0392B;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--gold:#D9B46A;--shadow:0 10px 30px rgba(60,30,40,.07);--r:18px}
+:root[data-theme="dark"]{--bg:#161113;--card:#211A1D;--ink:#F1E8EB;--muted:#AE9DA3;--line:#352A2E;--soft:#2C2226;--accent:#E8A2B8;--accent-ink:#2A1019;--fill:#B8607C;--glass:#3A2A30;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="sage"]{--accent:#4D7A5E;--fill:#8DB59A;--glass:#DFEBE2;--soft:#EBF2EC}:root[data-accent="sage"][data-theme="dark"]{--accent:#9FD0AE;--accent-ink:#0E1F14;--fill:#5E8F6E;--glass:#24352A;--soft:#1F2A22}
+:root[data-accent="champagne"]{--accent:#946414;--fill:#DDB46A;--glass:#F3E7CF;--soft:#F6EFE1}:root[data-accent="champagne"][data-theme="dark"]{--accent:#EAC67A;--accent-ink:#1E1606;--fill:#B88C3C;--glass:#3A3020;--soft:#2A251B}
+:root[data-accent="navy"]{--accent:#2F4F86;--fill:#8AA3CF;--glass:#DFE6F3;--soft:#EAEEF6}:root[data-accent="navy"][data-theme="dark"]{--accent:#A9BFEA;--accent-ink:#0D1424;--fill:#4F6EA6;--glass:#25304A;--soft:#1E2433}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav.side{padding:22px 14px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:19px;padding:0 10px 18px;letter-spacing:-.3px;line-height:1.2}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:18px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:28px 32px 120px;max-width:1160px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:28px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:19px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1.3fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g2e{grid-template-columns:1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);min-width:0}
+.hero{padding:28px}
+.lab{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:56px;font-weight:850;letter-spacing:-2px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.mid{font-size:28px;font-weight:800;letter-spacing:-.6px}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-weight:750;font-size:13px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}.done{background:var(--good);color:#fff}.grey{background:var(--soft);color:var(--muted)}
+.t-ok{color:var(--good)}.t-short{color:var(--bad)}.t-warn{color:var(--warn)}
+.row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.emo{width:40px;height:40px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:19px;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 18px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:14px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:15px;flex:none}
+.bar{height:12px;border-radius:999px;background:var(--glass);overflow:hidden;position:relative}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.bar.over i{background:var(--bad)}
+.fab{position:fixed;right:26px;bottom:26px;width:62px;height:62px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:7px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;color:var(--ink);font-weight:800}
+.ring circle{fill:none;stroke-width:12}.ring .tr{stroke:var(--glass)}.ring .pr{stroke:var(--fill);stroke-linecap:round;transition:stroke-dashoffset .4s}
+.ring text{fill:var(--ink);font-weight:850;font-size:26px}.ring .rs{fill:var(--muted);font-size:12px;font-weight:700}
+.ringrow{display:flex;gap:18px;align-items:center}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat3 div{background:var(--soft);border-radius:14px;padding:12px;min-width:0}
+.stat3 b{display:block;font-size:20px;letter-spacing:-.3px}
+.stat3 span{font-size:12px;color:var(--muted);font-weight:700}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px}
+table.t th{font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:800;text-align:right;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.t tr:last-child td{border-bottom:0}
+table.t tfoot td{font-weight:850;border-top:2px solid var(--line)}
+table.t td.l,table.t th.l{text-align:left}
+table.t input.pct{width:64px;padding:6px 8px;border-radius:9px;border:1px solid var(--line);background:var(--bg);text-align:right}
+table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:13.5px}
+.cbar{display:grid;grid-template-columns:170px 1fr 92px;gap:10px;align-items:center;font-size:14px;padding:5px 0}
+.cbar .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:650}
+.cbar .bar{height:14px}
+.cbar .bar b{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.55}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:12px}
+.tools .field{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* seating */
+.seatwrap{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.pool{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+.zone{min-height:60px;border-radius:14px;transition:background .15s,outline-color .15s;outline:2px dashed transparent;outline-offset:2px}
+.zone.over{background:var(--soft);outline-color:var(--accent)}
+.tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);min-width:0}
+.tcard.full{border-color:var(--good)}.tcard.overcap{border-color:var(--bad)}
+.thead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.thead .grow{flex:1;min-width:0}
+.thead .name{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thead .tname{font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tsvg{display:block;flex:none}.tsvg .top{fill:var(--glass)}.tsvg .seat{fill:var(--card);stroke:var(--line);stroke-width:2}.tsvg .seat.on{fill:var(--fill);stroke:var(--fill)}.tsvg .seat.x{fill:var(--bad);stroke:var(--bad)}.tsvg text{fill:var(--ink);font-weight:850;font-size:15px}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;min-height:34px;padding:2px}
+.gchip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 10px;cursor:grab;font-weight:650;font-size:13.5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;touch-action:manipulation}
+.gchip small{color:var(--muted);font-weight:700;margin-left:4px}
+.gchip.inv{border-style:dashed;color:var(--muted)}
+.gchip.picked{outline:3px solid var(--gold);outline-offset:1px;background:var(--soft)}
+.gchip.dragging{opacity:.4}
+/* checklist */
+.task{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.tick{width:30px;height:30px;border-radius:9px;border:2px solid var(--line);background:var(--bg);cursor:pointer;flex:none;display:grid;place-items:center;font-weight:900;color:#fff;font-size:15px;padding:0}
+.tick[aria-pressed="true"]{background:var(--good);border-color:var(--good)}
+.task .grow{flex:1;min-width:0}
+.task.isdone .tt{text-decoration:line-through;color:var(--muted)}
+.ghead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:18px 0 2px}
+.ghead:first-child{margin-top:0}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(500px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog::backdrop{background:rgba(20,10,14,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:6px;margin-bottom:14px;min-width:0}
+.field label,.field .fl{font-size:13px;font-weight:750;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.field textarea{min-height:150px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;background:var(--soft);padding:4px;border-radius:14px}
+.seg label{text-align:center;padding:9px 6px;border-radius:10px;cursor:pointer;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg input{position:absolute;opacity:0;width:1px;height:1px}
+.seg label:has(input:checked){background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.checkline{display:flex;align-items:center;gap:8px;font-weight:650;cursor:pointer}
+.checkline input{width:18px;height:18px}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.heart{color:var(--accent)}
+.names{font-size:22px;font-weight:800;letter-spacing:-.4px}
+@media (max-width:980px){.seatwrap{grid-template-columns:1fr}.pool{position:static;max-height:none}.g4{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10px;padding:6px 1px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:18px}
+ main{padding:20px 16px 150px}
+ .g2,.g3,.g2e{grid-template-columns:1fr}
+ .big{font-size:44px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .hero{padding:22px}
+ .card{padding:16px}
+ .stat3 b{font-size:17px}
+ .cbar{grid-template-columns:110px 1fr 76px;font-size:13px}
+ .three{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Wedding Planner<small>by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">♡</span>Home</button>
+  <button class="navbtn" data-view="budget"><span class="i">$</span>Budget</button>
+  <button class="navbtn" data-view="vendors"><span class="i">✦</span>Vendors</button>
+  <button class="navbtn" data-view="guests"><span class="i">☺</span>Guests</button>
+  <button class="navbtn" data-view="seating"><span class="i">◎</span>Seating</button>
+  <button class="navbtn" data-view="checklist"><span class="i">✓</span>Checklist</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add" title="Add">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/wedding-planner-app";
+const KEY = DEMO ? "lp-wedding-planner-demo" : "lp-wedding-planner-v1";
+const RSVP = ["Not invited yet", "Invited", "Attending", "Declined"];
+const MEALS = ["Chicken", "Beef", "Fish", "Vegetarian", "Vegan", "Kids meal"];
+const VSTAT = ["Researching", "Booked", "Paid in full"];
+const METHODS = ["Card", "Bank transfer", "Check", "Cash", "Zelle / Venmo", "Gift from family", "Other"];
+// Same categories and suggested split as the Wedding Budget Planner spreadsheet (adds up to 100%)
+const CATS = [["Venue", 20], ["Catering & Bar", 25], ["Photography", 10], ["Videography", 4], ["Attire & Beauty", 8], ["Flowers & Decor", 8], ["Music & Entertainment", 6],
+  ["Cake & Desserts", 2], ["Invitations & Stationery", 2], ["Rings", 3], ["Officiant & Ceremony", 1], ["Transportation", 2], ["Favors & Gifts", 2], ["Wedding Planner", 4], ["Other & Buffer", 3]];
+const CAT_ICON = { "Venue": "🏛️", "Catering & Bar": "🍽️", "Photography": "📷", "Videography": "🎥", "Attire & Beauty": "👗", "Flowers & Decor": "💐", "Music & Entertainment": "🎶", "Cake & Desserts": "🎂",
+  "Invitations & Stationery": "✉️", "Rings": "💍", "Officiant & Ceremony": "⛪", "Transportation": "🚗", "Favors & Gifts": "🎁", "Wedding Planner": "📋", "Other & Buffer": "🧾" };
+// Same month-by-month checklist as the spreadsheet: [label, days before the wedding, tasks]
+const WHEN = [
+  ["12+ months", 365, ["Set your total budget together", "Pick a date and rough guest count", "Book the venue", "Start the guest list", "Hire a planner (optional)"]],
+  ["10–12 months", 320, ["Book photographer", "Book caterer", "Book videographer", "Choose wedding party"]],
+  ["8–10 months", 270, ["Shop for the dress", "Book DJ or band", "Book florist", "Create a registry", "Send save the dates"]],
+  ["6–8 months", 210, ["Book officiant", "Plan the honeymoon", "Book hair & makeup", "Order the cake tasting"]],
+  ["4–6 months", 150, ["Order invitations", "Buy wedding bands", "Book transportation", "Choose bridesmaid dresses"]],
+  ["2–4 months", 90, ["Mail invitations", "Dress fittings", "Plan rehearsal dinner", "Buy favors and gifts"]],
+  ["1 month", 30, ["Final head count to caterer", "Seating chart", "Get the marriage license", "Confirm every vendor"]],
+  ["1–2 weeks", 10, ["Pay final balances", "Pack for the honeymoon", "Final dress fitting", "Prepare vendor tips"]],
+  ["After the wedding", -30, ["Send thank-you notes", "Change your name (if you want)", "Preserve the dress"]]
+];
+
+/* ---------- dates (local calendar days, ISO yyyy-mm-dd) ---------- */
+const iso = d => { const z = new Date(d); return z.getFullYear() + "-" + String(z.getMonth() + 1).padStart(2, "0") + "-" + String(z.getDate()).padStart(2, "0"); };
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const dayDiff = (a, b) => Math.round((b - a) / 86400000);
+const fmtD = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const fmtS = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const fmtLong = d => d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+
+/* ---------- state ---------- */
+const uid = () => Math.random().toString(36).slice(2, 9);
+const defaultCats = () => CATS.map(([name, pct]) => ({ id: uid(), name, pct }));
+const defaultTasks = () => WHEN.flatMap(([when, days, list]) => list.map(text => ({ id: uid(), when, days, text, done: false })));
+function blank() {
+  return { v: 1, app: "wedding-planner", currency: "$", theme: "auto", accent: "blush", p1: "", p2: "", date: "", budget: 0, guestGoal: 0,
+    cats: defaultCats(), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks() };
+}
+function valid(s) { return s && s.v === 1 && s.app === "wedding-planner" && ["cats", "vendors", "pays", "guests", "tables", "tasks"].every(k => Array.isArray(s[k])); }
+function normalize(s) { return Object.assign(blank(), s); }
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
+let S = load();
+const isNew = () => !S.date && !S.budget && !S.p1 && !S.p2 && !S.vendors.length && !S.guests.length;
+
+function sample() {
+  const s = blank(), t = today(), W = addDays(t, 215), before = n => iso(addDays(W, -n)), ago = n => iso(addDays(t, -n));
+  Object.assign(s, { p1: "Emma", p2: "James", date: iso(W), budget: 30000, guestGoal: 120 });
+  const cat = n => s.cats.find(c => c.name === n).id;
+  // [category, vendor, contact, status, contract total, deposit, deposit due, final payment due]
+  s.vendors = [
+    ["Venue", "Rosewood Garden Estate", "Sarah (events) · ceremony + reception", "Booked", 5900, 2000, ago(85), before(31)],
+    ["Catering & Bar", "Blush & Basil Catering", "Tasting done · 120 guests", "Booked", 7400, 1500, ago(58), before(15)],
+    ["Photography", "Golden Hour Studio", "8 hours + engagement shoot", "Booked", 2900, 1000, ago(70), before(14)],
+    ["Videography", "Ever After Films", "Highlight film · quote $1,800", "Researching", 0, 0, "", ""],
+    ["Attire & Beauty", "Ivory Lane Bridal", "Dress + alterations", "Booked", 1650, 825, ago(45), before(58)],
+    ["Attire & Beauty", "Glow Beauty Co.", "Hair & makeup, bride + 4", "Booked", 700, 200, ago(6), before(0)],
+    ["Flowers & Decor", "Petal & Stem", "Bouquets, arch, centerpieces", "Booked", 2600, 800, ago(24), before(14)],
+    ["Music & Entertainment", "Velvet Sound DJ", "Ceremony + reception", "Booked", 1500, 500, ago(32), before(11)],
+    ["Cake & Desserts", "Sugar Bloom Bakery", "3-tier + dessert table", "Booked", 600, 200, ago(9), before(14)],
+    ["Invitations & Stationery", "Paper Heart Press", "Save the dates + invites", "Paid in full", 540, 0, "", ago(37)],
+    ["Rings", "Lumen Jewelers", "Wedding bands", "Booked", 980, 300, ago(17), before(103)],
+    ["Officiant & Ceremony", "Rev. Maria Lopez", "Ceremony + rehearsal", "Booked", 300, 100, ago(3), before(0)]
+  ].map(([c, name, contact, status, total, deposit, depositDue, finalDue]) => ({ id: uid(), cat: cat(c), name, contact, status, total, deposit, depositDue, finalDue }));
+  const ven = n => s.vendors.find(v => v.name === n).id;
+  s.pays = [
+    [81, "Rosewood Garden Estate", 2000, "Bank transfer", "Venue deposit"], [68, "Golden Hour Studio", 1000, "Card", "Retainer"],
+    [55, "Blush & Basil Catering", 1500, "Check", "Deposit"], [42, "Ivory Lane Bridal", 900, "Card", "50% dress deposit"],
+    [37, "Paper Heart Press", 540, "Card", "Save the dates + invitations"], [30, "Velvet Sound DJ", 500, "Zelle / Venmo", "Deposit"],
+    [22, "Petal & Stem", 800, "Card", "Deposit"], [15, "Lumen Jewelers", 300, "Card", "Ring deposit"],
+    [7, "Sugar Bloom Bakery", 200, "Cash", "Tasting + deposit"], [5, "Rosewood Garden Estate", 1500, "Gift from family", "From Mom & Dad"],
+    [4, "Glow Beauty Co.", 200, "Card", "Trial + deposit"]
+  ].map(([d, v, amount, method, note]) => ({ id: uid(), vendor: ven(v), amount, date: ago(d), method, note }));
+  s.tables = ["Close family", "Friends", "Friends & work", "Extended family", "College friends", "Neighbors"].map(name => ({ id: uid(), name, seats: 8 }));
+  const FIRST = ["Olivia", "Liam", "Ava", "Noah", "Sophia", "Mason", "Isabella", "Ethan", "Mia", "Lucas", "Charlotte", "Logan", "Amelia", "Jacob", "Harper", "Henry", "Evelyn", "Owen", "Abigail", "Jack", "Emily", "Wyatt", "Ella", "Leo", "Grace", "Julian", "Chloe", "Levi", "Lily", "Caleb", "Zoe", "Nathan", "Hannah", "Ryan", "Nora", "Aaron", "Layla", "Eli"];
+  const LAST = ["Carter", "Bennett", "Hayes", "Brooks", "Reed", "Foster", "Parker", "Collins", "Morgan", "Hughes"];
+  s.guests = FIRST.map((f, i) => {
+    const rsvp = i < 22 ? "Attending" : i < 33 ? "Invited" : "Declined";
+    return { id: uid(), name: f + " " + LAST[i % LAST.length] + (i % 4 === 0 ? " & guest" : ""), side: ["p1", "p2", "both"][i % 3], group: ["Family", "Friends", "Work", "Friends", "Family"][i % 5],
+      size: i % 4 === 0 ? 2 : 1, rsvp, meal: rsvp === "Attending" ? MEALS[i % 4] : "", table: rsvp === "Attending" && i < 18 ? s.tables[Math.floor(i / 6)].id : (i >= 22 && i < 26 ? s.tables[4].id : null),
+      gift: ["", "", "Kitchen mixer (registry)", "", "", "$150 card", "", "", "", "Crystal vase"][i] || "", thanks: i === 2, notes: "" };
+  });
+  s.tasks.forEach((k, i) => k.done = i < 14);
+  return s;
+}
+
+/* ---------- the math (whole cents) ---------- */
+const cents = v => Math.round((Number(v) || 0) * 100);
+const catOf = id => S.cats.find(c => c.id === id);
+const venOf = id => S.vendors.find(v => v.id === id);
+const tabOf = id => S.tables.find(t => t.id === id);
+const booked = v => v.status !== "Researching";
+// Estimated = total budget × % for the category, rounded to the dollar (same as the spreadsheet)
+const catEst = c => cents(Math.round((Number(S.budget) || 0) * (Number(c.pct) || 0) / 100));
+const vendorPaid = v => S.pays.filter(p => p.vendor === v.id).reduce((s, p) => s + cents(p.amount), 0);
+const vendorBal = v => booked(v) ? Math.max(0, cents(v.total) - vendorPaid(v)) : 0;
+const catBooked = c => S.vendors.filter(v => v.cat === c.id && booked(v)).reduce((s, v) => s + cents(v.total), 0);
+const catPaid = c => S.vendors.filter(v => v.cat === c.id).reduce((s, v) => s + vendorPaid(v), 0);
+function catRow(c) {
+  const est = catEst(c), bk = catBooked(c), pd = catPaid(c);
+  return { est, booked: bk, paid: pd, still: Math.max(0, bk - pd), left: est - bk, status: bk === 0 ? "none" : bk > est ? "over" : "ok", over: Math.max(0, bk - est) };
+}
+function budgetTotals() {
+  const rows = S.cats.map(catRow), sum = k => rows.reduce((s, r) => s + r[k], 0);
+  const pct = Math.round(S.cats.reduce((s, c) => s + (Number(c.pct) || 0), 0) * 100) / 100;
+  return { budget: cents(S.budget), pct, est: sum("est"), booked: sum("booked"), paid: sum("paid"), still: S.vendors.reduce((s, v) => s + vendorBal(v), 0), left: cents(S.budget) - sum("booked") };
+}
+// What's due next for a vendor: the deposit if it isn't covered yet, then the balance by the final due date
+function nextDue(v) {
+  if (!booked(v)) return null;
+  const paid = vendorPaid(v), dep = cents(v.deposit), tot = cents(v.total);
+  if (dep > paid && v.depositDue) return { kind: "Deposit", amount: dep - paid, date: v.depositDue };
+  if (tot - paid > 0) return { kind: dep > 0 ? "Balance" : "Payment", amount: tot - paid, date: v.finalDue || "" };
+  return null;
+}
+const dueState = d => !d ? "" : dayDiff(today(), parse(d)) < 0 ? "overdue" : dayDiff(today(), parse(d)) <= 30 ? "soon" : "";
+function upcoming() { return S.vendors.map(v => [v, nextDue(v)]).filter(([, n]) => n).sort((a, b) => (a[1].date || "9999").localeCompare(b[1].date || "9999")); }
+// Guests: a declined guest doesn't take a seat; everyone else counts at their table
+const seatsOf = g => g.rsvp === "Declined" ? 0 : Math.max(1, Math.round(Number(g.size) || 1));
+const people = g => Math.max(1, Math.round(Number(g.size) || 1));
+function headcount() {
+  const r = { total: 0, invited: 0, attending: 0, awaiting: 0, declined: 0, notyet: 0, parties: S.guests.length };
+  S.guests.forEach(g => { const n = people(g); r.total += n; if (g.rsvp !== "Not invited yet") r.invited += n; if (g.rsvp === "Attending") r.attending += n; if (g.rsvp === "Invited") r.awaiting += n; if (g.rsvp === "Declined") r.declined += n; if (g.rsvp === "Not invited yet") r.notyet += n; });
+  return r;
+}
+function meals() { const m = {}; MEALS.forEach(x => m[x] = 0); m["Not chosen"] = 0; S.guests.filter(g => g.rsvp === "Attending").forEach(g => m[g.meal && m[g.meal] != null ? g.meal : "Not chosen"] += people(g)); return m; }
+const tableSeated = t => S.guests.filter(g => g.table === t.id).reduce((s, g) => s + seatsOf(g), 0);
+function seating() {
+  const seats = S.tables.reduce((s, t) => s + (Number(t.seats) || 0), 0), seated = S.tables.reduce((s, t) => s + tableSeated(t), 0);
+  const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table)).reduce((s, g) => s + people(g), 0);
+  return { seats, seated, need, over: S.tables.filter(t => tableSeated(t) > (Number(t.seats) || 0)).length, used: S.tables.filter(t => tableSeated(t) > 0).length };
+}
+// Checklist: target date = wedding date minus the days before
+const taskDue = t => S.date ? addDays(parse(S.date), -(Number(t.days) || 0)) : null;
+function taskState(t) { if (t.done) return "done"; const d = taskDue(t); if (!d) return ""; const n = dayDiff(today(), d); return n < 0 ? "overdue" : n <= 7 ? "week" : ""; }
+const daysToGo = () => S.date ? dayDiff(today(), parse(S.date)) : null;
+const tableNo = id => S.tables.findIndex(t => t.id === id) + 1;
+const tableLabel = id => { const t = tabOf(id); return t ? "Table " + tableNo(id) + (t.name ? " · " + t.name : "") : ""; };
+const sideName = s => s === "p1" ? (S.p1 || "Partner 1") : s === "p2" ? (S.p2 || "Partner 2") : "Both";
+const couple = () => S.p1 || S.p2 ? esc(S.p1 || "Partner 1") + ` <span class="heart">&amp;</span> ` + esc(S.p2 || "Partner 2") : "Our wedding";
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const n = Math.round(Math.abs(v) * 100) / 100, neg = v < 0 && n > 0 ? "-" : "";
+  const d = dec ?? (Math.round(n * 100) % 100 ? 2 : 0);
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(c / 100, dec);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2200); }
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+function ringSVG(pct, big, small, size = 132) {
+  const r = 52, c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, pct));
+  return `<svg class="ring" viewBox="0 0 132 132" width="${size}" height="${size}" role="img" aria-label="${Math.round(p * 100)}%"><circle class="tr" cx="66" cy="66" r="${r}"/><circle class="pr" cx="66" cy="66" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - p)).toFixed(1)}" transform="rotate(-90 66 66)"/><text x="66" y="70" text-anchor="middle">${big}</text><text class="rs" x="66" y="90" text-anchor="middle">${small}</text></svg>`;
+}
+function tableSVG(t, size = 74) {
+  const n = Math.max(0, Math.min(24, Number(t.seats) || 0)), used = tableSeated(t), R = 30, cx = 40, cy = 40;
+  let dots = "";
+  for (let i = 0; i < Math.max(n, Math.min(24, used)); i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / Math.max(n, used, 1); dots += `<circle class="seat ${i >= n ? "x" : i < used ? "on" : ""}" cx="${(cx + R * Math.cos(a)).toFixed(1)}" cy="${(cy + R * Math.sin(a)).toFixed(1)}" r="6"/>`; }
+  return `<svg class="tsvg" viewBox="0 0 80 80" width="${size}" height="${size}" aria-hidden="true"><circle class="top" cx="40" cy="40" r="20"/>${dots}<text x="40" y="45" text-anchor="middle">${tableNo(t.id)}</text></svg>`;
+}
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home";
+const M = () => document.getElementById("main");
+function go(v) {
+  VIEW = v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  const fab = document.getElementById("fab"), lab = { guests: "Add a guest", seating: "Add a guest", checklist: "Add a task", vendors: "Add a payment", budget: "Add a payment", home: "Add a payment" }[v];
+  fab.hidden = !lab; if (lab) { fab.setAttribute("aria-label", lab); fab.title = lab; }
+  render(); window.scrollTo(0, 0);
+  M().focus({ preventScroll: true });
+}
+function render() {
+  applyTheme();
+  ({ home, budget: budgetV, vendors: vendorsV, guests: guestsV, seating: seatingV, checklist: checklistV, settings })[VIEW]();
+}
+
+function detailsForm(id) {
+  return `<form id="${id}"><div class="two"><div class="field"><label for="${id}p1">Partner 1</label><input id="${id}p1" name="p1" value="${esc(S.p1)}" placeholder="Emma"></div><div class="field"><label for="${id}p2">Partner 2</label><input id="${id}p2" name="p2" value="${esc(S.p2)}" placeholder="James"></div></div>
+   <div class="three"><div class="field"><label for="${id}date">Wedding date</label><input id="${id}date" name="date" type="date" value="${esc(S.date)}"></div><div class="field"><label for="${id}budget">Total budget</label><input id="${id}budget" name="budget" type="number" min="0" step="0.01" inputmode="decimal" value="${S.budget || ""}" placeholder="30000"></div><div class="field"><label for="${id}goal">Guest count goal</label><input id="${id}goal" name="guestGoal" type="number" min="0" step="1" value="${S.guestGoal || ""}" placeholder="120"></div></div>
+   <button class="btn" id="${id}save">Save</button></form>`;
+}
+function readDetails(f) { S.p1 = f.p1.value.trim(); S.p2 = f.p2.value.trim(); S.date = f.date.value; S.budget = Math.max(0, +f.budget.value || 0); S.guestGoal = Math.max(0, Math.round(+f.guestGoal.value || 0)); }
+
+function welcome() {
+  M().innerHTML = `<h1>Let's plan your wedding 💍</h1><p class="sub">Budget, vendors, guests, seating and your checklist, all in one place. Start with the basics.</p>
+  <div class="card hero" style="max-width:640px"><div class="lab">Step 1</div><div class="mid" style="margin:4px 0 14px">Your names, date and budget</div>
+   ${detailsForm("setupF")}
+   <div class="actions" style="justify-content:flex-start;margin-top:14px"><button class="btn ghost" id="trySample">Try with sample data</button></div></div>`;
+  const f = document.getElementById("setupF");
+  f.onsubmit = e => { e.preventDefault(); readDetails(f); save(); go("home"); toast("Saved. Your budget is split by category"); };
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); go("home"); };
+}
+
+function home() {
+  if (isNew()) return welcome();
+  const d = daysToGo(), b = budgetTotals(), h = headcount(), st = seating(), m = meals();
+  const tasks = S.tasks.filter(t => !t.done), done = S.tasks.length - tasks.length;
+  const week = tasks.filter(t => ["overdue", "week"].includes(taskState(t))).sort((a, x) => x.days - a.days).slice(0, 6);
+  const up = upcoming().slice(0, 5);
+  M().innerHTML = `<div class="grid g2">
+   <div class="card hero"><div class="names">${couple()}</div>
+    ${d == null ? `<div class="big" id="countdown" style="font-size:40px">Set your date</div><p class="meta">Add your wedding date in Settings to start the countdown.</p>`
+      : d > 0 ? `<div class="big" id="countdown">${plural(d, "day")} to go</div><div style="font-weight:700">${fmtLong(parse(S.date))} · ${d >= 14 ? Math.floor(d / 7) + " weeks" : "almost there!"}</div>`
+      : d === 0 ? `<div class="big" id="countdown">Today's the day! 💍</div><div style="font-weight:700">${fmtLong(parse(S.date))}</div>` : `<div class="big" id="countdown">Married! 💍</div><div style="font-weight:700">${plural(-d, "day")} ago · ${fmtLong(parse(S.date))}</div>`}
+    <div class="stat3"><div><span>Budget booked</span><b>${b.budget ? Math.round(b.booked / b.budget * 100) + "%" : "—"}</b></div><div><span>Guests attending</span><b>${h.attending}${S.guestGoal ? " / " + S.guestGoal : ""}</b></div><div><span>Checklist done</span><b>${S.tasks.length ? Math.round(done / S.tasks.length * 100) : 0}%</b></div></div>
+    ${up.length ? (([v, n]) => `<p class="hint" style="margin:14px 0 0">💳 Next payment: <b>${mc(n.amount)}</b> ${n.kind.toLowerCase()} to ${esc(v.name)}${n.date ? (dueState(n.date) === "overdue" ? ", <b class=t-short>overdue</b> since " : ", due ") + fmtD(parse(n.date)) : ""}</p>`)(up[0]) : ""}
+    ${S.guestGoal ? `<p class="hint" style="margin:10px 0 0">💌 ${h.invited} of ${S.guestGoal} guests invited · ${h.awaiting} still to reply</p>` : ""}
+   </div>
+   <div class="card"><h2>This week</h2>${week.length ? week.map(taskRow).join("") : `<div class="empty">Nothing due this week. 🎉</div>`}<div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="checklist">See the full checklist</button></div></div>
+  </div>
+  <div class="grid g3" style="margin-top:16px">
+   <div class="card"><div class="lab">Budget</div><div class="mid" style="margin-top:6px" id="homeBooked">${mc(b.booked, 0)} <span class="meta">booked of ${mc(b.budget, 0)}</span></div>
+    <div class="bar ${b.booked > b.budget ? "over" : ""}" style="margin:10px 0"><i style="width:${b.budget ? Math.min(100, b.booked / b.budget * 100) : 0}%"></i></div>
+    <div class="kv"><span>Paid so far</span><b class="t-ok">${mc(b.paid, 0)}</b></div><div class="kv"><span>Still to pay</span><b>${mc(b.still, 0)}</b></div><div class="kv"><span>Left to book</span><b class="${b.left < 0 ? "t-short" : ""}">${mc(b.left, 0)}</b></div></div>
+   <div class="card"><div class="lab">RSVPs</div><div class="mid" style="margin-top:6px">${h.attending} <span class="meta">attending</span></div>
+    <div class="kv"><span>Waiting to hear</span><b>${h.awaiting}</b></div><div class="kv"><span>Declined</span><b>${h.declined}</b></div><div class="kv"><span>Not invited yet</span><b>${h.notyet}</b></div>
+    <div class="meta" style="margin-top:6px">${Object.entries(m).filter(([, n]) => n).map(([k, n]) => esc(k) + " " + n).join(" · ") || "No meals chosen yet"}</div></div>
+   <div class="card"><div class="lab">Seating</div><div class="mid" style="margin-top:6px">${st.seated} <span class="meta">seated at ${plural(st.used, "table")}</span></div>
+    <div class="kv"><span>Seats set up</span><b>${st.seats}</b></div><div class="kv"><span>Attending, no table yet</span><b class="${st.need ? "t-warn" : ""}">${st.need}</b></div><div class="kv"><span>Tables over capacity</span><b class="${st.over ? "t-short" : ""}">${st.over}</b></div>
+    <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="seating">Open the seating map</button></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="tablebar"><h2 style="margin:0">Payments coming up</h2><button class="btn small ghost" data-go="vendors">All vendors</button></div>${up.length ? up.map(([v, n]) => dueRow(v, n)).join("") : `<div class="empty">No payments due. Add your vendors to track deposits and balances.</div>`}</div>`;
+  wire();
+}
+function dueRow(v, n) {
+  const ds = dueState(n.date), c = catOf(v.cat);
+  return `<div class="row"><div class="emo">${CAT_ICON[c && c.name] || "✦"}</div><div class="grow"><div class="name">${esc(v.name)}</div><div class="meta">${n.kind}${n.date ? " · due " + fmtD(parse(n.date)) : " · no due date"}</div></div>
+   ${ds === "overdue" ? `<span class="pill short">Overdue</span>` : ds === "soon" ? `<span class="pill tight">In ${plural(dayDiff(today(), parse(n.date)), "day")}</span>` : ""}<div class="amt">${mc(n.amount)}</div><button class="btn small" data-pay="${v.id}">Pay</button></div>`;
+}
+
+/* --- budget --- */
+function budgetV() {
+  const b = budgetTotals();
+  M().innerHTML = `<div class="tablebar"><div><h1>Budget</h1><p class="sub" style="margin:0">Estimated (your % of the total) × booked (signed contracts) × paid.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvB">⬇ Export CSV</button><button class="btn" id="addCat">+ Add a category</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   <div class="card"><div class="lab">Total budget</div><div class="mid" id="bTotal">${mc(b.budget, 0)}</div><button class="btn small ghost" style="margin-top:6px" data-go="settings">Change</button></div>
+   <div class="card"><div class="lab">Booked</div><div class="mid" id="bBooked">${mc(b.booked, 0)}</div><div class="meta">${b.budget ? Math.round(b.booked / b.budget * 100) : 0}% of the budget</div></div>
+   <div class="card"><div class="lab">Paid</div><div class="mid t-ok" id="bPaid">${mc(b.paid, 0)}</div><div class="meta">${mc(b.still, 0)} still to pay</div></div>
+   <div class="card"><div class="lab">Left to book</div><div class="mid ${b.left < 0 ? "t-short" : ""}" id="bLeft">${mc(b.left, 0)}</div><div class="meta">${b.left < 0 ? "over the budget" : "not signed yet"}</div></div>
+  </div>
+  ${b.pct !== 100 ? `<p class="hint" id="pctWarn" style="margin-top:14px">⚠ Your categories add up to <b>${b.pct}%</b> of the budget. Aim for 100%.</p>` : ""}
+  <div class="card" style="margin-top:16px"><div class="tscroll"><table class="t" id="budTable"><thead><tr><th>Category</th><th>% of budget</th><th>Estimated</th><th>Booked</th><th>Paid</th><th>Still to pay</th><th>Left to book</th><th class="l">Status</th><th></th></tr></thead><tbody>
+   ${S.cats.map(c => { const r = catRow(c); return `<tr><td><span style="margin-right:6px">${CAT_ICON[c.name] || "•"}</span><b>${esc(c.name)}</b></td><td><input class="pct" type="number" min="0" max="100" step="0.5" value="${c.pct}" data-pct="${c.id}" aria-label="${esc(c.name)} percent"> %</td><td data-est="${c.id}">${mc(r.est, 0)}</td><td>${mc(r.booked, 0)}</td><td class="t-ok">${mc(r.paid, 0)}</td><td>${mc(r.still, 0)}</td><td class="${r.left < 0 ? "t-short" : ""}">${mc(r.left, 0)}</td>
+    <td class="l">${r.status === "over" ? `<span class="pill short">Over by ${mc(r.over, 0)}</span>` : r.status === "ok" ? `<span class="pill ok">On budget</span>` : `<span class="pill grey">Not booked yet</span>`}</td><td><button class="icon" data-editcat="${c.id}" aria-label="Edit ${esc(c.name)}">✎</button></td></tr>`; }).join("")}
+   </tbody><tfoot><tr><td>Total</td><td id="pctTotal">${b.pct}%</td><td>${mc(b.est, 0)}</td><td>${mc(b.booked, 0)}</td><td class="t-ok">${mc(b.paid, 0)}</td><td>${mc(b.still, 0)}</td><td class="${b.left < 0 ? "t-short" : ""}">${mc(b.budget - b.booked, 0)}</td><td></td><td></td></tr></tfoot></table></div></div>
+  <div class="grid g2" style="margin-top:16px">
+   <div class="card"><h2>Booked vs. estimated</h2>${S.cats.map(c => { const r = catRow(c), mx = Math.max(r.est, r.booked, 1); return `<div class="cbar"><span class="n">${esc(c.name)}</span><div class="bar ${r.status === "over" ? "over" : ""}"><i style="width:${Math.min(100, r.booked / Math.max(r.est, 1) * 100)}%"></i></div><span class="amt" style="font-size:13px">${mc(r.booked, 0)} / ${mc(r.est, 0)}</span></div>`; }).join("")}</div>
+   <div class="card"><h2>How the split works</h2><p class="meta" style="font-size:14px;margin:0 0 10px">Each category starts with a suggested share of your total budget: venue 20%, catering & bar 25%, photography 10% and so on. Change any % to fit what matters to you; the estimate updates right away.</p>
+    <p class="meta" style="font-size:14px;margin:0 0 10px"><b>Booked</b> adds up the contracts of vendors you've booked. <b>Paid</b> adds up every payment you've logged. A category turns red when its contracts go over its estimate.</p>
+    <p class="hint" style="margin:0">💡 Venue and catering are usually about half of a wedding budget. Keep 3–5% as a buffer for surprises.</p>
+    <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" id="resetPct">Use the suggested split</button></div></div>
+  </div>`;
+  M().querySelectorAll("[data-pct]").forEach(i => i.onchange = () => { const c = catOf(i.dataset.pct); c.pct = Math.max(0, Math.min(100, Math.round((+i.value || 0) * 100) / 100)); save(); render(); });
+  document.getElementById("addCat").onclick = () => catDlg();
+  document.getElementById("csvB").onclick = () => exportCSV("budget");
+  document.getElementById("resetPct").onclick = () => confirmDlg("Use the suggested split?", "This sets every category back to its suggested % (custom categories go to 0%).", "Reset %", () => { S.cats.forEach(c => { const d = CATS.find(x => x[0] === c.name); c.pct = d ? d[1] : 0; }); save(); render(); });
+  wire();
+}
+
+/* --- vendors --- */
+function vendorsV() {
+  const b = budgetTotals(), up = upcoming(), od = up.filter(([, n]) => dueState(n.date) === "overdue");
+  const list = S.vendors.slice().sort((a, x) => S.cats.indexOf(catOf(a.cat)) - S.cats.indexOf(catOf(x.cat)));
+  M().innerHTML = `<div class="tablebar"><div><h1>Vendors &amp; payments</h1><p class="sub" style="margin:0">${S.vendors.filter(booked).length} booked · ${mc(b.booked, 0)} signed · ${mc(b.paid, 0)} paid · ${mc(b.still, 0)} still to pay</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvV">⬇ Export CSV</button><button class="btn" id="addVen">+ Add a vendor</button></div></div>
+  ${od.length ? `<p class="hint" style="margin-top:12px;background:var(--badbg);color:var(--bad)" id="overdueWarn">⚠ ${plural(od.length, "payment")} past due: ${od.map(([v]) => esc(v.name)).join(", ")}</p>` : ""}
+  <div class="card" style="margin-top:12px"><div class="tscroll"><table class="t" id="venTable"><thead><tr><th>Vendor</th><th class="l">Status</th><th>Contract</th><th>Deposit</th><th>Paid</th><th>Balance</th><th class="l">Next due</th><th></th></tr></thead><tbody>
+   ${list.length ? list.map(v => { const c = catOf(v.cat), n = nextDue(v), ds = n ? dueState(n.date) : "", bal = vendorBal(v), paidAll = booked(v) && cents(v.total) > 0 && bal === 0;
+     return `<tr data-v="${v.id}"><td><b>${esc(v.name)}</b><div class="meta">${CAT_ICON[c && c.name] || ""} ${esc(c ? c.name : "No category")}${v.contact ? " · " + esc(v.contact) : ""}</div></td>
+      <td class="l">${paidAll ? `<span class="pill done">Paid in full</span>` : booked(v) ? `<span class="pill ok">Booked</span>` : `<span class="pill grey">Researching</span>`}</td>
+      <td>${booked(v) ? mc(cents(v.total), 0) : "—"}</td><td>${cents(v.deposit) ? mc(cents(v.deposit), 0) + (v.depositDue ? `<div class="meta">${fmtS(parse(v.depositDue))}</div>` : "") : "—"}</td><td class="t-ok">${mc(vendorPaid(v), 0)}</td><td data-bal="${v.id}">${booked(v) ? mc(bal, 0) : "—"}</td>
+      <td class="l">${n ? `<span class="${ds === "overdue" ? "t-short" : ds === "soon" ? "t-warn" : ""}"><b>${mc(n.amount, 0)}</b> ${n.kind.toLowerCase()}${n.date ? " · " + fmtS(parse(n.date)) : ""}${ds === "overdue" ? " · overdue" : ""}</span>` : paidAll ? `<span class="t-ok">All paid ✓</span>` : `<span class="meta">—</span>`}</td>
+      <td><div style="display:flex;gap:6px;justify-content:flex-end">${n ? `<button class="btn small" data-pay="${v.id}">Pay</button>` : ""}<button class="icon" data-editven="${v.id}" aria-label="Edit ${esc(v.name)}">✎</button></div></td></tr>`; }).join("") : `<tr><td colspan="8"><div class="empty">No vendors yet. Add your venue, caterer or photographer to track deposits and due dates.</div></td></tr>`}
+   </tbody></table></div></div>
+  <div class="grid g2" style="margin-top:16px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Payments log</h2><button class="btn small ghost" id="addPay">+ Log a payment</button></div><div id="payList">${S.pays.length ? S.pays.slice().sort((a, x) => x.date.localeCompare(a.date)).map(payRow).join("") : `<div class="empty">No payments yet.</div>`}</div></div>
+   <div class="card"><h2>Coming up</h2>${up.length ? up.slice(0, 8).map(([v, n]) => dueRow(v, n)).join("") : `<div class="empty">Nothing due. 🎉</div>`}
+    <p class="hint" style="margin:12px 0 0">💡 Add the deposit and both due dates from each contract. The app shows the deposit first, then the balance, and turns red when a date has passed.</p></div>
+  </div>`;
+  document.getElementById("addVen").onclick = () => vendorDlg();
+  document.getElementById("addPay").onclick = () => payDlg();
+  document.getElementById("csvV").onclick = () => S.vendors.length ? exportCSV("vendors") : toast("Add a vendor first");
+  wire();
+}
+function payRow(p) {
+  const v = venOf(p.vendor);
+  return `<div class="row"><div class="emo">↗</div><div class="grow"><div class="name">${esc(v ? v.name : "Deleted vendor")}</div><div class="meta">${fmtD(parse(p.date))}${p.method ? " · " + esc(p.method) : ""}${p.note ? " · " + esc(p.note) : ""}</div></div><div class="amt">${mc(cents(p.amount))}</div><button class="icon" data-editpay="${p.id}" aria-label="Edit payment">✎</button></div>`;
+}
+
+/* --- guests --- */
+let GF = { q: "", rsvp: "", side: "" };
+function guestsV() {
+  const h = headcount(), m = meals();
+  const list = S.guests.filter(g => (!GF.rsvp || g.rsvp === GF.rsvp) && (!GF.side || g.side === GF.side) && (!GF.q || (g.name + " " + g.group).toLowerCase().includes(GF.q.toLowerCase())));
+  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button><button class="btn" id="addG">+ Add a guest</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   <div class="card"><div class="lab">Attending</div><div class="mid t-ok" id="gAtt">${h.attending}</div><div class="meta">${S.guestGoal ? Math.round(h.attending / S.guestGoal * 100) + "% of your goal" : "people"}</div></div>
+   <div class="card"><div class="lab">Waiting to hear</div><div class="mid" id="gWait">${h.awaiting}</div><div class="meta">invited, no reply yet</div></div>
+   <div class="card"><div class="lab">Declined</div><div class="mid" id="gDec">${h.declined}</div><div class="meta">${h.notyet} not invited yet</div></div>
+   <div class="card"><div class="lab">Meals</div><div class="meta" style="margin-top:6px;font-size:13.5px;line-height:1.55" id="gMeals">${Object.entries(m).filter(([, n]) => n).map(([k, n]) => `<b style="color:var(--ink)">${n}</b> ${esc(k)}`).join(" · ") || "None yet"}</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+   <div class="tools"><div class="field" style="flex:1;min-width:160px"><label for="gq">Search</label><input id="gq" value="${esc(GF.q)}" placeholder="Name or group"></div>
+    <div class="field"><label for="gr">RSVP</label><select id="gr"><option value="">All</option>${RSVP.map(r => `<option ${GF.rsvp === r ? "selected" : ""}>${r}</option>`).join("")}</select></div>
+    <div class="field"><label for="gs">Side</label><select id="gs"><option value="">Both sides</option>${["p1", "p2", "both"].map(s => `<option value="${s}" ${GF.side === s ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div></div>
+   <div class="tscroll"><table class="t" id="gTable"><thead><tr><th>Guest</th><th class="l">Side</th><th>Party</th><th class="l">RSVP</th><th class="l">Meal</th><th class="l">Table</th><th></th></tr></thead><tbody>
+   ${list.length ? list.map(g => `<tr data-g="${g.id}"><td><b>${esc(g.name)}</b><div class="meta">${esc(g.group || "")}${g.gift ? " · 🎁 " + esc(g.gift) + (g.thanks ? " ✓ thanked" : "") : ""}</div></td><td class="l">${esc(sideName(g.side))}</td><td>${people(g)}</td>
+     <td class="l"><select class="rs" data-rsvp="${g.id}" aria-label="RSVP for ${esc(g.name)}">${RSVP.map(r => `<option ${g.rsvp === r ? "selected" : ""}>${r}</option>`).join("")}</select></td>
+     <td class="l"><select class="rs" data-meal="${g.id}" aria-label="Meal for ${esc(g.name)}"><option value="">—</option>${MEALS.map(x => `<option ${g.meal === x ? "selected" : ""}>${x}</option>`).join("")}</select></td>
+     <td class="l">${g.rsvp === "Declined" ? `<span class="meta">—</span>` : tabOf(g.table) ? esc(tableLabel(g.table)) : `<span class="meta">Not seated</span>`}</td><td><button class="icon" data-editg="${g.id}" aria-label="Edit ${esc(g.name)}">✎</button></td></tr>`).join("") : `<tr><td colspan="7"><div class="empty">${S.guests.length ? "No guests match." : "No guests yet. Add them one by one or paste a list with + Add several."}</div></td></tr>`}
+   </tbody></table></div></div>`;
+  const q = document.getElementById("gq"); q.oninput = () => { GF.q = q.value; const pos = q.selectionStart; render(); const n = document.getElementById("gq"); n.focus(); n.setSelectionRange(pos, pos); };
+  document.getElementById("gr").onchange = e => { GF.rsvp = e.target.value; render(); };
+  document.getElementById("gs").onchange = e => { GF.side = e.target.value; render(); };
+  M().querySelectorAll("[data-rsvp]").forEach(s => s.onchange = () => { const g = S.guests.find(x => x.id === s.dataset.rsvp); g.rsvp = s.value; if (g.rsvp === "Declined") g.table = null; save(); render(); });
+  M().querySelectorAll("[data-meal]").forEach(s => s.onchange = () => { S.guests.find(x => x.id === s.dataset.meal).meal = s.value; save(); render(); });
+  document.getElementById("addG").onclick = () => guestDlg();
+  document.getElementById("bulkG").onclick = () => bulkDlg();
+  document.getElementById("csvG").onclick = () => S.guests.length ? exportCSV("guests") : toast("Add a guest first");
+  wire();
+}
+
+/* --- seating (drag the names onto the tables) --- */
+let PICKG = null;
+function seatingV() {
+  const st = seating();
+  const pool = S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).sort((a, b) => (a.rsvp === "Attending" ? 0 : 1) - (b.rsvp === "Attending" ? 0 : 1) || a.name.localeCompare(b.name));
+  const chip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}" draggable="true" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}">${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}</button>`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Seating chart</h1><p class="sub" style="margin:0">Drag a name onto a table. Or tap a name, then tap a table.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="addTables">+ Add several tables</button><button class="btn" id="addTable">+ Add a table</button></div></div>
+  <div class="grid g4" style="margin:12px 0 16px">
+   <div class="card"><div class="lab">Seated</div><div class="mid" id="sSeated">${st.seated}</div><div class="meta">of ${st.seats} seats</div></div>
+   <div class="card"><div class="lab">Need a table</div><div class="mid ${st.need ? "t-warn" : "t-ok"}" id="sNeed">${st.need}</div><div class="meta">attending guests</div></div>
+   <div class="card"><div class="lab">Tables</div><div class="mid">${S.tables.length}</div><div class="meta">${st.used} in use</div></div>
+   <div class="card"><div class="lab">Over capacity</div><div class="mid ${st.over ? "t-short" : ""}" id="sOver">${st.over}</div><div class="meta">${st.over ? "move someone" : "all good"}</div></div>
+  </div>
+  <div class="seatwrap">
+   <div class="card pool"><h2>Not seated yet <span class="meta">(${pool.reduce((s, g) => s + people(g), 0)})</span></h2>
+    <div class="zone gchips" data-drop="" id="poolZone" aria-label="Not seated">${pool.length ? pool.map(chip).join("") : `<div class="meta" style="padding:8px">Everyone has a seat. 🎉</div>`}</div>
+    <p class="meta" style="margin:12px 0 0">Dashed names are invited but haven't replied yet. Declined guests aren't shown.</p></div>
+   <div>${S.tables.length ? `<div class="tables">${S.tables.map(t => { const n = tableSeated(t), cap = Number(t.seats) || 0, gs = S.guests.filter(g => g.table === t.id && g.rsvp !== "Declined");
+     return `<div class="tcard zone ${n > cap ? "overcap" : n === cap && cap ? "full" : ""}" data-drop="${t.id}" data-tid="${t.id}"><div class="thead">${tableSVG(t)}<div class="grow"><div class="name">Table ${tableNo(t.id)}</div>${t.name ? `<div class="meta tname">${esc(t.name)}</div>` : ""}<div class="meta" data-occ="${t.id}">${n} of ${cap} seats${n > cap ? ` · <b class="t-short">over by ${n - cap}</b>` : n === cap && cap ? " · full" : ""}</div></div><button class="icon" data-edittable="${t.id}" aria-label="Edit table ${tableNo(t.id)}">✎</button></div>
+      <div class="gchips">${gs.map(chip).join("") || `<span class="meta" style="padding:6px 2px">Drop names here</span>`}</div></div>`; }).join("")}</div>`
+     : `<div class="card"><div class="empty">No tables yet. Add them one at a time or several at once (for example 12 tables of 8).</div></div>`}</div>
+  </div>`;
+  document.getElementById("addTable").onclick = () => tableDlg();
+  document.getElementById("addTables").onclick = () => tablesDlg();
+  M().querySelectorAll(".gchip").forEach(c => {
+    c.ondragstart = e => { e.dataTransfer.setData("text/plain", c.dataset.gid); e.dataTransfer.effectAllowed = "move"; c.classList.add("dragging"); };
+    c.ondragend = () => c.classList.remove("dragging");
+    c.onclick = e => { e.stopPropagation(); PICKG = PICKG === c.dataset.gid ? null : c.dataset.gid; render(); if (PICKG) toast("Now tap a table for " + S.guests.find(g => g.id === PICKG).name); };
+  });
+  M().querySelectorAll(".zone[data-drop]").forEach(z => {
+    z.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; z.classList.add("over"); };
+    z.ondragleave = e => { if (!z.contains(e.relatedTarget)) z.classList.remove("over"); };
+    z.ondrop = e => { e.preventDefault(); e.stopPropagation(); z.classList.remove("over"); const gid = e.dataTransfer.getData("text/plain"); if (gid) seat(gid, z.dataset.drop); };
+    z.onclick = e => { if (PICKG && !e.target.closest("[data-edittable]")) seat(PICKG, z.dataset.drop); };
+  });
+  wire();
+}
+function seat(gid, tid) {
+  const g = S.guests.find(x => x.id === gid); if (!g) return;
+  PICKG = null; const t = tabOf(tid);
+  if ((g.table || null) === (t ? t.id : null)) { render(); return; }
+  g.table = t ? t.id : null; save(); render();
+  if (t) { const n = tableSeated(t), cap = Number(t.seats) || 0; toast(n > cap ? `Table ${tableNo(t.id)} is over by ${n - cap}` : `${g.name} → Table ${tableNo(t.id)}`); } else toast(g.name + " is not seated");
+}
+
+/* --- checklist --- */
+let CF = "all";
+function taskRow(t) {
+  const d = taskDue(t), st = taskState(t);
+  return `<div class="task ${t.done ? "isdone" : ""}"><button class="tick" data-tick="${t.id}" aria-pressed="${!!t.done}" aria-label="${t.done ? "Mark as not done" : "Mark as done"}: ${esc(t.text)}">${t.done ? "✓" : ""}</button><div class="grow"><div class="tt" style="font-weight:650">${esc(t.text)}</div><div class="meta">${d ? fmtD(d) : esc(t.when)}${d && !t.done ? " · " + (dayDiff(today(), d) >= 0 ? "in " + plural(dayDiff(today(), d), "day") : plural(-dayDiff(today(), d), "day") + " ago") : ""}</div></div>
+   ${st === "overdue" ? `<span class="pill short">Overdue</span>` : st === "week" ? `<span class="pill tight">This week</span>` : ""}<button class="icon" data-edittask="${t.id}" aria-label="Edit task">✎</button></div>`;
+}
+function checklistV() {
+  const done = S.tasks.filter(t => t.done).length, od = S.tasks.filter(t => taskState(t) === "overdue").length, wk = S.tasks.filter(t => taskState(t) === "week").length;
+  const show = t => CF === "all" || (CF === "open" && !t.done) || (CF === "done" && t.done) || (CF === "overdue" && taskState(t) === "overdue");
+  const groups = []; S.tasks.slice().sort((a, b) => b.days - a.days).forEach(t => { if (!show(t)) return; let g = groups.find(x => x.when === t.when); if (!g) groups.push(g = { when: t.when, days: t.days, list: [] }); g.list.push(t); });
+  M().innerHTML = `<div class="tablebar"><div><h1>Checklist</h1><p class="sub" style="margin:0">Target dates count back from your wedding date${S.date ? " (" + fmtD(parse(S.date)) + ")" : ""}.</p></div><button class="btn" id="addTask">+ Add a task</button></div>
+  ${!S.date ? `<p class="hint" style="margin-top:12px">Add your wedding date in Settings to see a target date for every task.</p>` : ""}
+  <div class="grid g2" style="margin-top:12px">
+   <div class="card"><div class="ringrow">${ringSVG(S.tasks.length ? done / S.tasks.length : 0, (S.tasks.length ? Math.round(done / S.tasks.length * 100) : 0) + "%", "done", 104)}<div><div class="mid" id="cDone">${done} of ${S.tasks.length}</div><div class="meta">tasks done · <span class="${od ? "t-short" : ""}" id="cOver">${od} overdue</span> · ${wk} this week</div></div></div></div>
+   <div class="card"><div class="lab">Show</div><div class="chips" style="margin-top:8px">${[["all", "All"], ["open", "To do"], ["overdue", "Overdue"], ["done", "Done"]].map(([k, t]) => `<button class="chip" data-cf="${k}" aria-pressed="${CF === k}">${t}</button>`).join("")}</div></div>
+  </div>
+  <div class="card" style="margin-top:16px" id="taskList">${groups.length ? groups.map(g => { const d = S.date ? addDays(parse(S.date), -g.days) : null; return `<div class="ghead"><h2 style="margin:0">${esc(g.when)}</h2><span class="meta">${d ? (g.days >= 0 ? "by " : "after, by ") + fmtD(d) : ""}</span></div>${g.list.map(taskRow).join("")}`; }).join("") : `<div class="empty">Nothing here.</div>`}</div>`;
+  M().querySelectorAll("[data-cf]").forEach(b => b.onclick = () => { CF = b.dataset.cf; render(); });
+  document.getElementById("addTask").onclick = () => taskDlg();
+  wire();
+}
+
+/* --- settings --- */
+function settings() {
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then.</p>
+  <div class="grid g2e">
+   <div class="card"><h2>Your wedding</h2>${detailsForm("detF")}</div>
+   <div class="card"><h2>Look</h2>
+    <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><span class="fl">Color</span><div class="chips">${[["blush", "Blush"], ["sage", "Sage"], ["champagne", "Champagne"], ["navy", "Navy"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
+    <form id="curF" style="display:flex;gap:10px;align-items:end"><div class="field" style="margin:0;width:140px"><label for="cur">Currency symbol</label><input id="cur" name="currency" maxlength="3" value="${esc(S.currency)}"></div><button class="btn ghost">Save</button></form>
+   </div>
+   <div class="card"><h2>Backup</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+    <h2 style="margin-top:22px">Export to CSV</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvB2">⬇ Budget CSV</button><button class="btn ghost" id="csvV2">⬇ Vendors CSV</button><button class="btn ghost" id="csvP2">⬇ Payments CSV</button><button class="btn ghost" id="csvG2">⬇ Guests CSV</button></div>
+   </div>
+   <div class="card"><h2>Start over</h2><p class="meta" style="margin:0 0 10px">The sample shows a full plan for Emma &amp; James. Erasing keeps nothing.</p>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
+  </div>
+  <p class="foot">Wedding Planner App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
+  const df = document.getElementById("detF"); df.onsubmit = e => { e.preventDefault(); readDetails(df); save(); render(); toast("Saved"); };
+  M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
+  const cf = document.getElementById("curF"); cf.onsubmit = e => { e.preventDefault(); S.currency = cf.currency.value.trim() || "$"; save(); render(); toast("Saved"); };
+  document.getElementById("exp").onclick = () => { download("wedding-planner-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Wedding Planner backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("csvB2").onclick = () => exportCSV("budget");
+  document.getElementById("csvV2").onclick = () => S.vendors.length ? exportCSV("vendors") : toast("Add a vendor first");
+  document.getElementById("csvP2").onclick = () => S.pays.length ? exportCSV("payments") : toast("No payments yet");
+  document.getElementById("csvG2").onclick = () => S.guests.length ? exportCSV("guests") : toast("Add a guest first");
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with the sample wedding. Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, vendors, payments, guests, tables and checklist from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f2 = c => (c / 100).toFixed(2);
+function csvText(kind) {
+  let L;
+  if (kind === "budget") {
+    L = [["Category", "% of budget", "Estimated", "Booked", "Paid", "Still to pay", "Left to book", "Status"]];
+    S.cats.forEach(c => { const r = catRow(c); L.push([c.name, c.pct, f2(r.est), f2(r.booked), f2(r.paid), f2(r.still), f2(r.left), r.status === "over" ? "Over by " + f2(r.over) : r.status === "ok" ? "On budget" : "Not booked yet"]); });
+    const b = budgetTotals(); L.push(["Total", b.pct, f2(b.est), f2(b.booked), f2(b.paid), f2(b.still), f2(b.left), ""]);
+  } else if (kind === "vendors") {
+    L = [["Category", "Vendor", "Contact / notes", "Status", "Contract total", "Deposit", "Deposit due", "Paid so far", "Balance", "Final payment due", "Next due", "Next due date"]];
+    S.vendors.forEach(v => { const c = catOf(v.cat), n = nextDue(v), bal = vendorBal(v); L.push([c ? c.name : "", v.name, v.contact || "", booked(v) && cents(v.total) > 0 && bal === 0 ? "Paid in full" : booked(v) ? "Booked" : "Researching", f2(booked(v) ? cents(v.total) : 0), f2(cents(v.deposit)), v.depositDue || "", f2(vendorPaid(v)), f2(bal), v.finalDue || "", n ? n.kind + " " + f2(n.amount) : "", n ? n.date : ""]); });
+  } else if (kind === "payments") {
+    L = [["Date", "Vendor", "Category", "Amount", "Paid with", "Note"]];
+    S.pays.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(p => { const v = venOf(p.vendor), c = v && catOf(v.cat); L.push([p.date, v ? v.name : "", c ? c.name : "", f2(cents(p.amount)), p.method || "", p.note || ""]); });
+  } else {
+    L = [["Guest", "Side", "Group", "Party size", "RSVP", "Meal", "Table", "Gift", "Thank-you sent", "Notes"]];
+    S.guests.forEach(g => L.push([g.name, sideName(g.side), g.group || "", people(g), g.rsvp, g.meal || "", g.rsvp === "Declined" ? "" : tableLabel(g.table), g.gift || "", g.thanks ? "Yes" : "", g.notes || ""]));
+  }
+  return L.map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { download("wedding-" + kind + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=radio]):not([type=checkbox]),select,textarea"); first && first.focus();
+}
+const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+const opts = (list, cur) => list.map(x => `<option ${x === cur ? "selected" : ""}>${esc(x)}</option>`).join("");
+const delBtn = fn => { const d = document.getElementById("delBtn"); if (d) d.onclick = fn; };
+
+function catDlg(id) {
+  const c = catOf(id) || { name: "", pct: 0 };
+  openDlg(`<h2>${id ? "Edit category" : "Add a category"}</h2>
+   <div class="two"><div class="field"><label>Name</label><input name="name" required value="${esc(c.name)}" placeholder="Honeymoon, rehearsal dinner…"></div><div class="field"><label>% of budget</label><input name="pct" type="number" min="0" max="100" step="0.5" value="${c.pct}"></div></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: c.id || uid(), name: fd.get("name").trim() || "Category", pct: Math.max(0, Math.min(100, +fd.get("pct") || 0)) };
+    if (id) Object.assign(c, o); else S.cats.push(o);
+    toast(id ? "Category updated" : "Category added");
+  }, () => delBtn(() => { if (S.vendors.some(v => v.cat === id)) { toast("Move or delete its vendors first"); return; } D().close(); S.cats = S.cats.filter(x => x.id !== id); save(); render(); toast("Category deleted"); }));
+}
+function vendorDlg(id) {
+  const v = venOf(id) || { cat: S.cats[0] && S.cats[0].id, name: "", contact: "", status: "Booked", total: "", deposit: "", depositDue: "", finalDue: "" };
+  openDlg(`<h2>${id ? "Edit vendor" : "Add a vendor"}</h2>
+   <div class="two"><div class="field"><label>Vendor</label><input name="name" required value="${esc(v.name)}" placeholder="Rosewood Garden Estate"></div><div class="field"><label>Category</label><select name="cat">${S.cats.map(c => `<option value="${c.id}" ${v.cat === c.id ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></div></div>
+   <div class="field"><label>Contact / notes</label><input name="contact" value="${esc(v.contact)}" placeholder="Name, phone, what's included"></div>
+   <div class="field"><span class="fl">Status</span><div class="seg">${["Researching", "Booked"].map(s => `<label><input type="radio" name="status" value="${s}" ${(v.status === s || (s === "Booked" && v.status === "Paid in full")) ? "checked" : ""}>${s}</label>`).join("")}</div></div>
+   <div class="field"><label>Contract total</label><input name="total" type="number" step="0.01" min="0" inputmode="decimal" value="${v.total || ""}" placeholder="0"></div>
+   <div class="two"><div class="field"><label>Deposit</label><input name="deposit" type="number" step="0.01" min="0" inputmode="decimal" value="${v.deposit || ""}" placeholder="0"></div><div class="field"><label>Deposit due</label><input name="depositDue" type="date" value="${esc(v.depositDue)}"></div></div>
+   <div class="field"><label>Final payment due</label><input name="finalDue" type="date" value="${esc(v.finalDue)}"><small>Payments you log count toward the deposit first, then the balance.</small></div>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, v, { id: v.id || uid(), name: fd.get("name").trim() || "Vendor", cat: fd.get("cat"), contact: fd.get("contact").trim(), status: fd.get("status") === "Researching" ? "Researching" : "Booked",
+      total: Math.max(0, +fd.get("total") || 0), deposit: Math.max(0, +fd.get("deposit") || 0), depositDue: fd.get("depositDue") || "", finalDue: fd.get("finalDue") || "" });
+    if (o.deposit > o.total && o.total > 0) { toast("The deposit can't be more than the contract"); return false; }
+    if (id) S.vendors[S.vendors.findIndex(x => x.id === id)] = o; else S.vendors.push(o);
+    toast(id ? "Vendor updated" : "Vendor added");
+  }, () => delBtn(() => { D().close(); const n = S.pays.filter(p => p.vendor === id).length; confirmDlg("Delete " + esc(v.name) + "?", `This also deletes its ${plural(n, "payment")}. It can't be undone.`, "Delete", () => { S.vendors = S.vendors.filter(x => x.id !== id); S.pays = S.pays.filter(p => p.vendor !== id); save(); render(); toast("Vendor deleted"); }); }));
+}
+function payDlg(id, vendor) {
+  const list = S.vendors.filter(booked); if (!list.length) { toast("Add a booked vendor first"); vendorDlg(); return; }
+  const p = S.pays.find(x => x.id === id) || { vendor: vendor || list[0].id, amount: "", date: iso(today()), method: "Card", note: "" };
+  const v0 = venOf(p.vendor), n0 = !id && v0 ? nextDue(v0) : null;
+  openDlg(`<h2>${id ? "Edit payment" : "Log a payment"}</h2>
+   <div class="field"><label>Vendor</label><select name="vendor">${S.vendors.filter(v => booked(v) || v.id === p.vendor).map(v => `<option value="${v.id}" ${p.vendor === v.id ? "selected" : ""}>${esc(v.name)} (${mc(vendorBal(v), 0)} left)</option>`).join("")}</select></div>
+   <div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" min="0.01" inputmode="decimal" required value="${p.amount !== "" ? p.amount : n0 ? (n0.amount / 100) : ""}" style="font-size:26px;font-weight:800"></div>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" value="${esc(p.date)}"></div><div class="field"><label>Paid with</label><select name="method">${opts(METHODS, p.method)}</select></div></div>
+   <div class="field"><label>Note (optional)</label><input name="note" value="${esc(p.note)}" placeholder="Deposit, final balance…"></div>
+   ${btns(!!id)}`, fd => {
+    const amt = cents(Math.abs(+fd.get("amount") || 0)); if (!amt) { toast("Enter an amount"); return false; }
+    const o = { id: p.id || uid(), vendor: fd.get("vendor"), amount: amt / 100, date: fd.get("date") || iso(today()), method: fd.get("method"), note: fd.get("note").trim() };
+    if (id) S.pays[S.pays.findIndex(x => x.id === id)] = o; else S.pays.push(o);
+    const v = venOf(o.vendor); toast(v && vendorBal(v) === 0 && cents(v.total) > 0 ? v.name + " is paid in full ✓" : "Payment saved");
+  }, () => delBtn(() => { S.pays = S.pays.filter(x => x.id !== id); save(); D().close(); render(); toast("Payment deleted"); }));
+}
+function guestDlg(id) {
+  const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, gift: "", thanks: false, notes: "" };
+  const groups = [...new Set(["Family", "Friends", "Work", ...S.guests.map(x => x.group).filter(Boolean)])];
+  openDlg(`<h2>${id ? "Edit guest" : "Add a guest"}</h2>
+   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"></div>
+   <div class="field"><span class="fl">Side</span><div class="seg">${["p1", "p2", "both"].map(s => `<label><input type="radio" name="side" value="${s}" ${g.side === s ? "checked" : ""}>${esc(sideName(s))}</label>`).join("")}</div></div>
+   <div class="three"><div class="field"><label>Group</label><input name="group" list="grpList" value="${esc(g.group)}" placeholder="Family"><datalist id="grpList">${groups.map(x => `<option value="${esc(x)}">`).join("")}</datalist></div><div class="field"><label>Party size</label><input name="size" type="number" min="1" max="20" step="1" value="${people(g)}"></div>
+    <div class="field"><label>RSVP</label><select name="rsvp">${opts(RSVP, g.rsvp)}</select></div></div>
+   <div class="two"><div class="field"><label>Meal</label><select name="meal"><option value="">—</option>${opts(MEALS, g.meal)}</select></div><div class="field"><label>Table</label><select name="table"><option value="">Not seated</option>${S.tables.map(t => `<option value="${t.id}" ${g.table === t.id ? "selected" : ""}>${esc(tableLabel(t.id))} (${tableSeated(t)}/${t.seats})</option>`).join("")}</select></div></div>
+   <div class="two"><div class="field"><label>Gift received</label><input name="gift" value="${esc(g.gift)}" placeholder="Registry item, card…"></div><div class="field"><span class="fl">Thank-you note</span><label class="checkline"><input type="checkbox" name="thanks" ${g.thanks ? "checked" : ""}> Sent</label></div></div>
+   <div class="field"><label>Address / notes</label><input name="notes" value="${esc(g.notes)}" placeholder="Allergies, plus-one, address…"></div>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, g, { id: g.id || uid(), name: fd.get("name").trim() || "Guest", side: fd.get("side") || "both", group: fd.get("group").trim(), size: Math.max(1, Math.min(20, Math.round(+fd.get("size") || 1))), rsvp: fd.get("rsvp"),
+      meal: fd.get("meal") || "", table: fd.get("table") || null, gift: fd.get("gift").trim(), thanks: fd.get("thanks") === "on", notes: fd.get("notes").trim() });
+    if (o.rsvp === "Declined") o.table = null;
+    if (id) S.guests[S.guests.findIndex(x => x.id === id)] = o; else S.guests.push(o);
+    toast(id ? "Guest updated" : "Guest added");
+  }, () => delBtn(() => { S.guests = S.guests.filter(x => x.id !== id); save(); D().close(); render(); toast("Guest deleted"); }));
+}
+function bulkDlg() {
+  openDlg(`<h2>Add several guests</h2><p class="sub" style="margin-bottom:12px">Paste or type one guest per line. Add “& guest” or “+1” to count two people.</p>
+   <div class="field"><label>Names</label><textarea name="names" required placeholder="Olivia Carter&#10;Liam Bennett & guest&#10;The Hayes family"></textarea></div>
+   <div class="two"><div class="field"><span class="fl">Side</span><select name="side">${["p1", "p2", "both"].map(s => `<option value="${s}" ${s === "both" ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div><div class="field"><label>Group</label><input name="group" placeholder="Family, Friends, Work…"></div></div>
+   <div class="field"><label>RSVP</label><select name="rsvp">${opts(RSVP, "Not invited yet")}</select></div>
+   ${btns(false)}`, fd => {
+    const names = fd.get("names").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    if (!names.length) { toast("Type at least one name"); return false; }
+    names.forEach(n => S.guests.push({ id: uid(), name: n, side: fd.get("side"), group: fd.get("group").trim(), size: /(&|\band\b)\s*guest|\+\s*1\b/i.test(n) ? 2 : 1, rsvp: fd.get("rsvp"), meal: "", table: null, gift: "", thanks: false, notes: "" }));
+    toast(plural(names.length, "guest") + " added");
+  });
+}
+function tableDlg(id) {
+  const t = tabOf(id) || { name: "", seats: 8 };
+  openDlg(`<h2>${id ? "Edit table " + tableNo(id) : "Add a table"}</h2>
+   <div class="two"><div class="field"><label>Name (optional)</label><input name="name" value="${esc(t.name)}" placeholder="Close family, Head table…"></div><div class="field"><label>Seats</label><input name="seats" type="number" min="1" max="24" step="1" required value="${t.seats}"></div></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: t.id || uid(), name: fd.get("name").trim(), seats: Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8))) };
+    if (id) Object.assign(t, o); else S.tables.push(o);
+    toast(id ? "Table updated" : "Table " + S.tables.length + " added");
+  }, () => delBtn(() => { D().close(); const n = S.guests.filter(g => g.table === id).length; confirmDlg("Delete table " + tableNo(id) + "?", n ? `Its ${plural(n, "guest")} go back to “Not seated yet”.` : "The table is empty.", "Delete", () => { S.guests.forEach(g => { if (g.table === id) g.table = null; }); S.tables = S.tables.filter(x => x.id !== id); save(); render(); toast("Table deleted"); }); }));
+}
+function tablesDlg() {
+  openDlg(`<h2>Add several tables</h2>
+   <div class="two"><div class="field"><label>How many tables</label><input name="n" type="number" min="1" max="60" step="1" required value="${Math.max(1, Math.ceil((S.guestGoal || 80) / 8) - S.tables.length)}"></div><div class="field"><label>Seats at each</label><input name="seats" type="number" min="1" max="24" step="1" required value="8"></div></div>
+   ${btns(false)}`, fd => {
+    const n = Math.max(1, Math.min(60, Math.round(+fd.get("n") || 1))), seats = Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8)));
+    for (let i = 0; i < n; i++) S.tables.push({ id: uid(), name: "", seats });
+    toast(plural(n, "table") + " added");
+  });
+}
+function taskDlg(id) {
+  const t = S.tasks.find(x => x.id === id) || { text: "", when: "1 month", days: 30, done: false };
+  const known = WHEN.map(w => w[0]), custom = !known.includes(t.when) || WHEN.find(w => w[0] === t.when)[1] !== t.days;
+  openDlg(`<h2>${id ? "Edit task" : "Add a task"}</h2>
+   <div class="field"><label>Task</label><input name="text" required value="${esc(t.text)}" placeholder="Book the photo booth"></div>
+   <div class="two"><div class="field"><label>When</label><select name="when">${WHEN.map(([w, d]) => `<option value="${esc(w)}" data-days="${d}" ${t.when === w ? "selected" : ""}>${esc(w)}</option>`).join("")}${!known.includes(t.when) ? `<option selected>${esc(t.when)}</option>` : ""}</select></div>
+    <div class="field"><label>Days before the wedding</label><input name="days" type="number" step="1" value="${t.days}"><small>Use a negative number for after the wedding.</small></div></div>
+   <p class="hint" id="tprev" style="margin:0 0 10px"></p>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, t, { id: t.id || uid(), text: fd.get("text").trim() || "Task", when: fd.get("when"), days: Math.round(+fd.get("days") || 0) });
+    if (id) S.tasks[S.tasks.findIndex(x => x.id === id)] = o; else S.tasks.push(o);
+    toast(id ? "Task updated" : "Task added");
+  }, () => {
+    const f = F(), p = document.getElementById("tprev");
+    const chk = () => { p.textContent = S.date ? "Target date: " + fmtD(addDays(parse(S.date), -(Math.round(+f.days.value || 0)))) : "Set your wedding date in Settings to get a target date."; };
+    f.when.onchange = () => { const o = f.when.selectedOptions[0]; if (o && o.dataset.days) f.days.value = o.dataset.days; chk(); };
+    f.days.oninput = chk; chk();
+    delBtn(() => { S.tasks = S.tasks.filter(x => x.id !== id); save(); D().close(); render(); toast("Task deleted"); });
+  });
+}
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  M().querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+  M().querySelectorAll("[data-pay]").forEach(b => b.onclick = () => payDlg(null, b.dataset.pay));
+  M().querySelectorAll("[data-editcat]").forEach(b => b.onclick = () => catDlg(b.dataset.editcat));
+  M().querySelectorAll("[data-editven]").forEach(b => b.onclick = () => vendorDlg(b.dataset.editven));
+  M().querySelectorAll("[data-editpay]").forEach(b => b.onclick = () => payDlg(b.dataset.editpay));
+  M().querySelectorAll("[data-editg]").forEach(b => b.onclick = () => guestDlg(b.dataset.editg));
+  M().querySelectorAll("[data-edittable]").forEach(b => b.onclick = e => { e.stopPropagation(); tableDlg(b.dataset.edittable); });
+  M().querySelectorAll("[data-edittask]").forEach(b => b.onclick = () => taskDlg(b.dataset.edittask));
+  M().querySelectorAll("[data-tick]").forEach(b => b.onclick = () => { const t = S.tasks.find(x => x.id === b.dataset.tick); t.done = !t.done; save(); render(); if (t.done && S.tasks.every(x => x.done)) toast("Every task done! 🎉"); });
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => VIEW === "guests" || VIEW === "seating" ? guestDlg() : VIEW === "checklist" ? taskDlg() : payDlg();
+if (DEMO) {
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
+window.__lp = { catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, get S() { return S; } };
+go("home");
+</script>
+</body>
+</html>
