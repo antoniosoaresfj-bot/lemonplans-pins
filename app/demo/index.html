@@ -22,7 +22,8 @@ nav.side{padding:22px 14px;border-right:1px solid var(--line);position:sticky;to
 .navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
 .navbtn .i{width:22px;text-align:center;font-size:18px}
 .navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
-main{padding:28px 32px 120px;max-width:1040px;width:100%}
+main{padding:28px 32px 120px;max-width:1040px;width:100%;min-width:0}
+/*overflow-fix*/.app>*,.grid>*,.card{min-width:0}
 main:focus{outline:none}
 h1{font-size:28px;margin:0 0 4px;letter-spacing:-.6px}
 h2{font-size:19px;margin:0 0 12px;letter-spacing:-.2px}
@@ -83,8 +84,8 @@ dialog::backdrop{background:rgba(10,14,18,.45)}
 .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1}
 .tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal div{background:var(--soft);border-radius:10px;min-height:54px;padding:6px;font-size:12px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal div{background:var(--soft);border-radius:10px;min-height:54px;padding:6px;font-size:12px;min-width:0;overflow:hidden}
 .cal .pd{outline:2px solid var(--accent)}
 .cal .dn{font-weight:800}
 .cal .bl{display:block;margin-top:2px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -96,6 +97,8 @@ dialog::backdrop{background:rgba(10,14,18,.45)}
  .navbtn{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;justify-content:center;align-items:center;text-align:center}
  .navbtn .i{font-size:20px}
  main{padding:20px 16px 150px}
+ .g2,.g3{grid-template-columns:minmax(0,1fr)}
+ .cal{gap:3px}.cal div{padding:4px 3px;font-size:10.5px;min-height:46px}
  .g2,.g3{grid-template-columns:1fr}
  .big{font-size:52px}
  .fab{bottom:86px;right:18px}
