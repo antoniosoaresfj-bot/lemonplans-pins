@@ -426,8 +426,8 @@ function settings() {
   const f = document.getElementById("payF");
   f.freq.onchange = () => document.getElementById("semiF2").hidden = f.freq.value !== "semimonthly";
   f.onsubmit = e => { e.preventDefault(); S.pay = { freq: f.freq.value, next: f.next.value || S.pay.next, amount: +f.amount.value || 0, semi2: +f.semi2.value || 15 }; S.savingsPer = +f.savings.value || 0; S.currency = f.currency.value.trim() || "$"; save(); toast("Saved"); render(); };
-  document.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
-  document.querySelectorAll("[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
+  M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
   document.getElementById("exp").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], { type: "application/json" })); a.download = "safe-to-spend-backup-" + iso(today()) + ".json"; a.click(); toast("Backup downloaded"); };
   document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (d.v !== 1 || !Array.isArray(d.bills)) throw 0; S = d; save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Safe to Spend backup")); };
   document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with a sample budget. Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });

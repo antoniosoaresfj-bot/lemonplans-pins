@@ -449,8 +449,8 @@ function settings() {
    </div>
   </div>
   <p class="foot">Debt Payoff App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice. Interest is estimated monthly (APR ÷ 12).</p>`;
-  document.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
-  document.querySelectorAll("[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
+  M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
   const cf = document.getElementById("curF"); cf.onsubmit = e => { e.preventDefault(); S.currency = cf.currency.value.trim() || "$"; save(); toast("Saved"); render(); };
   document.getElementById("exp").onclick = () => { download("debt-payoff-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
   document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (d.v !== 1 || d.app !== "debt-payoff" || !Array.isArray(d.debts) || !Array.isArray(d.payments)) throw 0; S = Object.assign(blank(), d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Debt Payoff backup")); };
