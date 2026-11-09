@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F5F4A">
+<title>Budget Planner App · The Lemon Plans</title>
+<style>
+:root{--bg:#F5F4EF;--card:#FFFFFF;--ink:#1F2937;--muted:#6B7280;--line:#E4E2D9;--soft:#ECF3EF;--accent:#1F5F4A;--accent-ink:#fff;--fill:#2E7D5B;--fill2:#F2C94C;--glass:#DCEAE2;--good:#2E7D5B;--warn:#B7791F;--bad:#B91C1C;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--g-needs:#2E7D5B;--g-wants:#E0A526;--g-savings:#3B82B8;--g-debt:#C2553F;--shadow:0 10px 30px rgba(31,41,55,.07);--r:18px}
+:root[data-theme="dark"]{--bg:#0F1613;--card:#17201C;--ink:#E5ECE8;--muted:#9AA8A1;--line:#26332D;--soft:#1D2A24;--accent:#6FCB9F;--accent-ink:#0A1A12;--fill:#3E9B70;--fill2:#D9B13F;--glass:#22352C;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--g-needs:#4FB083;--g-wants:#E3B445;--g-savings:#62A3D6;--g-debt:#E07A64;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="ocean"]{--accent:#1F5A85;--fill:#3B82B8;--glass:#DCE7F1;--soft:#E9F0F6}:root[data-accent="ocean"][data-theme="dark"]{--accent:#7DB8E8;--accent-ink:#0B1622;--fill:#3B7DB0;--glass:#1F2E3B;--soft:#1B2630}
+:root[data-accent="coral"]{--accent:#B0452C;--fill:#E07A5F;--glass:#F6E1DA;--soft:#F7ECE7}:root[data-accent="coral"][data-theme="dark"]{--accent:#F4A18A;--accent-ink:#2A0F08;--fill:#D06A4F;--glass:#3A2620;--soft:#2B201C}
+:root[data-accent="plum"]{--accent:#6B4C9A;--fill:#9479C4;--glass:#E9E2F3;--soft:#EEEAF5}:root[data-accent="plum"][data-theme="dark"]{--accent:#B9A0E6;--accent-ink:#170F24;--fill:#7E62AE;--glass:#2E2840;--soft:#231F30}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;position:relative}
+nav.side{padding:22px 12px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:18px;padding:0 10px 18px;letter-spacing:-.3px;line-height:1.2}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:17px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:26px 30px 120px;max-width:1180px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:18px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1.4fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2e{grid-template-columns:1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
+.lab{font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:44px;font-weight:850;letter-spacing:-1.6px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.big.neg{color:var(--bad)}
+.mid{font-size:25px;font-weight:800;letter-spacing:-.6px;margin-top:4px}
+.mid.neg{color:var(--bad)}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-weight:750;font-size:12.5px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}.done{background:var(--good);color:#fff}.plain{background:var(--soft);color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dt{width:56px;flex:none;font-size:12.5px;font-weight:750;color:var(--muted);line-height:1.2}
+.dt b{display:block;font-size:17px;color:var(--ink)}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.amt.pos{color:var(--good)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;padding:11px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:13.5px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:34px;height:34px;cursor:pointer;display:grid;place-items:center;font-size:14px;flex:none}
+.bar{height:9px;border-radius:999px;background:var(--glass);overflow:hidden}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.bar i.over{background:var(--bad)}
+.fab{position:fixed;right:26px;bottom:26px;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.themetog{position:absolute;top:22px;right:28px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;z-index:10;padding:0;transition:color .15s,border-color .15s}
+.themetog:hover,.themetog:focus-visible{color:var(--ink);border-color:var(--muted)}
+.themetog svg{width:18px;height:18px;display:block}
+main h1{padding-right:48px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top .sub{margin:0}
+@media (min-width:861px){.top{padding-right:56px}}
+.mpick{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
+.mpick button{border:0;background:var(--soft);border-radius:10px;width:34px;height:34px;cursor:pointer;font-size:18px;font-weight:800;line-height:1}
+.mpick b{min-width:140px;text-align:center;font-size:15px}
+@media (max-width:860px){.themetog{top:14px;right:14px;width:36px;height:36px}}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right;white-space:nowrap}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--ink);font-weight:800}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.filters select,.filters input{padding:9px 12px;border-radius:11px;border:1px solid var(--line);background:var(--card);min-width:0;max-width:100%}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.t{border-collapse:collapse;width:100%;font-size:13px}
+table.t th,table.t td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t th:first-child,table.t td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+table.t thead th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+table.t tr.sum td{font-weight:800;border-top:2px solid var(--line)}
+table.t tr.hd td{font-weight:800;color:var(--accent);font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;padding-top:14px}
+table.t td.z{color:var(--muted)}
+table.t td.neg{color:var(--bad);font-weight:750}
+table.t th.now{background:var(--fill2);color:#1F2933;border-radius:6px}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:11px;font-weight:700}.chart .ax{stroke:var(--line)}
+.chart .gi{fill:var(--fill)}.chart .ge{fill:var(--fill2)}.chart .gp{fill:var(--glass)}.chart .gl{stroke:var(--ink);stroke-width:2;fill:none}.chart .gd{fill:var(--ink)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);font-weight:700;flex-wrap:wrap}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.gdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;flex:none}
+.g-income{background:var(--accent)}.g-needs{background:var(--g-needs)}.g-wants{background:var(--g-wants)}.g-savings{background:var(--g-savings)}.g-debt{background:var(--g-debt)}
+.ltb{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ltb .msg{flex:1;min-width:220px}
+.split{display:flex;height:16px;border-radius:999px;overflow:hidden;background:var(--glass);margin:10px 0 8px}
+.split i{display:block;height:100%}
+/* budget rows */
+.bhead,.brow{display:grid;grid-template-columns:minmax(0,1.6fr) 118px 110px 110px minmax(90px,1fr) 128px;gap:10px;align-items:center}
+.bhead{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:800;padding:0 0 6px;border-bottom:1px solid var(--line)}
+.bhead span,.brow .n{text-align:right}
+.bhead span:first-child{text-align:left}
+.brow{padding:8px 0;border-bottom:1px solid var(--line)}
+.brow.tot{border-bottom:0;font-weight:800;background:var(--soft);border-radius:10px;padding:8px 8px;margin-top:6px}
+.brow .cname{border:0;background:none;padding:0;text-align:left;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.brow .cname:hover{color:var(--accent);text-decoration:underline}
+.brow input{width:100%;padding:7px 9px;border-radius:10px;border:1px solid var(--line);background:var(--bg);text-align:right;font-weight:750;min-width:0}
+.brow input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.brow .n{white-space:nowrap;font-weight:700}
+.brow .n.neg{color:var(--bad)}
+.brow .st{text-align:right}
+.brow .st .pill{font-size:11.5px;padding:3px 9px}
+.addcat{margin-top:10px}
+.gtitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.gtitle h2{margin:0;display:flex;align-items:center}
+/* bills grid */
+.bgrid td.c{text-align:center;font-weight:800;color:var(--good)}
+.bgrid td.c.late{color:var(--bad)}
+.paybtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-weight:750;cursor:pointer;white-space:nowrap;font-size:13px}
+.paybtn[aria-pressed="true"]{background:var(--good);border-color:var(--good);color:#fff}
+.goal{display:flex;gap:16px;align-items:center}
+.ring circle{fill:none;stroke-width:11}.ring .tr{stroke:var(--glass)}.ring .pr{stroke:var(--fill);stroke-linecap:round}
+.ring text{fill:var(--ink);font-weight:850;font-size:22px}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(520px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:5px;margin-bottom:12px;min-width:0}
+.field label,.field .fl{font-size:12.5px;font-weight:750;color:var(--muted)}
+.field input,.field select{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tick{display:flex;gap:10px;align-items:center;font-weight:650;cursor:pointer;margin:2px 0 12px}
+.tick input{width:18px;height:18px;accent-color:var(--accent)}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.flag{color:var(--bad);font-weight:800}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.bhead,.brow{grid-template-columns:minmax(0,1.4fr) 104px 96px 96px 120px}.brow .bc,.bhead .bc{display:none}}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10px;padding:6px 1px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:18px}
+ main{padding:20px 14px 150px}
+ .g2,.g3,.g2e{grid-template-columns:1fr}
+ .big{font-size:36px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .card{padding:15px}
+ .top{padding-right:44px}
+ .mpick b{min-width:118px;font-size:14px}
+ .bhead{display:none}
+ .brow{grid-template-columns:minmax(0,1fr) 96px;row-gap:4px}
+ .brow .n,.brow .st{text-align:left;font-size:13px}
+ .brow .n.a::before{content:"Actual ";color:var(--muted);font-weight:600}
+ .brow .n.l::before{content:"Left ";color:var(--muted);font-weight:600}
+ .brow .bc{display:block!important;grid-column:1 / -1}
+ .brow.tot .bc{display:none!important}
+ .g4 .mid{font-size:21px}
+ .row.bill{flex-wrap:wrap;row-gap:6px}
+ .row.bill .grow{flex:1 1 calc(100% - 68px)}
+ .row.bill .pill{margin-left:68px}
+ .row.bill .amt{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Budget Planner<small>Monthly &amp; yearly · by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">◉</span>Dashboard</button>
+  <button class="navbtn" data-view="budget"><span class="i">▦</span>Budget</button>
+  <button class="navbtn" data-view="tx"><span class="i">⇅</span>Spending</button>
+  <button class="navbtn" data-view="bills"><span class="i">▤</span>Bills</button>
+  <button class="navbtn" data-view="goals"><span class="i">◎</span>Goals</button>
+  <button class="navbtn" data-view="year"><span class="i">▥</span>Year</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <button class="themetog" id="themeTog" type="button"></button>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add a transaction" title="Add a transaction">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/budget-planner-app";
+const KEY = DEMO ? "lp-budgetplanner-demo" : "lp-budgetplanner-v1";
+const SAMPLE = {"year":2026,"cats":[{"name":"Salary","group":"income","budget":4800},{"name":"Side Income","group":"income","budget":400},{"name":"Rent / Mortgage","group":"needs","budget":1500},{"name":"Utilities","group":"needs","budget":220},{"name":"Groceries","group":"needs","budget":550},{"name":"Transportation","group":"needs","budget":300},{"name":"Insurance","group":"needs","budget":180},{"name":"Phone & Internet","group":"needs","budget":120},{"name":"Health","group":"needs","budget":80},{"name":"Dining Out","group":"wants","budget":200},{"name":"Entertainment","group":"wants","budget":100},{"name":"Shopping","group":"wants","budget":150},{"name":"Subscriptions","group":"wants","budget":45},{"name":"Personal Care","group":"wants","budget":60},{"name":"Gifts","group":"wants","budget":50},{"name":"Emergency Fund","group":"savings","budget":300},{"name":"Vacation Fund","group":"savings","budget":150},{"name":"Christmas Fund","group":"savings","budget":75},{"name":"Credit Card","group":"debt","budget":250},{"name":"Student Loan","group":"debt","budget":275}],"tx":[{"date":"2026-01-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-01-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-01-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-01-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-01-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-01-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-01-03","desc":"Aldi","cat":"Groceries","amount":67.88,"note":""},{"date":"2026-01-03","desc":"Gas station","cat":"Transportation","amount":39.12,"note":""},{"date":"2026-01-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-01-05","desc":"Trader Joe's","cat":"Groceries","amount":81.02,"note":""},{"date":"2026-01-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-01-05","desc":"Chipotle","cat":"Dining Out","amount":36.67,"note":""},{"date":"2026-01-07","desc":"Haircut","cat":"Personal Care","amount":35,"note":""},{"date":"2026-01-08","desc":"Brunch","cat":"Dining Out","amount":27.35,"note":""},{"date":"2026-01-09","desc":"Gas station","cat":"Transportation","amount":58.6,"note":""},{"date":"2026-01-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-01-09","desc":"Concert","cat":"Entertainment","amount":37.47,"note":""},{"date":"2026-01-11","desc":"Home decor","cat":"Shopping","amount":68.76,"note":""},{"date":"2026-01-12","desc":"Electric bill","cat":"Utilities","amount":110.66,"note":""},{"date":"2026-01-12","desc":"Pharmacy","cat":"Health","amount":19.64,"note":""},{"date":"2026-01-13","desc":"Trader Joe's","cat":"Groceries","amount":69.44,"note":""},{"date":"2026-01-13","desc":"Brunch","cat":"Dining Out","amount":33.12,"note":""},{"date":"2026-01-14","desc":"Gas station","cat":"Transportation","amount":44.95,"note":""},{"date":"2026-01-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-01-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-01-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-01-18","desc":"Water bill","cat":"Utilities","amount":45.97,"note":""},{"date":"2026-01-18","desc":"Home decor","cat":"Shopping","amount":39.4,"note":""},{"date":"2026-01-19","desc":"Aldi","cat":"Groceries","amount":80.47,"note":""},{"date":"2026-01-19","desc":"Coffee shop","cat":"Dining Out","amount":34.11,"note":""},{"date":"2026-01-20","desc":"Aldi","cat":"Groceries","amount":62.43,"note":""},{"date":"2026-01-20","desc":"Gas station","cat":"Transportation","amount":41.46,"note":""},{"date":"2026-01-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-01-22","desc":"Thai takeout","cat":"Dining Out","amount":31.4,"note":""},{"date":"2026-01-23","desc":"Etsy shop payout","cat":"Side Income","amount":365,"note":""},{"date":"2026-01-27","desc":"Concert","cat":"Entertainment","amount":22.05,"note":""},{"date":"2026-01-28","desc":"Costco","cat":"Groceries","amount":92.84,"note":""},{"date":"2026-02-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-02-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-02-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-02-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-02-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-02-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-02-03","desc":"Kroger","cat":"Groceries","amount":96.72,"note":""},{"date":"2026-02-03","desc":"Doctor copay","cat":"Health","amount":31,"note":""},{"date":"2026-02-03","desc":"Coffee shop","cat":"Dining Out","amount":25.36,"note":""},{"date":"2026-02-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-02-04","desc":"Aldi","cat":"Groceries","amount":84.8,"note":""},{"date":"2026-02-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-02-05","desc":"Pizza night","cat":"Dining Out","amount":32.35,"note":""},{"date":"2026-02-08","desc":"Thai takeout","cat":"Dining Out","amount":24.1,"note":""},{"date":"2026-02-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-02-09","desc":"Amazon","cat":"Shopping","amount":29.15,"note":""},{"date":"2026-02-11","desc":"Gas station","cat":"Transportation","amount":61.83,"note":""},{"date":"2026-02-12","desc":"Electric bill","cat":"Utilities","amount":94.88,"note":""},{"date":"2026-02-12","desc":"Walmart groceries","cat":"Groceries","amount":59.13,"note":""},{"date":"2026-02-12","desc":"Haircut","cat":"Personal Care","amount":35,"note":""},{"date":"2026-02-14","desc":"Amazon","cat":"Shopping","amount":36.6,"note":""},{"date":"2026-02-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-02-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-02-15","desc":"Bowling","cat":"Entertainment","amount":37.66,"note":""},{"date":"2026-02-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-02-17","desc":"Thai takeout","cat":"Dining Out","amount":32.44,"note":""},{"date":"2026-02-18","desc":"Water bill","cat":"Utilities","amount":54.78,"note":""},{"date":"2026-02-19","desc":"Trader Joe's","cat":"Groceries","amount":111.68,"note":""},{"date":"2026-02-20","desc":"Etsy shop payout","cat":"Side Income","amount":420,"note":""},{"date":"2026-02-20","desc":"Walmart groceries","cat":"Groceries","amount":96.82,"note":""},{"date":"2026-02-20","desc":"Gas station","cat":"Transportation","amount":57.73,"note":""},{"date":"2026-02-20","desc":"Birthday gift","cat":"Gifts","amount":54.09,"note":""},{"date":"2026-02-22","desc":"Gas station","cat":"Transportation","amount":44.83,"note":""},{"date":"2026-02-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-02-23","desc":"Trader Joe's","cat":"Groceries","amount":58.64,"note":""},{"date":"2026-02-24","desc":"Gas station","cat":"Transportation","amount":47.26,"note":""},{"date":"2026-02-26","desc":"Coffee shop","cat":"Dining Out","amount":44.97,"note":""},{"date":"2026-02-28","desc":"Bowling","cat":"Entertainment","amount":37.07,"note":""},{"date":"2026-03-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-03-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-03-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-03-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-03-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-03-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-03-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-03-05","desc":"Gas station","cat":"Transportation","amount":46.16,"note":""},{"date":"2026-03-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-03-06","desc":"Aldi","cat":"Groceries","amount":112.01,"note":""},{"date":"2026-03-06","desc":"Coffee shop","cat":"Dining Out","amount":46.84,"note":""},{"date":"2026-03-07","desc":"Gas station","cat":"Transportation","amount":39.26,"note":""},{"date":"2026-03-08","desc":"Gas station","cat":"Transportation","amount":38.01,"note":""},{"date":"2026-03-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-03-11","desc":"Haircut","cat":"Personal Care","amount":45,"note":""},{"date":"2026-03-12","desc":"Electric bill","cat":"Utilities","amount":103.33,"note":""},{"date":"2026-03-12","desc":"Trader Joe's","cat":"Groceries","amount":82.4,"note":""},{"date":"2026-03-12","desc":"Old Navy","cat":"Shopping","amount":48.93,"note":""},{"date":"2026-03-13","desc":"Aldi","cat":"Groceries","amount":78.54,"note":""},{"date":"2026-03-14","desc":"Pharmacy","cat":"Health","amount":18.16,"note":""},{"date":"2026-03-14","desc":"Brunch","cat":"Dining Out","amount":31.47,"note":""},{"date":"2026-03-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-03-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-03-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-03-16","desc":"Gas station","cat":"Transportation","amount":41.63,"note":""},{"date":"2026-03-16","desc":"Game","cat":"Entertainment","amount":32.1,"note":""},{"date":"2026-03-17","desc":"Movie tickets","cat":"Entertainment","amount":23.6,"note":""},{"date":"2026-03-18","desc":"Water bill","cat":"Utilities","amount":47.91,"note":""},{"date":"2026-03-19","desc":"Walmart groceries","cat":"Groceries","amount":78.65,"note":""},{"date":"2026-03-20","desc":"Etsy shop payout","cat":"Side Income","amount":420,"note":""},{"date":"2026-03-20","desc":"Walmart groceries","cat":"Groceries","amount":93.06,"note":""},{"date":"2026-03-21","desc":"Trader Joe's","cat":"Groceries","amount":66.44,"note":""},{"date":"2026-03-21","desc":"Chipotle","cat":"Dining Out","amount":25,"note":""},{"date":"2026-03-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-03-25","desc":"Amazon","cat":"Shopping","amount":50.82,"note":""},{"date":"2026-04-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-04-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-04-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-04-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-04-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-04-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-04-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-04-04","desc":"Costco","cat":"Groceries","amount":76.34,"note":""},{"date":"2026-04-04","desc":"Pizza night","cat":"Dining Out","amount":30.78,"note":""},{"date":"2026-04-04","desc":"Movie tickets","cat":"Entertainment","amount":42.74,"note":""},{"date":"2026-04-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-04-05","desc":"Thai takeout","cat":"Dining Out","amount":38.23,"note":""},{"date":"2026-04-07","desc":"Old Navy","cat":"Shopping","amount":29.34,"note":""},{"date":"2026-04-07","desc":"Haircut","cat":"Personal Care","amount":45,"note":""},{"date":"2026-04-08","desc":"Gas station","cat":"Transportation","amount":46.53,"note":""},{"date":"2026-04-09","desc":"Gas station","cat":"Transportation","amount":38.7,"note":""},{"date":"2026-04-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-04-09","desc":"Brunch","cat":"Dining Out","amount":43.85,"note":""},{"date":"2026-04-09","desc":"Birthday gift","cat":"Gifts","amount":25.96,"note":""},{"date":"2026-04-10","desc":"Costco","cat":"Groceries","amount":86.96,"note":""},{"date":"2026-04-12","desc":"Electric bill","cat":"Utilities","amount":134.28,"note":""},{"date":"2026-04-13","desc":"Aldi","cat":"Groceries","amount":74.78,"note":""},{"date":"2026-04-13","desc":"Thai takeout","cat":"Dining Out","amount":45.64,"note":""},{"date":"2026-04-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-04-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-04-15","desc":"Home decor","cat":"Shopping","amount":48.16,"note":""},{"date":"2026-04-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-04-17","desc":"Gas station","cat":"Transportation","amount":38.67,"note":""},{"date":"2026-04-17","desc":"Coffee shop","cat":"Dining Out","amount":42.79,"note":""},{"date":"2026-04-18","desc":"Water bill","cat":"Utilities","amount":50.96,"note":""},{"date":"2026-04-18","desc":"Costco","cat":"Groceries","amount":91.79,"note":""},{"date":"2026-04-18","desc":"Gas station","cat":"Transportation","amount":44.71,"note":""},{"date":"2026-04-22","desc":"Costco","cat":"Groceries","amount":103.36,"note":""},{"date":"2026-04-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-04-24","desc":"Walmart groceries","cat":"Groceries","amount":99.39,"note":""},{"date":"2026-04-25","desc":"Doctor copay","cat":"Health","amount":35.13,"note":""},{"date":"2026-04-26","desc":"Etsy shop payout","cat":"Side Income","amount":310,"note":""},{"date":"2026-04-28","desc":"Concert","cat":"Entertainment","amount":31.95,"note":""},{"date":"2026-05-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-05-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-05-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-05-02","desc":"Pizza night","cat":"Dining Out","amount":37.82,"note":""},{"date":"2026-05-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-05-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-05-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-05-03","desc":"Amazon","cat":"Shopping","amount":38.85,"note":""},{"date":"2026-05-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-05-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-05-06","desc":"Costco","cat":"Groceries","amount":56.28,"note":""},{"date":"2026-05-06","desc":"Pizza night","cat":"Dining Out","amount":26.48,"note":""},{"date":"2026-05-07","desc":"Birthday gift","cat":"Gifts","amount":40.51,"note":""},{"date":"2026-05-09","desc":"Gas station","cat":"Transportation","amount":44.22,"note":""},{"date":"2026-05-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-05-09","desc":"Target","cat":"Shopping","amount":50.39,"note":""},{"date":"2026-05-12","desc":"Electric bill","cat":"Utilities","amount":124.75,"note":""},{"date":"2026-05-12","desc":"Gas station","cat":"Transportation","amount":48.06,"note":""},{"date":"2026-05-13","desc":"Trader Joe's","cat":"Groceries","amount":86.59,"note":""},{"date":"2026-05-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-05-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-05-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-05-16","desc":"Thai takeout","cat":"Dining Out","amount":38.1,"note":""},{"date":"2026-05-17","desc":"Costco","cat":"Groceries","amount":81.03,"note":""},{"date":"2026-05-17","desc":"Doctor copay","cat":"Health","amount":52.22,"note":""},{"date":"2026-05-18","desc":"Water bill","cat":"Utilities","amount":56.92,"note":""},{"date":"2026-05-18","desc":"Chipotle","cat":"Dining Out","amount":36.47,"note":""},{"date":"2026-05-18","desc":"Game","cat":"Entertainment","amount":39.61,"note":""},{"date":"2026-05-19","desc":"Costco","cat":"Groceries","amount":104.57,"note":""},{"date":"2026-05-19","desc":"Coffee shop","cat":"Dining Out","amount":39.74,"note":""},{"date":"2026-05-19","desc":"Movie tickets","cat":"Entertainment","amount":42.08,"note":""},{"date":"2026-05-20","desc":"Gas station","cat":"Transportation","amount":41.15,"note":""},{"date":"2026-05-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-05-22","desc":"Haircut","cat":"Personal Care","amount":35,"note":""},{"date":"2026-05-23","desc":"Costco","cat":"Groceries","amount":56.68,"note":""},{"date":"2026-05-24","desc":"Costco","cat":"Groceries","amount":72.58,"note":""},{"date":"2026-05-25","desc":"Etsy shop payout","cat":"Side Income","amount":365,"note":""},{"date":"2026-05-26","desc":"Gas station","cat":"Transportation","amount":59.84,"note":""},{"date":"2026-06-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-06-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-06-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-06-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-06-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-06-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-06-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-06-04","desc":"Gas station","cat":"Transportation","amount":45.27,"note":""},{"date":"2026-06-04","desc":"Old Navy","cat":"Shopping","amount":25.97,"note":""},{"date":"2026-06-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-06-05","desc":"Haircut","cat":"Personal Care","amount":40,"note":""},{"date":"2026-06-08","desc":"Gas station","cat":"Transportation","amount":40.94,"note":""},{"date":"2026-06-09","desc":"Aldi","cat":"Groceries","amount":107.59,"note":""},{"date":"2026-06-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-06-09","desc":"Chipotle","cat":"Dining Out","amount":32.35,"note":""},{"date":"2026-06-12","desc":"Electric bill","cat":"Utilities","amount":118.29,"note":""},{"date":"2026-06-14","desc":"Pharmacy","cat":"Health","amount":26.39,"note":""},{"date":"2026-06-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-06-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-06-15","desc":"Gas station","cat":"Transportation","amount":56.65,"note":""},{"date":"2026-06-15","desc":"Game","cat":"Entertainment","amount":28.48,"note":""},{"date":"2026-06-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-06-16","desc":"Kroger","cat":"Groceries","amount":110.37,"note":""},{"date":"2026-06-16","desc":"Thai takeout","cat":"Dining Out","amount":26.23,"note":""},{"date":"2026-06-17","desc":"Costco","cat":"Groceries","amount":105.4,"note":""},{"date":"2026-06-18","desc":"Water bill","cat":"Utilities","amount":58.85,"note":""},{"date":"2026-06-18","desc":"Costco","cat":"Groceries","amount":80,"note":""},{"date":"2026-06-18","desc":"Concert","cat":"Entertainment","amount":28.92,"note":""},{"date":"2026-06-19","desc":"Walmart groceries","cat":"Groceries","amount":81.53,"note":""},{"date":"2026-06-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-06-23","desc":"Gas station","cat":"Transportation","amount":60.55,"note":""},{"date":"2026-06-25","desc":"Pizza night","cat":"Dining Out","amount":26.2,"note":""},{"date":"2026-06-25","desc":"Home decor","cat":"Shopping","amount":47.02,"note":""},{"date":"2026-06-26","desc":"Etsy shop payout","cat":"Side Income","amount":390,"note":""},{"date":"2026-06-27","desc":"Trader Joe's","cat":"Groceries","amount":95.27,"note":""},{"date":"2026-07-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-07-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-07-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-07-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-07-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-07-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-07-03","desc":"Gas station","cat":"Transportation","amount":57.19,"note":""},{"date":"2026-07-03","desc":"Concert","cat":"Entertainment","amount":43.45,"note":""},{"date":"2026-07-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-07-04","desc":"Trader Joe's","cat":"Groceries","amount":109.35,"note":""},{"date":"2026-07-04","desc":"Gas station","cat":"Transportation","amount":42.4,"note":""},{"date":"2026-07-04","desc":"Thai takeout","cat":"Dining Out","amount":22.3,"note":""},{"date":"2026-07-05","desc":"Costco","cat":"Groceries","amount":71.23,"note":""},{"date":"2026-07-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-07-05","desc":"Doctor copay","cat":"Health","amount":18.77,"note":""},{"date":"2026-07-05","desc":"Brunch","cat":"Dining Out","amount":32.86,"note":""},{"date":"2026-07-07","desc":"Old Navy","cat":"Shopping","amount":56.43,"note":""},{"date":"2026-07-08","desc":"Amazon","cat":"Shopping","amount":39.5,"note":""},{"date":"2026-07-09","desc":"Costco","cat":"Groceries","amount":104.19,"note":""},{"date":"2026-07-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-07-10","desc":"Kroger","cat":"Groceries","amount":79.36,"note":""},{"date":"2026-07-10","desc":"Gas station","cat":"Transportation","amount":59.49,"note":""},{"date":"2026-07-10","desc":"Coffee shop","cat":"Dining Out","amount":38.16,"note":""},{"date":"2026-07-12","desc":"Electric bill","cat":"Utilities","amount":147.45,"note":""},{"date":"2026-07-12","desc":"Gas station","cat":"Transportation","amount":44.45,"note":""},{"date":"2026-07-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-07-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-07-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-07-16","desc":"Birthday gift","cat":"Gifts","amount":53.13,"note":""},{"date":"2026-07-18","desc":"Water bill","cat":"Utilities","amount":47.26,"note":""},{"date":"2026-07-18","desc":"Concert","cat":"Entertainment","amount":26.55,"note":""},{"date":"2026-07-21","desc":"Haircut","cat":"Personal Care","amount":45,"note":""},{"date":"2026-07-22","desc":"Etsy shop payout","cat":"Side Income","amount":390,"note":""},{"date":"2026-07-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-07-24","desc":"Aldi","cat":"Groceries","amount":110.15,"note":""},{"date":"2026-07-27","desc":"Aldi","cat":"Groceries","amount":84.68,"note":""},{"date":"2026-08-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-08-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-08-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-08-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-08-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-08-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-08-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-08-04","desc":"Thai takeout","cat":"Dining Out","amount":44.63,"note":""},{"date":"2026-08-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-08-07","desc":"Game","cat":"Entertainment","amount":20.09,"note":""},{"date":"2026-08-08","desc":"Trader Joe's","cat":"Groceries","amount":94.5,"note":""},{"date":"2026-08-09","desc":"Walmart groceries","cat":"Groceries","amount":94.39,"note":""},{"date":"2026-08-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-08-10","desc":"Bowling","cat":"Entertainment","amount":44.04,"note":""},{"date":"2026-08-10","desc":"Haircut","cat":"Personal Care","amount":35,"note":""},{"date":"2026-08-12","desc":"Electric bill","cat":"Utilities","amount":86,"note":""},{"date":"2026-08-12","desc":"Amazon","cat":"Shopping","amount":26.72,"note":""},{"date":"2026-08-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-08-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-08-15","desc":"Birthday gift","cat":"Gifts","amount":38.36,"note":""},{"date":"2026-08-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-08-16","desc":"Aldi","cat":"Groceries","amount":105.08,"note":""},{"date":"2026-08-17","desc":"Walmart groceries","cat":"Groceries","amount":113.22,"note":""},{"date":"2026-08-18","desc":"Water bill","cat":"Utilities","amount":59.66,"note":""},{"date":"2026-08-18","desc":"Kroger","cat":"Groceries","amount":96.26,"note":""},{"date":"2026-08-19","desc":"Costco","cat":"Groceries","amount":75.56,"note":""},{"date":"2026-08-19","desc":"Old Navy","cat":"Shopping","amount":35.89,"note":""},{"date":"2026-08-22","desc":"Etsy shop payout","cat":"Side Income","amount":310,"note":""},{"date":"2026-08-22","desc":"Gas station","cat":"Transportation","amount":41.35,"note":""},{"date":"2026-08-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-08-23","desc":"Doctor copay","cat":"Health","amount":34.38,"note":""},{"date":"2026-08-23","desc":"Coffee shop","cat":"Dining Out","amount":37.57,"note":""},{"date":"2026-08-24","desc":"Gas station","cat":"Transportation","amount":61.75,"note":""},{"date":"2026-08-25","desc":"Gas station","cat":"Transportation","amount":61.57,"note":""},{"date":"2026-08-28","desc":"Gas station","cat":"Transportation","amount":58.09,"note":""},{"date":"2026-08-28","desc":"Coffee shop","cat":"Dining Out","amount":23.18,"note":""},{"date":"2026-09-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-09-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-09-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-09-02","desc":"Costco","cat":"Groceries","amount":78.97,"note":""},{"date":"2026-09-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-09-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-09-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-09-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-09-04","desc":"Trader Joe's","cat":"Groceries","amount":78.64,"note":""},{"date":"2026-09-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-09-05","desc":"Home decor","cat":"Shopping","amount":66.79,"note":""},{"date":"2026-09-07","desc":"Pharmacy","cat":"Health","amount":52.12,"note":""},{"date":"2026-09-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-09-10","desc":"Kroger","cat":"Groceries","amount":73.25,"note":""},{"date":"2026-09-12","desc":"Electric bill","cat":"Utilities","amount":117.68,"note":""},{"date":"2026-09-13","desc":"Target","cat":"Shopping","amount":56.39,"note":""},{"date":"2026-09-14","desc":"Gas station","cat":"Transportation","amount":56.34,"note":""},{"date":"2026-09-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-09-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-09-15","desc":"Brunch","cat":"Dining Out","amount":25.62,"note":""},{"date":"2026-09-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-09-18","desc":"Water bill","cat":"Utilities","amount":49.02,"note":""},{"date":"2026-09-18","desc":"Costco","cat":"Groceries","amount":60.07,"note":""},{"date":"2026-09-18","desc":"Brunch","cat":"Dining Out","amount":41.57,"note":""},{"date":"2026-09-21","desc":"Gas station","cat":"Transportation","amount":55.3,"note":""},{"date":"2026-09-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-09-22","desc":"Brunch","cat":"Dining Out","amount":43.71,"note":""},{"date":"2026-09-23","desc":"Concert","cat":"Entertainment","amount":22.13,"note":""},{"date":"2026-09-24","desc":"Gas station","cat":"Transportation","amount":49.86,"note":""},{"date":"2026-09-24","desc":"Chipotle","cat":"Dining Out","amount":43.49,"note":""},{"date":"2026-09-24","desc":"Movie tickets","cat":"Entertainment","amount":23.33,"note":""},{"date":"2026-09-25","desc":"Etsy shop payout","cat":"Side Income","amount":420,"note":""},{"date":"2026-09-25","desc":"Aldi","cat":"Groceries","amount":106.19,"note":""},{"date":"2026-09-25","desc":"Brunch","cat":"Dining Out","amount":42.75,"note":""},{"date":"2026-09-25","desc":"Haircut","cat":"Personal Care","amount":45,"note":""},{"date":"2026-09-26","desc":"Costco","cat":"Groceries","amount":94.45,"note":""},{"date":"2026-09-27","desc":"Gas station","cat":"Transportation","amount":44.82,"note":""},{"date":"2026-10-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-10-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-10-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-10-02","desc":"Chipotle","cat":"Dining Out","amount":34.63,"note":""},{"date":"2026-10-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-10-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-10-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-10-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-10-04","desc":"Trader Joe's","cat":"Groceries","amount":99.74,"note":""},{"date":"2026-10-04","desc":"Gas station","cat":"Transportation","amount":44.9,"note":""},{"date":"2026-10-04","desc":"Movie tickets","cat":"Entertainment","amount":27.24,"note":""},{"date":"2026-10-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-10-06","desc":"Chipotle","cat":"Dining Out","amount":40,"note":""},{"date":"2026-10-07","desc":"Haircut","cat":"Personal Care","amount":35,"note":""},{"date":"2026-10-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-10-10","desc":"Home decor","cat":"Shopping","amount":35.49,"note":""},{"date":"2026-10-11","desc":"Thai takeout","cat":"Dining Out","amount":29.56,"note":""},{"date":"2026-10-12","desc":"Electric bill","cat":"Utilities","amount":85.22,"note":""},{"date":"2026-10-13","desc":"Doctor copay","cat":"Health","amount":44.32,"note":""},{"date":"2026-10-14","desc":"Gas station","cat":"Transportation","amount":39.12,"note":""},{"date":"2026-10-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-10-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-10-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-10-16","desc":"Amazon","cat":"Shopping","amount":28.73,"note":""},{"date":"2026-10-17","desc":"Gas station","cat":"Transportation","amount":53.19,"note":""},{"date":"2026-10-17","desc":"Brunch","cat":"Dining Out","amount":29.42,"note":""},{"date":"2026-10-17","desc":"Movie tickets","cat":"Entertainment","amount":40.5,"note":""},{"date":"2026-10-18","desc":"Water bill","cat":"Utilities","amount":60.95,"note":""},{"date":"2026-10-18","desc":"Walmart groceries","cat":"Groceries","amount":70.13,"note":""},{"date":"2026-10-19","desc":"Trader Joe's","cat":"Groceries","amount":105.77,"note":""},{"date":"2026-10-20","desc":"Thai takeout","cat":"Dining Out","amount":34.12,"note":""},{"date":"2026-10-21","desc":"Chipotle","cat":"Dining Out","amount":47.83,"note":""},{"date":"2026-10-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-10-23","desc":"Costco","cat":"Groceries","amount":98.76,"note":""},{"date":"2026-10-23","desc":"Gas station","cat":"Transportation","amount":42.76,"note":""},{"date":"2026-10-24","desc":"Brunch","cat":"Dining Out","amount":27.18,"note":""},{"date":"2026-10-25","desc":"Etsy shop payout","cat":"Side Income","amount":420,"note":""},{"date":"2026-10-25","desc":"Costco","cat":"Groceries","amount":68.84,"note":""},{"date":"2026-10-27","desc":"Walmart groceries","cat":"Groceries","amount":84.64,"note":""},{"date":"2026-11-01","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-11-01","desc":"Rent","cat":"Rent / Mortgage","amount":1500,"note":""},{"date":"2026-11-01","desc":"Student loan","cat":"Student Loan","amount":275,"note":""},{"date":"2026-11-02","desc":"Coffee shop","cat":"Dining Out","amount":28.58,"note":""},{"date":"2026-11-02","desc":"Transfer to savings","cat":"Emergency Fund","amount":300,"note":""},{"date":"2026-11-02","desc":"Transfer to savings","cat":"Vacation Fund","amount":150,"note":""},{"date":"2026-11-02","desc":"Transfer to savings","cat":"Christmas Fund","amount":75,"note":""},{"date":"2026-11-03","desc":"Spotify","cat":"Subscriptions","amount":11.99,"note":""},{"date":"2026-11-05","desc":"Walmart groceries","cat":"Groceries","amount":108.86,"note":""},{"date":"2026-11-05","desc":"Gas station","cat":"Transportation","amount":45.95,"note":""},{"date":"2026-11-05","desc":"Car insurance","cat":"Insurance","amount":180,"note":""},{"date":"2026-11-09","desc":"Walmart groceries","cat":"Groceries","amount":78.64,"note":""},{"date":"2026-11-09","desc":"Internet","cat":"Phone & Internet","amount":50,"note":""},{"date":"2026-11-10","desc":"Costco","cat":"Groceries","amount":55.22,"note":""},{"date":"2026-11-12","desc":"Electric bill","cat":"Utilities","amount":93.62,"note":""},{"date":"2026-11-12","desc":"Gas station","cat":"Transportation","amount":45.79,"note":""},{"date":"2026-11-13","desc":"Walmart groceries","cat":"Groceries","amount":95.9,"note":""},{"date":"2026-11-13","desc":"Haircut","cat":"Personal Care","amount":40,"note":""},{"date":"2026-11-14","desc":"Gas station","cat":"Transportation","amount":46.12,"note":""},{"date":"2026-11-14","desc":"Netflix","cat":"Subscriptions","amount":15.49,"note":""},{"date":"2026-11-15","desc":"Paycheck","cat":"Salary","amount":2400,"note":""},{"date":"2026-11-15","desc":"Bowling","cat":"Entertainment","amount":41.36,"note":""},{"date":"2026-11-15","desc":"Credit card payment","cat":"Credit Card","amount":250,"note":""},{"date":"2026-11-18","desc":"Water bill","cat":"Utilities","amount":61.4,"note":""},{"date":"2026-11-18","desc":"Walmart groceries","cat":"Groceries","amount":73.12,"note":""},{"date":"2026-11-21","desc":"Birthday gift","cat":"Gifts","amount":36.05,"note":""},{"date":"2026-11-22","desc":"Etsy shop payout","cat":"Side Income","amount":420,"note":""},{"date":"2026-11-22","desc":"Phone bill","cat":"Phone & Internet","amount":70,"note":""},{"date":"2026-11-23","desc":"Old Navy","cat":"Shopping","amount":56.75,"note":""},{"date":"2026-11-24","desc":"Costco","cat":"Groceries","amount":79.97,"note":""},{"date":"2026-11-24","desc":"Chipotle","cat":"Dining Out","amount":32.22,"note":""},{"date":"2026-11-25","desc":"Brunch","cat":"Dining Out","amount":23.99,"note":""},{"date":"2026-11-26","desc":"Bowling","cat":"Entertainment","amount":22.54,"note":""},{"date":"2026-11-28","desc":"Gas station","cat":"Transportation","amount":47.56,"note":""},{"date":"2026-11-28","desc":"Amazon","cat":"Shopping","amount":37.47,"note":""}],"bills":[{"name":"Rent","amount":1500,"day":1,"autopay":false,"paid":[1,2,3,4,5,6,7,8,9,10,11]},{"name":"Student loan","amount":275,"day":1,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10,11]},{"name":"Spotify","amount":11.99,"day":3,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10,11]},{"name":"Car insurance","amount":180,"day":5,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Internet","amount":50,"day":9,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Electric","amount":110,"day":12,"autopay":false,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Netflix","amount":15.49,"day":14,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Credit card","amount":250,"day":15,"autopay":false,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Water","amount":55,"day":18,"autopay":false,"paid":[1,2,3,4,5,6,7,8,9,10]},{"name":"Phone","amount":70,"day":22,"autopay":true,"paid":[1,2,3,4,5,6,7,8,9,10]}],"goals":[{"name":"Emergency fund","cat":"Emergency Fund","target":10000,"date":"2027-12-01","before":2500},{"name":"Summer trip","cat":"Vacation Fund","target":3000,"date":"2027-07-01","before":400},{"name":"Holiday gifts","cat":"Christmas Fund","target":900,"date":"2026-12-01","before":0}]};
+// Five groups, like the Budget Planner spreadsheet. Income comes in; the other four are where every dollar goes.
+const GROUPS = [["income", "Income"], ["needs", "Needs"], ["wants", "Wants"], ["savings", "Savings"], ["debt", "Debt payments"]].map(([key, name]) => ({ key, name }));
+const OUT = ["needs", "wants", "savings", "debt"];
+const GUIDE = { needs: "about 50%", wants: "about 30%", savings: "20%+ with debt", debt: "(with savings)" };
+const DEFAULT_CATS = [["income", "Salary"], ["income", "Side income"], ["needs", "Rent / Mortgage"], ["needs", "Utilities"], ["needs", "Groceries"], ["needs", "Transportation"], ["needs", "Insurance"], ["needs", "Phone & Internet"], ["needs", "Health"], ["wants", "Dining out"], ["wants", "Entertainment"], ["wants", "Shopping"], ["wants", "Subscriptions"], ["wants", "Personal care"], ["wants", "Gifts"], ["savings", "Emergency fund"], ["savings", "Vacation fund"], ["debt", "Credit card"], ["debt", "Student loan"]];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MON = MONTHS.map(m => m.slice(0, 3));
+
+/* ---------- dates (local calendar days) ---------- */
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const ymKey = (y, m) => y + "-" + String(m).padStart(2, "0");
+const dim = (y, m) => new Date(y, m, 0).getDate();
+const fmtD = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+/* ---------- state ---------- */
+const uid = () => Math.random().toString(36).slice(2, 9);
+function blank() {
+  return { v: 1, app: "budget-planner", currency: "$", theme: "auto", accent: "sage", cats: DEFAULT_CATS.map(([group, name]) => ({ id: uid(), group, name, budget: 0 })), plan: {}, tx: [], bills: [], paid: {}, goals: [] };
+}
+function valid(s) { return s && s.v === 1 && s.app === "budget-planner" && ["cats", "tx", "bills", "goals"].every(k => Array.isArray(s[k])); }
+function normalize(s) {
+  const o = Object.assign(blank(), s);
+  ["plan", "paid"].forEach(k => { if (!o[k] || typeof o[k] !== "object" || Array.isArray(o[k])) o[k] = {}; });
+  if (!["sage", "ocean", "coral", "plum"].includes(o.accent)) o.accent = "sage";
+  return o;
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
+function sample() {
+  const s = blank(), id = {};
+  s.cats = SAMPLE.cats.map(c => { const o = { id: uid(), group: c.group, name: c.name, budget: c.budget }; id[c.name] = o.id; return o; });
+  s.tx = SAMPLE.tx.map(t => ({ id: uid(), date: t.date, desc: t.desc, cat: id[t.cat] || "", amount: t.amount, note: t.note || "" }));
+  s.bills = SAMPLE.bills.map(b => ({ id: uid(), name: b.name, amount: b.amount, day: b.day, autopay: b.autopay, _paid: b.paid }));
+  s.bills.forEach(b => { b._paid.forEach(m => { const k = ymKey(SAMPLE.year, m); (s.paid[k] = s.paid[k] || []).push(b.id); }); delete b._paid; });
+  s.goals = SAMPLE.goals.map(g => ({ id: uid(), name: g.name, cat: id[g.cat] || "", target: g.target, date: g.date, before: g.before }));
+  return s;
+}
+let S = load();
+// The month on screen (not saved): this month, or the latest month with transactions in the sample
+let VM = { y: today().getFullYear(), m: today().getMonth() + 1 };
+function lastDataMonth() { const d = S.tx.map(t => t.date).sort().pop(); if (d) { const x = parse(d); VM = { y: x.getFullYear(), m: x.getMonth() + 1 }; } }
+if (DEMO) lastDataMonth();
+
+/* ---------- the math (whole cents) ---------- */
+const cents = v => Math.round((Number(v) || 0) * 100);
+const catById = id => S.cats.find(c => c.id === id);
+const groupOf = id => (catById(id) || {}).group || "";
+const catsIn = g => S.cats.filter(c => c.group === g);
+// Planned amount for one category in one month: this month's own number, or the category's monthly budget
+function planned(c, y, m) { const p = S.plan[ymKey(y, m)]; return cents(p && p[c.id] !== undefined ? p[c.id] : c.budget); }
+function month(y = VM.y, m = VM.m) {
+  const key = ymKey(y, m), act = {}, cat = {}, grp = {};
+  S.tx.forEach(t => { if (t.date && t.date.slice(0, 7) === key) act[t.cat] = (act[t.cat] || 0) + cents(t.amount); });
+  GROUPS.forEach(g => grp[g.key] = { plan: 0, act: 0 });
+  S.cats.forEach(c => { const p = planned(c, y, m), a = act[c.id] || 0; cat[c.id] = { plan: p, act: a }; grp[c.group].plan += p; grp[c.group].act += a; });
+  const planOut = OUT.reduce((s, g) => s + grp[g].plan, 0), actOut = OUT.reduce((s, g) => s + grp[g].act, 0);
+  const uncategorized = S.tx.filter(t => t.date && t.date.slice(0, 7) === key && !catById(t.cat));
+  return { y, m, key, cat, grp, planIncome: grp.income.plan, planOut, toBudget: grp.income.plan - planOut,
+    income: grp.income.act, spent: grp.needs.act + grp.wants.act, saved: grp.savings.act, debt: grp.debt.act, actOut, left: grp.income.act - actOut,
+    uncat: uncategorized.length, uncatAmt: uncategorized.reduce((s, t) => s + cents(t.amount), 0) };
+}
+// Status of one category, the same words the spreadsheet uses
+function status(group, p, a) {
+  if (!p && !a) return null;
+  if (group === "income") return a >= p ? ["Received", "done"] : [mc(p - a, 0) + " expected", "plain"];
+  if (group === "savings" || group === "debt") return a >= p ? ["Done", "done"] : [mc(p - a, 0) + " to go", "plain"];
+  if (a > p) return ["Over by " + mc(a - p, 0), "short"];
+  if (!p) return null;
+  if (a === p) return ["On budget", "ok"];
+  return a >= 0.9 * p ? ["Almost at limit", "tight"] : ["On track", "ok"];
+}
+function year(y = VM.y) {
+  const months = Array.from({ length: 12 }, (_, i) => month(y, i + 1));
+  const avg = (arr, test) => { const n = arr.filter(test).length; return n ? Math.round(arr.reduce((s, v) => s + v, 0) / n) : 0; };
+  const row = (vals, budget, inc) => { const tot = vals.reduce((s, v) => s + v, 0); return { vals, tot, budget, left: inc ? tot - budget : budget - tot }; };
+  const groups = {}; GROUPS.forEach(g => { const r = row(months.map(x => x.grp[g.key].act), months.reduce((s, x) => s + x.grp[g.key].plan, 0), g.key === "income"); r.avg = avg(r.vals, v => v !== 0); groups[g.key] = r; });
+  const out = row(months.map(x => x.actOut), months.reduce((s, x) => s + x.planOut, 0)); out.avg = avg(out.vals, v => v !== 0);
+  const left = row(months.map(x => x.left), months.reduce((s, x) => s + x.toBudget, 0), true); left.avg = avg(left.vals, v => v !== 0);
+  const cats = {}; S.cats.forEach(c => { const r = row(months.map(x => x.cat[c.id].act), months.reduce((s, x) => s + x.cat[c.id].plan, 0), c.group === "income"); r.avg = avg(r.vals, v => v > 0); cats[c.id] = r; });
+  return { y, months, groups, out, left, cats };
+}
+// Savings goals: everything ever logged in the goal's savings category counts, plus what was saved before
+function goalInfo(g, now = today()) {
+  const saved = cents(g.before) + S.tx.filter(t => g.cat && t.cat === g.cat).reduce((s, t) => s + cents(t.amount), 0), target = cents(g.target);
+  const left = Math.max(0, target - saved), pct = target > 0 ? Math.min(1, saved / target) : 0;
+  let monthsLeft = null, per = null, st;
+  if (left === 0 && target > 0) st = "reached";
+  else if (!g.date) st = "nodate";
+  else { const d = parse(g.date); monthsLeft = (d.getFullYear() - now.getFullYear()) * 12 + d.getMonth() - now.getMonth(); if (monthsLeft <= 0) st = "passed"; else { st = "saving"; per = Math.ceil(left / monthsLeft); } }
+  return { saved, target, left, pct, monthsLeft, per, st };
+}
+// Bills: paid, late (due day passed and not marked), due soon (7 days) or upcoming
+function billDay(b, y, m) { return Math.min(Math.max(1, Math.round(Number(b.day) || 1)), dim(y, m)); }
+function billStatus(b, y = VM.y, m = VM.m, now = today()) {
+  if ((S.paid[ymKey(y, m)] || []).includes(b.id)) return { k: "paid", t: "Paid" };
+  const due = new Date(y, m - 1, billDay(b, y, m)), diff = Math.round((due - now) / 86400000);
+  if (diff < 0) return { k: "late", t: "Late" };
+  if (diff === 0) return { k: "soon", t: "Due today" };
+  if (diff <= 7) return { k: "soon", t: "Due in " + diff + " day" + (diff === 1 ? "" : "s") };
+  return { k: "up", t: "Upcoming" };
+}
+function billTotals(y = VM.y, m = VM.m) {
+  const tot = S.bills.reduce((s, b) => s + cents(b.amount), 0), paid = S.bills.filter(b => billStatus(b, y, m).k === "paid").reduce((s, b) => s + cents(b.amount), 0);
+  return { tot, paid, left: tot - paid, late: S.bills.filter(b => billStatus(b, y, m).k === "late").length };
+}
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const n = Math.round(Math.abs(v) * 100) / 100, neg = v < 0 && n > 0 ? "-" : "", d = dec ?? 2;
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(c / 100, dec);
+const mcs = c => mc(c, c % 100 === 0 ? 0 : 2);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2200); }
+const pctTxt = (a, b) => b > 0 ? Math.round(a / b * 100) + "%" : "–";
+const catName = id => (catById(id) || { name: "No category" }).name;
+const gName = k => GROUPS.find(g => g.key === k).name;
+const pill = st => st ? `<span class="pill ${st[1]}">${st[1] === "done" || st[0] === "Received" ? "✓ " : ""}${esc(st[0])}</span>` : "";
+const barHTML = (a, p, over) => `<div class="bar"><i class="${over ? "over" : ""}" style="width:${p > 0 ? Math.min(100, a / p * 100).toFixed(1) : 0}%"></i></div>`;
+const empty = () => !S.tx.length && S.cats.every(c => !Number(c.budget)) && !Object.keys(S.plan).length && !S.bills.length && !S.goals.length;
+const catOpts = (sel, only) => GROUPS.filter(g => !only || g.key === only).map(g => `<optgroup label="${g.name}">${catsIn(g.key).map(c => `<option value="${c.id}" ${c.id === sel ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</optgroup>`).join("");
+const mlabel = (y, m) => MONTHS[m - 1] + " " + y;
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+  paintThemeToggle();
+}
+function paintThemeToggle() {
+  const b = document.getElementById("themeTog"); if (!b) return;
+  const dark = document.documentElement.dataset.theme === "dark";
+  b.innerHTML = dark ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  const t = dark ? "Switch to light mode" : "Switch to dark mode";
+  b.setAttribute("aria-label", t); b.title = t;
+}
+document.getElementById("themeTog").addEventListener("click", ev => {
+  ev.stopPropagation();
+  S.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  save(); render();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home", TF = { cat: "", q: "" };
+const M = () => document.getElementById("main");
+function go(v) {
+  VIEW = v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render(); window.scrollTo(0, 0); M().focus({ preventScroll: true });
+}
+function render() { applyTheme(); ({ home, budget, tx, bills, goals, year: yearView, settings })[VIEW](); wire(); }
+// month picker: ‹ November 2026 › (changes the month on screen only)
+const mpick = () => `<div class="mpick" role="group" aria-label="Month"><button type="button" id="prevM" aria-label="Previous month">‹</button><b id="mLabel">${mlabel(VM.y, VM.m)}</b><button type="button" id="nextM" aria-label="Next month">›</button></div>`;
+const ypick = () => `<div class="mpick" role="group" aria-label="Year"><button type="button" id="prevY" aria-label="Previous year">‹</button><b id="yLabel">${VM.y}</b><button type="button" id="nextY" aria-label="Next year">›</button></div>`;
+function shiftMonth(n) { const d = new Date(VM.y, VM.m - 1 + n, 1); VM = { y: d.getFullYear(), m: d.getMonth() + 1 }; render(); }
+const topbar = (h, sub, right) => `<div class="top"><div><h1>${h}</h1><p class="sub">${sub}</p></div>${right || ""}</div>`;
+
+function welcome() {
+  M().innerHTML = `<h1>Give every dollar a job 👋</h1><p class="sub">Plan your month and your year: income, needs, wants, savings and debt payments. Track what you really spend, pay your bills on time and see your savings goals grow.</p>
+  <div class="card" style="max-width:660px;padding:26px">
+   <div class="lab">Step 1</div><div class="mid" style="margin:4px 0 10px">Plan ${MONTHS[VM.m - 1]}</div>
+   <p class="sub" style="margin-bottom:16px">Type what you expect to earn and give each category a monthly amount until <b>Left to budget</b> is $0. Then log what you spend.</p>
+   <div class="actions" style="justify-content:flex-start"><button class="btn" id="goPlan">Plan my month</button><button class="btn ghost" id="trySample">Try with sample data</button></div>
+  </div>
+  <p class="meta" style="margin-top:18px;max-width:640px">Everything stays in this browser on your computer. No account, no bank login.</p>`;
+  document.getElementById("goPlan").onclick = () => go("budget");
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); lastDataMonth(); go("home"); toast("Sample year loaded: " + SAMPLE.year); };
+}
+
+function groupChart(R) {
+  const W = 520, H = 210, gs = OUT, max = Math.max(1, ...gs.map(g => Math.max(R.grp[g].plan, R.grp[g].act))), bw = W / gs.length, base = H - 26;
+  const y = v => base - (base - 18) * Math.max(0, v) / max;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Budget and actual by group">
+   <line class="ax" x1="0" x2="${W}" y1="${base}" y2="${base}"/>
+   ${gs.map((g, i) => { const x0 = i * bw + bw * .2, w = bw * .28, p = R.grp[g].plan, a = R.grp[g].act;
+     return `<rect class="gp" x="${x0.toFixed(1)}" y="${y(p).toFixed(1)}" width="${w.toFixed(1)}" height="${(base - y(p)).toFixed(1)}" rx="4"><title>${gName(g)} budget ${mc(p, 0)}</title></rect>
+     <rect style="fill:var(--g-${g})" x="${(x0 + w + 4).toFixed(1)}" y="${y(a).toFixed(1)}" width="${w.toFixed(1)}" height="${(base - y(a)).toFixed(1)}" rx="4"><title>${gName(g)} actual ${mc(a, 0)}</title></rect>
+     <text x="${(i * bw + bw / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle">${gName(g).replace(" payments", "")}</text>`; }).join("")}
+  </svg>`;
+}
+function ltbCard(R) {
+  const v = R.toBudget, msg = !R.planIncome && !R.planOut ? "Type your income and plan each category in Budget." : v === 0 ? "✓ Every dollar has a job." : v > 0 ? `${mc(v, 0)} not assigned yet. Give it a job: savings or an extra debt payment.` : `You planned ${mc(-v, 0)} more than you expect to earn. Trim a category.`;
+  return `<div class="card ltb" id="ltb"><div><div class="lab">Left to budget · ${MON[R.m - 1]}</div><div class="big ${v < 0 ? "neg" : ""}" id="ltbVal">${mc(v, 0)}</div></div>
+   <div class="msg"><b>${esc(msg)}</b><div class="meta">Planned income ${mc(R.planIncome, 0)} − planned spending, saving and debt ${mc(R.planOut, 0)}</div></div></div>`;
+}
+function home() {
+  if (empty()) return welcome();
+  const R = month(), B = billTotals(), now = today(), isNow = VM.y === now.getFullYear() && VM.m === now.getMonth() + 1;
+  const watch = S.cats.filter(c => (c.group === "needs" || c.group === "wants") && R.cat[c.id].act > 0).map(c => ({ c, r: R.cat[c.id], st: status(c.group, R.cat[c.id].plan, R.cat[c.id].act) }))
+    .filter(x => x.st && (x.st[1] === "short" || x.st[1] === "tight")).sort((a, b) => (b.r.act - b.r.plan) - (a.r.act - a.r.plan)).slice(0, 5);
+  const nextBills = S.bills.map(b => ({ b, st: billStatus(b) })).filter(x => x.st.k !== "paid").sort((a, b) => billDay(a.b, VM.y, VM.m) - billDay(b.b, VM.y, VM.m)).slice(0, 5);
+  M().innerHTML = topbar("Dashboard", isNow ? "This month at a glance." : "Your budget for " + mlabel(VM.y, VM.m) + ".", mpick()) + ltbCard(R) + `
+  <div class="grid g4" style="margin-top:14px">
+   <div class="card"><div class="lab">Income</div><div class="mid" id="cIncome">${mc(R.income, 0)}</div><div class="meta">received of ${mc(R.planIncome, 0)} planned</div></div>
+   <div class="card"><div class="lab">Spent</div><div class="mid" id="cSpent">${mc(R.spent, 0)}</div><div class="meta">needs + wants, budget ${mc(R.grp.needs.plan + R.grp.wants.plan, 0)}</div></div>
+   <div class="card"><div class="lab">Saved + debt paid</div><div class="mid" id="cSaved">${mc(R.saved + R.debt, 0)}</div><div class="meta">${mc(R.saved, 0)} saved · ${mc(R.debt, 0)} to debt</div></div>
+   <div class="card"><div class="lab">Left over</div><div class="mid ${R.left < 0 ? "neg" : ""}" id="cLeft">${mc(R.left, 0)}</div><div class="meta">income minus everything</div></div>
+  </div>
+  ${R.uncat ? `<p class="hint" style="margin-top:14px">⚠ ${R.uncat} transaction${R.uncat === 1 ? "" : "s"} this month (${mc(R.uncatAmt)}) ${R.uncat === 1 ? "has" : "have"} no category, so ${R.uncat === 1 ? "it isn't" : "they aren't"} counted. <button class="btn small ghost" data-go="tx">Fix in Spending</button></p>` : ""}
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Budget vs. actual</h2><div class="legend"><span><i style="background:var(--glass)"></i>Budget</span><span><i style="background:var(--g-needs)"></i>Actual</span></div></div>${groupChart(R)}
+    <div class="split" aria-label="Where your income went">${OUT.map(g => `<i class="g-${g}" style="width:${R.income > 0 ? Math.min(100, R.grp[g].act / R.income * 100).toFixed(1) : 0}%" title="${gName(g)}"></i>`).join("")}</div>
+    <div class="legend">${OUT.map(g => `<span><i class="g-${g}"></i>${gName(g)} ${pctTxt(R.grp[g].act, R.income)}</span>`).join("")}</div></div>
+   <div class="card"><h2>Watch these</h2>${watch.length ? watch.map(x => `<div class="row"><div class="grow"><div class="name">${esc(x.c.name)}</div>${barHTML(x.r.act, x.r.plan, x.st[1] === "short")}</div><div class="amt">${mc(x.r.act, 0)}<div class="meta">of ${mc(x.r.plan, 0)}</div></div></div>`).join("") : `<div class="empty">Nothing over budget. Nice work. 🍋</div>`}</div>
+  </div>
+  <div class="grid g2e" style="margin-top:14px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Bills this month</h2><button class="btn small ghost" data-go="bills">All bills</button></div>
+    <div class="kv"><span>Bills</span><b>${mc(B.tot)}</b></div><div class="kv"><span>Paid</span><b>${mc(B.paid)}</b></div><div class="kv total"><span>Still to pay</span><b>${mc(B.left)}</b></div>
+    ${nextBills.map(x => `<div class="row"><div class="dt"><b>${billDay(x.b, VM.y, VM.m)}</b>${MON[VM.m - 1]}</div><div class="grow"><div class="name">${esc(x.b.name)}</div></div><span class="pill ${x.st.k === "late" ? "short" : x.st.k === "soon" ? "tight" : "plain"}">${x.st.t}</span><div class="amt">${mcs(cents(x.b.amount))}</div></div>`).join("") || (S.bills.length ? `<div class="empty">All paid this month ✓</div>` : `<div class="empty">No bills yet.</div>`)}</div>
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Savings goals</h2><button class="btn small ghost" data-go="goals">All goals</button></div>
+    ${S.goals.map(g => { const G = goalInfo(g); return `<div class="row"><div class="grow"><div class="name">${esc(g.name)}</div>${barHTML(G.saved, G.target)}<div class="meta">${mc(G.saved, 0)} of ${mc(G.target, 0)}</div></div><div class="amt">${goalPer(G)}</div></div>`; }).join("") || `<div class="empty">No goals yet.</div>`}</div>
+  </div>`;
+}
+const goalPer = G => G.st === "reached" ? `<span class="pill done">✓ Reached</span>` : G.st === "nodate" ? `<span class="pill plain">Add a date</span>` : G.st === "passed" ? `<span class="pill short">Date passed</span>` : `${mc(G.per, 0)}<div class="meta">a month</div>`;
+
+function budget() {
+  const R = month(), inc = R.income;
+  const groupCard = g => {
+    const list = catsIn(g.key), isInc = g.key === "income", T = R.grp[g.key];
+    return `<div class="card" style="margin-top:14px" id="grp-${g.key}"><div class="gtitle"><h2><span class="gdot g-${g.key}"></span>${g.name}</h2><span class="meta">${isInc ? "" : `${pctTxt(T.act, inc)} of income · guide ${GUIDE[g.key]}`}</span></div>
+     <div class="bhead"><span>Category</span><span>Planned</span><span>${isInc ? "Received" : "Actual"}</span><span>${isInc ? "Difference" : "Left"}</span><span class="bc">Progress</span><span>Status</span></div>
+     ${list.map(c => { const r = R.cat[c.id], left = isInc ? r.act - r.plan : r.plan - r.act, st = status(g.key, r.plan, r.act);
+       return `<div class="brow" data-row="${c.id}"><button type="button" class="cname" data-editcat="${c.id}" title="Edit ${esc(c.name)}">${esc(c.name)}</button><input type="number" step="any" min="0" inputmode="decimal" data-plan="${c.id}" value="${r.plan / 100}" aria-label="Planned for ${esc(c.name)} in ${MONTHS[VM.m - 1]}"><span class="n a">${mcs(r.act)}</span><span class="n l ${!isInc && left < 0 ? "neg" : ""}">${mcs(left)}</span><span class="bc">${r.plan > 0 ? barHTML(r.act, r.plan, !isInc && g.key !== "savings" && g.key !== "debt" && r.act > r.plan) : ""}</span><span class="st">${pill(st)}</span></div>`; }).join("")}
+     <div class="brow tot"><span>Total ${g.name.toLowerCase()}</span><span class="n" id="tp-${g.key}">${mc(T.plan, 0)}</span><span class="n a">${mc(T.act, 0)}</span><span class="n l ${!isInc && T.plan - T.act < 0 ? "neg" : ""}">${mc(isInc ? T.act - T.plan : T.plan - T.act, 0)}</span><span class="bc"></span><span></span></div>
+     <button type="button" class="btn small ghost addcat" data-addcat="${g.key}">+ Add ${isInc ? "income" : "category"}</button></div>`;
+  };
+  M().innerHTML = topbar("Monthly budget", "Zero-based: plan income, then give every dollar a job.", mpick()) + ltbCard(R) +
+  `<div class="filters" style="margin-top:12px"><button class="btn small ghost" id="copyPrev">Copy last month's plan</button><button class="btn small ghost" id="resetMonth">Reset to monthly budgets</button><span class="meta">Planned amounts you type here are for ${MONTHS[VM.m - 1]} only. A category's monthly budget (click its name) fills every month.</span></div>` +
+  GROUPS.map(groupCard).join("") +
+  `<div class="card" style="margin-top:14px"><h2>The 50/30/20 guide</h2><div class="grid g4">${OUT.map(g => `<div><div class="lab"><span class="gdot g-${g}"></span>${gName(g)}</div><div class="mid">${pctTxt(R.grp[g].plan, R.planIncome)}</div><div class="meta">planned · actual ${pctTxt(R.grp[g].act, inc)} · guide ${GUIDE[g]}</div></div>`).join("")}</div><p class="meta" style="margin:12px 0 0">Needs about 50% of income, wants about 30%, savings and debt payments 20% or more. A starting point, not a rule.</p></div>`;
+  M().querySelectorAll("input[data-plan]").forEach(inp => inp.onchange = () => {
+    const v = inp.value === "" ? 0 : Math.max(0, Math.round(Number(inp.value) * 100) / 100), key = ymKey(VM.y, VM.m);
+    (S.plan[key] = S.plan[key] || {})[inp.dataset.plan] = v; save();
+    setTimeout(() => { const ae = document.activeElement, ds = ae && ae.dataset ? ae.dataset : {}, sel = ds.plan ? `input[data-plan="${ds.plan}"]` : ds.editcat ? `[data-editcat="${ds.editcat}"]` : null; render(); const el = sel && M().querySelector(sel); if (el) { el.focus(); el.select && el.select(); } }, 0);
+  });
+  const boxes = [...M().querySelectorAll("input[data-plan]")];
+  boxes.forEach((inp, i) => inp.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); const nx = boxes[i + 1]; if (nx) nx.focus(); else inp.blur(); } });
+  M().querySelectorAll("[data-addcat]").forEach(b => b.onclick = () => catDlg(null, b.dataset.addcat));
+  document.getElementById("copyPrev").onclick = () => {
+    const p = new Date(VM.y, VM.m - 2, 1), py = p.getFullYear(), pm = p.getMonth() + 1, key = ymKey(VM.y, VM.m);
+    S.plan[key] = {}; S.cats.forEach(c => S.plan[key][c.id] = planned(c, py, pm) / 100); save(); render(); toast("Copied the plan from " + mlabel(py, pm));
+  };
+  document.getElementById("resetMonth").onclick = () => { delete S.plan[ymKey(VM.y, VM.m)]; save(); render(); toast(MONTHS[VM.m - 1] + " uses the monthly budgets again"); };
+}
+
+function tx() {
+  const key = ymKey(VM.y, VM.m), q = TF.q.trim().toLowerCase();
+  let list = S.tx.filter(t => t.date && t.date.slice(0, 7) === key);
+  const R = month();
+  if (TF.cat === "_none") list = list.filter(t => !catById(t.cat)); else if (TF.cat) list = list.filter(t => t.cat === TF.cat);
+  if (q) list = list.filter(t => (t.desc + " " + t.note + " " + catName(t.cat)).toLowerCase().includes(q));
+  list.sort((a, b) => b.date.localeCompare(a.date));
+  M().innerHTML = topbar("Spending & income", "Every transaction this month. Amounts are positive; the category decides where it counts.", mpick()) + `
+  <div class="grid g4"><div class="card"><div class="lab">Income</div><div class="mid">${mc(R.income)}</div></div><div class="card"><div class="lab">Spent</div><div class="mid">${mc(R.spent)}</div></div><div class="card"><div class="lab">Saved</div><div class="mid">${mc(R.saved)}</div></div><div class="card"><div class="lab">Debt paid</div><div class="mid">${mc(R.debt)}</div></div></div>
+  <div class="card" style="margin-top:14px">
+   <div class="tablebar"><h2 style="margin:0">${list.length} transaction${list.length === 1 ? "" : "s"}</h2><div class="actions" style="margin:0"><button class="btn small ghost" id="csvTx">⬇ CSV</button><button class="btn small" id="addTx">+ Add</button></div></div>
+   <div class="filters"><select id="fCat" aria-label="Category"><option value="">All categories</option>${catOpts(TF.cat)}<option value="_none" ${TF.cat === "_none" ? "selected" : ""}>⚠ No category</option></select><input id="fQ" type="search" placeholder="Search" value="${esc(TF.q)}" aria-label="Search"></div>
+   <div id="txList">${list.map(t => { const c = catById(t.cat), g = c ? c.group : "";
+     return `<div class="row"><div class="dt"><b>${+t.date.slice(8)}</b>${MON[+t.date.slice(5, 7) - 1]}</div><div class="grow"><div class="name">${esc(t.desc || catName(t.cat))}</div><div class="meta">${c ? `<span class="gdot g-${g}"></span>${esc(c.name)} · ${gName(g)}` : `<span class="flag">⚠ No category</span>`}${t.note ? " · " + esc(t.note) : ""}</div></div><div class="amt ${g === "income" ? "pos" : ""}">${g === "income" ? "+" : ""}${mc(cents(t.amount))}</div><button class="icon" data-edittx="${t.id}" aria-label="Edit">✎</button></div>`; }).join("") || `<div class="empty">No transactions${TF.cat || q ? " match" : " in " + MONTHS[VM.m - 1]} yet.</div>`}</div>
+  </div>`;
+  document.getElementById("addTx").onclick = () => txDlg();
+  document.getElementById("csvTx").onclick = () => exportCSV("transactions");
+  document.getElementById("fCat").onchange = e => { TF.cat = e.target.value; render(); };
+  const fq = document.getElementById("fQ"); fq.oninput = () => { TF.q = fq.value; clearTimeout(tx.h); tx.h = setTimeout(() => { render(); const n = document.getElementById("fQ"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); };
+}
+
+function bills() {
+  const B = billTotals(), now = today();
+  const list = S.bills.slice().sort((a, b) => billDay(a, VM.y, VM.m) - billDay(b, VM.y, VM.m) || a.name.localeCompare(b.name));
+  const cls = k => ({ paid: "done", late: "short", soon: "tight", up: "plain" })[k];
+  M().innerHTML = topbar("Bills", "List each recurring bill once. Every month, mark it paid. Late bills turn red.", mpick()) + `
+  <div class="grid g3"><div class="card"><div class="lab">Bills this month</div><div class="mid" id="bTot">${mc(B.tot)}</div></div><div class="card"><div class="lab">Paid</div><div class="mid" id="bPaid">${mc(B.paid)}</div></div><div class="card"><div class="lab">Still to pay</div><div class="mid ${B.late ? "neg" : ""}" id="bLeft">${mc(B.left)}</div><div class="meta">${B.late ? B.late + " late" : "none late"}</div></div></div>
+  <div class="card" style="margin-top:14px"><div class="tablebar"><h2 style="margin:0">${MONTHS[VM.m - 1]}</h2><button class="btn small" id="addBill">+ Add bill</button></div>
+   <div id="billList">${list.map(b => { const st = billStatus(b), p = st.k === "paid";
+     return `<div class="row bill"><div class="dt"><b>${billDay(b, VM.y, VM.m)}</b>${MON[VM.m - 1]}</div><div class="grow"><div class="name">${esc(b.name)}</div><div class="meta">${b.autopay ? "Autopay" : "Pay by hand"}${b.cat && catById(b.cat) ? " · " + esc(catName(b.cat)) : ""}</div></div>${p ? "" : `<span class="pill ${cls(st.k)}">${st.t}</span>`}<div class="amt">${mcs(cents(b.amount))}</div><button type="button" class="paybtn" data-pay="${b.id}" aria-pressed="${p}">${p ? "✓ Paid" : "Mark paid"}</button><button class="icon" data-editbill="${b.id}" aria-label="Edit">✎</button></div>`; }).join("") || `<div class="empty">No bills yet. Add rent, phone, streaming…</div>`}</div></div>
+  ${S.bills.length ? `<div class="card" style="margin-top:14px"><h2>${VM.y} at a glance</h2><div class="scroll"><table class="t bgrid"><thead><tr><th>Bill</th>${MON.map((m, i) => `<th class="${VM.y === now.getFullYear() && i === now.getMonth() ? "now" : ""}">${m}</th>`).join("")}<th>Paid</th></tr></thead><tbody>
+   ${list.map(b => { let n = 0; const cells = MON.map((_, i) => { const st = billStatus(b, VM.y, i + 1); if (st.k === "paid") n++; return `<td class="c ${st.k === "late" ? "late" : ""}">${st.k === "paid" ? "✓" : st.k === "late" ? "!" : ""}</td>`; }).join(""); return `<tr><td>${esc(b.name)}</td>${cells}<td>${n} / 12</td></tr>`; }).join("")}
+   </tbody></table></div><p class="meta" style="margin:8px 0 0">✓ paid · ! due day passed and not marked paid.</p></div>` : ""}`;
+  document.getElementById("addBill").onclick = () => billDlg();
+  M().querySelectorAll("[data-pay]").forEach(b => b.onclick = () => {
+    const key = ymKey(VM.y, VM.m), arr = S.paid[key] = S.paid[key] || [], id = b.dataset.pay, i = arr.indexOf(id), bill = S.bills.find(x => x.id === id);
+    if (i >= 0) arr.splice(i, 1); else arr.push(id);
+    save(); render(); toast(bill.name + (i >= 0 ? " marked unpaid" : " paid for " + MONTHS[VM.m - 1]));
+  });
+}
+
+function ring(p) {
+  const r = 34, C = 2 * Math.PI * r;
+  return `<svg class="ring" width="86" height="86" viewBox="0 0 86 86" aria-hidden="true"><circle class="tr" cx="43" cy="43" r="${r}"/><circle class="pr" cx="43" cy="43" r="${r}" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${(C * (1 - p)).toFixed(2)}" transform="rotate(-90 43 43)"/><text x="43" y="51" text-anchor="middle">${Math.round(p * 100)}%</text></svg>`;
+}
+function goals() {
+  const tot = S.goals.reduce((s, g) => { const G = goalInfo(g); s.saved += G.saved; s.target += G.target; s.per += G.per || 0; return s; }, { saved: 0, target: 0, per: 0 });
+  M().innerHTML = topbar("Savings goals", "Link each goal to a Savings category. Every transaction in that category counts toward the goal.", `<button class="btn" id="addGoal">+ New goal</button>`) + `
+  <div class="grid g3"><div class="card"><div class="lab">Saved so far</div><div class="mid">${mc(tot.saved, 0)}</div><div class="meta">of ${mc(tot.target, 0)} across ${S.goals.length} goal${S.goals.length === 1 ? "" : "s"}</div></div><div class="card"><div class="lab">Save each month</div><div class="mid" id="gPer">${mc(tot.per, 0)}</div><div class="meta">to hit every date</div></div><div class="card"><div class="lab">Planned for savings in ${MON[VM.m - 1]}</div><div class="mid">${mc(month().grp.savings.plan, 0)}</div><div class="meta">from your monthly budget</div></div></div>
+  <div class="grid g2e" style="margin-top:14px" id="goalList">${S.goals.map(g => { const G = goalInfo(g);
+    return `<div class="card"><div class="goal">${ring(G.pct)}<div style="flex:1;min-width:0"><div class="tablebar" style="margin:0"><h2 style="margin:0">${esc(g.name)}</h2><button class="icon" data-editgoal="${g.id}" aria-label="Edit">✎</button></div>
+     <div class="meta">${g.cat && catById(g.cat) ? esc(catName(g.cat)) : `<span class="flag">No savings category</span>`}${g.date ? " · by " + fmtD(parse(g.date)) : ""}</div>
+     <div class="kv"><span>Saved</span><b>${mc(G.saved)}</b></div><div class="kv"><span>Left</span><b>${mc(G.left)}</b></div>
+     <div class="kv total"><span>Save per month</span><b>${G.st === "saving" ? mc(G.per) + ` <span class="meta">× ${G.monthsLeft}</span>` : goalPer(G)}</b></div></div></div></div>`; }).join("") || `<div class="card empty">No goals yet. An emergency fund is a great first one.</div>`}</div>
+  <p class="meta" style="margin-top:14px">Save per month = what's left ÷ months until the target date (rounded up to the cent). Put the same amount in that savings category in your monthly budget.</p>`;
+  document.getElementById("addGoal").onclick = () => goalDlg();
+}
+
+function yearChart(Y) {
+  const W = 760, H = 220, pad = 34, base = H - 24, max = Math.max(1, ...Y.months.map(x => Math.max(x.income, x.actOut))), bw = (W - pad) / 12;
+  const y = v => base - (base - 18) * Math.max(0, v) / max;
+  const pts = Y.months.map((x, i) => [pad + i * bw + bw / 2, y(x.left), i]).filter((p, i) => Y.months[i].income || Y.months[i].actOut);
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Income and spending by month">
+   <line class="ax" x1="${pad}" x2="${W}" y1="${base}" y2="${base}"/>
+   ${Y.months.map((x, i) => { const x0 = pad + i * bw + bw * .14, w = bw * .34;
+     return `<rect class="gi" x="${x0.toFixed(1)}" y="${y(x.income).toFixed(1)}" width="${w.toFixed(1)}" height="${(base - y(x.income)).toFixed(1)}" rx="3"><title>${MON[i]} income ${mc(x.income, 0)}</title></rect>
+     <rect class="ge" x="${(x0 + w + 2).toFixed(1)}" y="${y(x.actOut).toFixed(1)}" width="${w.toFixed(1)}" height="${(base - y(x.actOut)).toFixed(1)}" rx="3"><title>${MON[i]} total out ${mc(x.actOut, 0)}</title></rect>
+     <text x="${(pad + i * bw + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${MON[i]}</text>`; }).join("")}
+   <polyline class="gl" points="${pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ")}"/>${pts.map(p => `<circle class="gd" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3"><title>${MON[p[2]]} left over ${mc(Y.months[p[2]].left, 0)}</title></circle>`).join("")}
+   <text x="0" y="14">${mc(max, 0)}</text></svg>`;
+}
+function donut(Y) {
+  const tot = OUT.reduce((s, g) => s + Math.max(0, Y.groups[g].tot), 0), r = 52, C = 2 * Math.PI * r; let acc = 0;
+  return `<svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="Where the money went this year" style="flex:none"><circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--glass)" stroke-width="20"/>${tot ? OUT.map(g => { const f = Math.max(0, Y.groups[g].tot) / tot, s = `<circle cx="70" cy="70" r="${r}" fill="none" style="stroke:var(--g-${g})" stroke-width="20" stroke-dasharray="${(C * f).toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-C * acc).toFixed(2)}" transform="rotate(-90 70 70)"><title>${gName(g)} ${Math.round(f * 100)}%</title></circle>`; acc += f; return s; }).join("") : ""}</svg>`;
+}
+function yearView() {
+  const Y = year(), now = today(), cur = VM.y === now.getFullYear() ? now.getMonth() : -1;
+  const cell = (v, neg) => `<td class="${v === 0 ? "z" : neg && v < 0 ? "neg" : ""}">${mc(v, 0)}</td>`;
+  const tr = (label, r, cls, neg) => `<tr class="${cls || ""}"><td>${esc(label)}</td>${r.vals.map(v => cell(v, neg)).join("")}<td><b>${mc(r.tot, 0)}</b></td><td>${mc(r.avg, 0)}</td><td>${mc(r.budget, 0)}</td>${cell(r.left, true)}</tr>`;
+  const head = `<thead><tr><th></th>${MON.map((m, i) => `<th class="${i === cur ? "now" : ""}">${m}</th>`).join("")}<th>Total</th><th>Avg / month</th><th>Yearly budget</th><th>Left</th></tr></thead>`;
+  const best = Y.months.filter(x => x.income || x.actOut).sort((a, b) => b.left - a.left)[0];
+  M().innerHTML = topbar("Your year", "The whole year, month by month: what came in, where it went, and how it compares with the plan.", ypick()) + `
+  <div class="grid g4"><div class="card"><div class="lab">Income ${Y.y}</div><div class="mid" id="yIncome">${mc(Y.groups.income.tot, 0)}</div><div class="meta">planned ${mc(Y.groups.income.budget, 0)}</div></div>
+   <div class="card"><div class="lab">Total out</div><div class="mid" id="yOut">${mc(Y.out.tot, 0)}</div><div class="meta">budget ${mc(Y.out.budget, 0)}</div></div>
+   <div class="card"><div class="lab">Left over</div><div class="mid ${Y.left.tot < 0 ? "neg" : ""}" id="yLeft">${mc(Y.left.tot, 0)}</div><div class="meta">${mc(Y.left.avg, 0)} a month on average</div></div>
+   <div class="card"><div class="lab">Saved + debt paid</div><div class="mid">${mc(Y.groups.savings.tot + Y.groups.debt.tot, 0)}</div><div class="meta">${best ? "best month: " + MONTHS[best.m - 1] : "no data yet"}</div></div></div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Income vs. spending</h2><div class="legend"><span><i style="background:var(--fill)"></i>Income</span><span><i style="background:var(--fill2)"></i>Total out</span><span><i style="background:var(--ink);border-radius:50%"></i>Left over</span></div></div>${yearChart(Y)}</div>
+   <div class="card"><h2>Where it went</h2><div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">${donut(Y)}<div style="flex:1;min-width:150px">${OUT.map(g => `<div class="kv"><span><span class="gdot g-${g}"></span>${gName(g)}</span><b>${mc(Y.groups[g].tot, 0)} <span class="meta">${pctTxt(Y.groups[g].tot, Y.groups.income.tot)}</span></b></div>`).join("")}</div></div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div class="tablebar"><h2 style="margin:0">Annual overview</h2><button class="btn small ghost" id="csvYear">⬇ Year CSV</button></div><div class="scroll"><table class="t" id="yTable">${head}<tbody>
+   ${GROUPS.map(g => tr(g.name, Y.groups[g.key])).join("")}${tr("Total out", Y.out, "sum")}${tr("Left over", Y.left, "sum", true)}</tbody></table></div></div>
+  <div class="card" style="margin-top:14px"><h2>By category</h2><div class="scroll"><table class="t" id="cTable">${head}<tbody>
+   ${GROUPS.map(g => `<tr class="hd"><td>${g.name}</td>${"<td></td>".repeat(16)}</tr>` + catsIn(g.key).map(c => tr(c.name, Y.cats[c.id])).join("")).join("")}</tbody></table></div>
+   <p class="meta" style="margin:8px 0 0">Yearly budget = the 12 monthly plans added up. Left = budget minus actual (income: received minus planned).</p></div>`;
+  document.getElementById("prevY").onclick = () => { VM.y--; render(); };
+  document.getElementById("nextY").onclick = () => { VM.y++; render(); };
+  document.getElementById("csvYear").onclick = () => exportCSV("year");
+}
+
+function settings() {
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then.</p>
+  <div class="grid g2e">
+   <div>
+    <div class="card"><h2>Look</h2>
+     <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button type="button" class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+     <div class="field"><span class="fl">Color</span><div class="chips">${[["sage", "Sage"], ["ocean", "Ocean"], ["coral", "Coral"], ["plum", "Plum"]].map(([a, t]) => `<button type="button" class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
+    <div class="card" style="margin-top:14px"><h2>Money</h2><form id="curF"><div class="field"><label for="sCur">Currency symbol</label><input id="sCur" name="currency" maxlength="3" value="${esc(S.currency)}" style="max-width:120px"></div><button class="btn" id="saveCur">Save</button></form></div>
+   </div>
+   <div>
+    <div class="card"><h2>Export</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel and Google Sheets.</p>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" id="cT">⬇ All transactions CSV</button><button class="btn ghost small" id="cM">⬇ ${MON[VM.m - 1]} ${VM.y} budget CSV</button><button class="btn ghost small" id="cY">⬇ ${VM.y} overview CSV</button></div></div>
+    <div class="card" style="margin-top:14px"><h2>Backup</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+     <h2 style="margin-top:20px">Start over</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
+   </div>
+  </div>
+  <p class="foot">Budget Planner App v1.0 · © The Lemon Plans · For planning and education only, not financial advice. Please don't share or resell this file.</p>`;
+  M().querySelectorAll("button[data-theme]").forEach(x => x.onclick = () => { S.theme = x.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(x => x.onclick = () => { S.accent = x.dataset.accent; save(); render(); });
+  document.getElementById("curF").onsubmit = e => { e.preventDefault(); S.currency = document.getElementById("sCur").value.trim() || "$"; save(); render(); toast("Saved"); };
+  document.getElementById("cT").onclick = () => exportCSV("transactions");
+  document.getElementById("cM").onclick = () => exportCSV("month");
+  document.getElementById("cY").onclick = () => exportCSV("year");
+  document.getElementById("exp").onclick = () => { download("budget-planner-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Budget Planner backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with a sample year (" + SAMPLE.year + "). Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); lastDataMonth(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, transactions, bills and goals from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n\r]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f2 = c => (c / 100).toFixed(2);
+function csvText(kind) {
+  const out = (head, rows) => [head, ...rows].map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
+  if (kind === "transactions") return out(["Date", "Description", "Category", "Group", "Amount", "Notes"], S.tx.slice().sort((a, b) => a.date.localeCompare(b.date)).map(t => [t.date, t.desc, catName(t.cat), catById(t.cat) ? gName(groupOf(t.cat)) : "", f2(cents(t.amount)), t.note]));
+  if (kind === "month") {
+    const R = month(), rows = [];
+    GROUPS.forEach(g => { rows.push([g.name]); catsIn(g.key).forEach(c => { const r = R.cat[c.id], st = status(g.key, r.plan, r.act); rows.push([c.name, f2(r.plan), f2(r.act), f2(g.key === "income" ? r.act - r.plan : r.plan - r.act), st ? st[0] : ""]); }); const T = R.grp[g.key]; rows.push(["Total " + g.name.toLowerCase(), f2(T.plan), f2(T.act), f2(g.key === "income" ? T.act - T.plan : T.plan - T.act), ""]); });
+    rows.push([], ["Left to budget (planned)", f2(R.toBudget)], ["Left over (actual)", f2(R.left)]);
+    return out([mlabel(R.y, R.m), "Planned", "Actual", "Left / difference", "Status"], rows);
+  }
+  const Y = year(), r = (n, x) => [n, ...x.vals.map(f2), f2(x.tot), f2(x.avg), f2(x.budget), f2(x.left)];
+  const rows = [...GROUPS.map(g => r(g.name, Y.groups[g.key])), r("Total out", Y.out), r("Left over", Y.left), []];
+  GROUPS.forEach(g => { rows.push([g.name]); catsIn(g.key).forEach(c => rows.push(r(c.name, Y.cats[c.id]))); });
+  return out([String(Y.y), ...MON, "Total", "Avg / month", "Yearly budget", "Left"], rows);
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { const n = kind === "transactions" ? "transactions" : kind === "month" ? "budget-" + ymKey(VM.y, VM.m) : "year-" + VM.y; download("budget-planner-" + n + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=checkbox]),select"); first && first.focus();
+}
+const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+const num = (fd, k) => { const v = fd.get(k); return v === "" || v === null ? null : Number(v); };
+const r2 = v => Math.round((Number(v) || 0) * 100) / 100;
+function delWire(listKey, id, what, extra) { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S[listKey] = S[listKey].filter(x => x.id !== id); extra && extra(); save(); D().close(); render(); toast(what + " deleted"); }; }
+
+function txDlg(id) {
+  const now = today(), sameMonth = VM.y === now.getFullYear() && VM.m === now.getMonth() + 1;
+  const def = sameMonth ? iso(now) : ymKey(VM.y, VM.m) + "-01";
+  const x = S.tx.find(v => v.id === id) || { date: def, desc: "", cat: (catsIn("needs")[0] || S.cats[0] || {}).id || "", amount: "", note: "" };
+  openDlg(`<h2>${id ? "Edit transaction" : "Add a transaction"}</h2>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" required value="${x.date}"></div><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" min="0.01" inputmode="decimal" required value="${x.amount}" style="font-weight:800"><small>Always positive</small></div></div>
+   <div class="field"><label>Category</label><select name="cat" required>${catById(x.cat) ? "" : `<option value="" selected>⚠ Pick a category</option>`}${catOpts(x.cat)}</select><small>Income, spending, savings or a debt payment: the category decides.</small></div>
+   <div class="field"><label>Description</label><input name="desc" list="dlDesc" value="${esc(x.desc)}" placeholder="Trader Joe's, Paycheck, Rent…"><datalist id="dlDesc">${[...new Set(S.tx.map(t => t.desc).filter(Boolean))].slice(0, 60).map(v => `<option value="${esc(v)}">`).join("")}</datalist></div>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: x.id || uid(), date: fd.get("date"), desc: fd.get("desc").trim(), cat: fd.get("cat"), amount: r2(Math.abs(num(fd, "amount") || 0)), note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    if (!catById(o.cat)) { toast("Pick a category"); return false; }
+    if (id) S.tx[S.tx.findIndex(v => v.id === id)] = o; else S.tx.push(o);
+    toast(id ? "Transaction updated" : (gName(groupOf(o.cat)) + ": " + mc(cents(o.amount)) + " added"));
+  }, () => delWire("tx", id, "Transaction"));
+}
+function catDlg(id, group) {
+  const c = catById(id) || { name: "", group: group || "needs", budget: "" }, used = id ? S.tx.filter(t => t.cat === id).length : 0;
+  openDlg(`<h2>${id ? "Edit category" : "New category"}</h2>
+   <div class="field"><label>Name</label><input name="name" required maxlength="40" value="${esc(c.name)}" placeholder="Pet care"></div>
+   <div class="two"><div class="field"><label>Group</label><select name="group">${GROUPS.map(g => `<option value="${g.key}" ${g.key === c.group ? "selected" : ""}>${g.name}</option>`).join("")}</select></div><div class="field"><label>Monthly budget</label><input name="budget" type="number" step="0.01" min="0" inputmode="decimal" value="${c.budget}" style="font-weight:800"><small>Fills every month you haven't changed</small></div></div>
+   ${used ? `<p class="hint" style="margin:0 0 10px">${used} transaction${used === 1 ? "" : "s"} use this category.</p>` : ""}
+   ${btns(!!id)}`, fd => {
+    const o = { id: c.id || uid(), name: fd.get("name").trim(), group: fd.get("group"), budget: r2(Math.max(0, num(fd, "budget") || 0)) };
+    if (!o.name) return false;
+    if (id) S.cats[S.cats.findIndex(v => v.id === id)] = o; else S.cats.push(o);
+    toast(id ? "Category updated" : o.name + " added to " + gName(o.group));
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { if (used) { toast("Move its " + used + " transaction" + (used === 1 ? "" : "s") + " to another category first"); return; } S.cats = S.cats.filter(v => v.id !== id); Object.values(S.plan).forEach(p => delete p[id]); S.goals.forEach(g => { if (g.cat === id) g.cat = ""; }); S.bills.forEach(b => { if (b.cat === id) b.cat = ""; }); save(); D().close(); render(); toast("Category deleted"); }; });
+}
+function billDlg(id) {
+  const b = S.bills.find(v => v.id === id) || { name: "", amount: "", day: 1, autopay: false, cat: "" };
+  openDlg(`<h2>${id ? "Edit bill" : "Add a bill"}</h2>
+   <div class="field"><label>Bill</label><input name="name" required value="${esc(b.name)}" placeholder="Rent, Phone, Netflix…"></div>
+   <div class="two"><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" min="0" inputmode="decimal" required value="${b.amount}" style="font-weight:800"></div><div class="field"><label>Due day of the month</label><input name="day" type="number" min="1" max="31" step="1" required value="${b.day}"><small>31 = last day in short months</small></div></div>
+   <div class="field"><label>Budget category (optional)</label><select name="cat"><option value="">None</option>${catOpts(b.cat)}</select></div>
+   <label class="tick"><input type="checkbox" name="autopay" ${b.autopay ? "checked" : ""}> Autopay</label>
+   ${btns(!!id)}`, fd => {
+    const o = { id: b.id || uid(), name: fd.get("name").trim(), amount: r2(num(fd, "amount")), day: Math.min(31, Math.max(1, Math.round(num(fd, "day") || 1))), autopay: fd.get("autopay") === "on", cat: fd.get("cat") };
+    if (id) S.bills[S.bills.findIndex(v => v.id === id)] = o; else S.bills.push(o);
+    toast(id ? "Bill updated" : o.name + " added");
+  }, () => delWire("bills", id, "Bill", () => Object.values(S.paid).forEach(a => { const i = a.indexOf(id); if (i >= 0) a.splice(i, 1); })));
+}
+function goalDlg(id) {
+  const g = S.goals.find(v => v.id === id) || { name: "", cat: (catsIn("savings")[0] || {}).id || "", target: "", date: "", before: 0 };
+  openDlg(`<h2>${id ? "Edit goal" : "New savings goal"}</h2>
+   <div class="field"><label>Goal</label><input name="name" required value="${esc(g.name)}" placeholder="Emergency fund"></div>
+   <div class="field"><label>Savings category</label><select name="cat"><option value="">None</option>${catOpts(g.cat, "savings")}</select><small>Money you log in this category counts toward the goal. Add categories in Budget › Savings.</small></div>
+   <div class="two"><div class="field"><label>Target</label><input name="target" type="number" step="0.01" min="1" inputmode="decimal" required value="${g.target}" style="font-weight:800"></div><div class="field"><label>Target date</label><input name="date" type="date" value="${g.date}"></div></div>
+   <div class="field"><label>Already saved before</label><input name="before" type="number" step="0.01" min="0" inputmode="decimal" value="${g.before}"></div>
+   <p class="hint" id="gPrev" style="margin:0 0 10px"></p>
+   ${btns(!!id)}`, fd => {
+    const o = { id: g.id || uid(), name: fd.get("name").trim(), cat: fd.get("cat"), target: r2(num(fd, "target")), date: fd.get("date"), before: r2(num(fd, "before")) };
+    if (id) S.goals[S.goals.findIndex(v => v.id === id)] = o; else S.goals.push(o);
+    toast(id ? "Goal updated" : o.name + " added");
+  }, () => {
+    const f = F(), p = document.getElementById("gPrev"), chk = () => { const G = goalInfo({ cat: f.cat.value, target: f.target.value, date: f.date.value, before: f.before.value });
+      p.innerHTML = G.st === "saving" ? `Save <b>${mc(G.per)}</b> a month for ${G.monthsLeft} month${G.monthsLeft === 1 ? "" : "s"} (${mc(G.saved)} saved so far)` : G.st === "reached" ? "✓ Already reached" : G.st === "passed" ? "That date has passed" : "Add a target date to see how much to save each month"; };
+    ["target", "date", "before"].forEach(k => f[k].oninput = chk); f.cat.onchange = chk; chk();
+    delWire("goals", id, "Goal");
+  });
+}
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  const pm = document.getElementById("prevM"), nm = document.getElementById("nextM");
+  if (pm) pm.onclick = () => shiftMonth(-1); if (nm) nm.onclick = () => shiftMonth(1);
+  M().querySelectorAll("[data-edittx]").forEach(b => b.onclick = () => txDlg(b.dataset.edittx));
+  M().querySelectorAll("[data-editcat]").forEach(b => b.onclick = () => catDlg(b.dataset.editcat));
+  M().querySelectorAll("[data-editbill]").forEach(b => b.onclick = () => billDlg(b.dataset.editbill));
+  M().querySelectorAll("[data-editgoal]").forEach(b => b.onclick = () => goalDlg(b.dataset.editgoal));
+  M().querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.go === "tx") TF = { cat: "_none", q: "" }; go(b.dataset.go); });
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => VIEW === "bills" ? billDlg() : VIEW === "goals" ? goalDlg() : txDlg();
+if (DEMO) {
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
+window.__lp = { month, year, goalInfo, billStatus, billTotals, planned, status, csvText, sample, get VM() { return VM; }, set VM(v) { VM = v; }, get S() { return S; }, set S(v) { S = v; } };
+go("home");
+</script>
+</body>
+</html>
