@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F5F4A">
+<title>Debt Payoff App · Snowball & Avalanche Planner</title>
+<style>
+:root{--bg:#F7F5EF;--card:#FFFFFF;--ink:#1F2933;--muted:#6B7280;--line:#E7E3D8;--soft:#EEF3EF;--accent:#1F6F54;--accent-ink:#fff;--good:#2E7D5B;--warn:#B7791F;--bad:#C0392B;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--shadow:0 10px 30px rgba(31,41,51,.08);--r:18px;--chart2:#B8B2A3}
+:root[data-theme="dark"]{--bg:#12161A;--card:#1B2127;--ink:#E8ECEF;--muted:#9AA4AE;--line:#2A323A;--soft:#20282E;--accent:#5CC497;--accent-ink:#0E1A14;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--shadow:0 10px 30px rgba(0,0,0,.35);--chart2:#5A636C}
+:root[data-accent="rose"]{--accent:#A4506A}:root[data-accent="rose"][data-theme="dark"]{--accent:#E39AB0}
+:root[data-accent="blue"]{--accent:#2F5DA8}:root[data-accent="blue"][data-theme="dark"]{--accent:#8FB4F2}
+:root[data-accent="plum"]{--accent:#6B4C9A}:root[data-accent="plum"][data-theme="dark"]{--accent:#B9A0E6}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav.side{padding:22px 14px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:19px;padding:0 10px 18px;letter-spacing:-.3px}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:11px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:18px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:28px 32px 120px;max-width:1080px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:28px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:19px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1.3fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);min-width:0}
+.hero{padding:28px}
+.lab{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:60px;font-weight:850;letter-spacing:-2px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.mid{font-size:28px;font-weight:800;letter-spacing:-.6px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-weight:750;font-size:13px}
+.ok{background:var(--goodbg);color:var(--good)}
+.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}
+.t-ok{color:var(--good)}.t-short{color:var(--bad)}.t-warn{color:var(--warn)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{font-size:13px;color:var(--muted)}
+.num{width:30px;height:30px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.num.done{background:var(--good);color:#fff}
+.amt{font-weight:800;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 18px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:14px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:15px;flex:none}
+.icon:disabled{opacity:.35;cursor:default}
+.bar{height:12px;border-radius:999px;background:var(--soft);overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.fab{position:fixed;right:26px;bottom:26px;width:62px;height:62px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.empty{color:var(--muted);text-align:center;padding:24px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink)}
+.warnbox{background:var(--warnbg);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:16px}
+.warnbox b{color:var(--warn)}
+.kv{display:flex;justify-content:space-between;padding:7px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;color:var(--ink);font-weight:800}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(460px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:750;color:var(--muted)}
+.field input,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -6px}
+table.plan{border-collapse:collapse;width:100%;font-size:14px;white-space:nowrap}
+table.plan th{white-space:normal;min-width:84px;vertical-align:bottom;position:sticky;top:0;background:var(--card);text-align:right;font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);padding:8px 8px;border-bottom:1px solid var(--line)}
+table.plan td{text-align:right;padding:8px 8px;border-bottom:1px solid var(--line)}
+table.plan th:first-child,table.plan td:first-child{text-align:left}
+table.plan tr.off td{background:var(--goodbg)}
+.mf{display:none;font-size:12px;color:var(--muted)}
+table.plan td.z{color:var(--muted)}
+.cmp{width:100%;border-collapse:collapse;font-size:14px}
+.cmp td,.cmp th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right}
+.cmp th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.cmp td:first-child,.cmp th:first-child{text-align:left}
+.cmp tr.me td{font-weight:800}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:11px}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.inline{display:flex;gap:10px;align-items:end;flex-wrap:wrap}
+.inline .field{margin:0;flex:1;min-width:150px}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:11px;padding:6px 4px;justify-content:center;align-items:center;text-align:center}
+ .navbtn .i{font-size:20px}
+ main{padding:20px 16px 150px}
+ .g2,.g3{grid-template-columns:1fr}
+ .big{font-size:46px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .hero{padding:22px}
+ table.plan .dc{display:none}
+ .mf{display:block}
+ table.plan th{min-width:0}
+ table.plan .tp{display:none}
+ table.plan td,table.plan th{padding:8px 5px;font-size:13px}
+ table.plan td:first-child{white-space:normal}
+ .card{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Your changes stay in this browser · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Debt Payoff<small>by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">◎</span>Plan</button>
+  <button class="navbtn" data-view="debts"><span class="i">▤</span>Debts</button>
+  <button class="navbtn" data-view="schedule"><span class="i">▦</span>Months</button>
+  <button class="navbtn" data-view="progress"><span class="i">★</span>Progress</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Log a payment" title="Log a payment">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/debt-payoff-app";
+const KEY = DEMO ? "lp-debt-payoff-demo" : "lp-debt-payoff-v1";
+const MAXM = 600; // 50 years: past this, the plan "never" ends
+const METHODS = { snowball: "Snowball", avalanche: "Avalanche", custom: "Custom order" };
+const METHOD_TXT = { snowball: "Smallest balance first. Quick wins keep you going.", avalanche: "Highest interest rate first. Usually saves the most money.", custom: "Your own order. Use the ↑ ↓ arrows on the Debts page." };
+
+/* ---------- dates ---------- */
+const iso = d => { const z = new Date(d); return z.getFullYear() + "-" + String(z.getMonth() + 1).padStart(2, "0") + "-" + String(z.getDate()).padStart(2, "0"); };
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const thisMonth = () => iso(today()).slice(0, 7);
+const monthDate = i => { const s = parse(S.start); return new Date(s.getFullYear(), s.getMonth() + i - 1, 1); }; // i = 1 is the start month
+const fmtM = d => d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+const fmtML = d => d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+const fmtD = d => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const yrs = n => { const y = Math.floor(n / 12), m = n % 12; return [y ? y + (y === 1 ? " year" : " years") : "", m ? m + (m === 1 ? " month" : " months") : ""].filter(Boolean).join(" ") || "0 months"; };
+
+/* ---------- state ---------- */
+function blank() { return { v: 1, app: "debt-payoff", currency: "$", theme: "auto", accent: "green", extra: 0, method: "snowball", start: thisMonth(), debts: [], payments: [] }; }
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.v === 1 && Array.isArray(s.debts)) return s; } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } }
+const uid = () => Math.random().toString(36).slice(2, 9);
+let S = load();
+
+function sample() {
+  const s = blank();
+  s.extra = 250; s.method = "snowball";
+  s.debts = [
+    ["Rewards Credit Card", 6200, 5400, 24.99, 160], ["Store Credit Card", 1500, 1180, 29.99, 45], ["Car Loan", 22000, 15750, 6.9, 410],
+    ["Student Loan", 28000, 24300, 5.5, 275], ["Medical Bill", 1200, 820, 0, 50], ["Personal Loan", 8000, 6900, 11.9, 240]
+  ].map(([name, orig, balance, apr, min]) => ({ id: uid(), name, orig, balance, apr, min }));
+  const t = today(), d = n => iso(new Date(t.getFullYear(), t.getMonth() - 1, n));
+  const id = n => s.debts.find(x => x.name === n).id;
+  s.payments = [["Medical Bill", 300, 3, "Extra payment"], ["Rewards Credit Card", 160, 15, ""], ["Store Credit Card", 45, 3, ""], ["Car Loan", 410, 20, ""], ["Student Loan", 275, 1, ""], ["Personal Loan", 240, 25, ""]]
+    .map(([n, a, day, note]) => ({ id: uid(), debt: id(n), amount: a, date: d(day), note, applied: false }));
+  return s;
+}
+
+/* ---------- the math (whole cents, interest = balance × APR ÷ 12, rounded to the cent) ---------- */
+const cents = v => Math.round((Number(v) || 0) * 100);
+const interestOf = (bal, apr) => Math.round(bal * (Number(apr) || 0) / 1200 + 1e-9);
+function priority(list, method) {
+  const idx = list.map((d, i) => i);
+  if (method === "snowball") idx.sort((a, b) => list[a].bal - list[b].bal || a - b);
+  else if (method === "avalanche") idx.sort((a, b) => (Number(list[b].apr) || 0) - (Number(list[a].apr) || 0) || a - b);
+  return idx;
+}
+// Every month: each debt grows by its interest, gets its minimum, and the rest of the fixed monthly budget
+// (all starting minimums + extra) goes to the first debt in priority order. Freed-up minimums roll over.
+function simulate(debts, extra, method) {
+  const list = debts.map(d => ({ id: d.id, name: d.name, bal: cents(d.balance), apr: Number(d.apr) || 0, min: cents(d.min) })).filter(d => d.bal > 0);
+  const order = priority(list, method);
+  const budget = list.reduce((s, d) => s + d.min, 0) + Math.max(0, cents(extra));
+  const months = [], payoff = {}, interest = {}, paid = {};
+  list.forEach(d => { interest[d.id] = 0; paid[d.id] = 0; });
+  let total = list.reduce((s, d) => s + d.bal, 0), m = 0;
+  while (total > 0 && m < MAXM) {
+    m++;
+    const owed = list.map(d => d.bal + (d.bal > 0 ? interestOf(d.bal, d.apr) : 0));
+    const minPaid = list.map((d, i) => Math.min(d.min, owed[i]));
+    let left = Math.max(0, budget - minPaid.reduce((a, b) => a + b, 0));
+    const pay = minPaid.slice();
+    for (const i of order) { const x = Math.max(0, Math.min(owed[i] - minPaid[i], left)); pay[i] += x; left -= x; }
+    let mi = 0, mp = 0; const row = { m, pay: {}, bal: {} };
+    list.forEach((d, i) => {
+      const it = owed[i] - d.bal; mi += it; mp += pay[i]; interest[d.id] += it; paid[d.id] += pay[i];
+      d.bal = Math.max(0, owed[i] - pay[i]); row.pay[d.id] = pay[i]; row.bal[d.id] = d.bal;
+      if (d.bal === 0 && payoff[d.id] == null && (owed[i] > 0)) payoff[d.id] = m;
+    });
+    total = list.reduce((s, d) => s + d.bal, 0);
+    row.interest = mi; row.payment = mp; row.total = total; months.push(row);
+  }
+  const done = total === 0;
+  return { done, months: done ? m : Infinity, rows: months, payoff, interest, paid, budget,
+    totalInterest: months.reduce((s, r) => s + r.interest, 0), totalPaid: months.reduce((s, r) => s + r.payment, 0),
+    start: list.reduce((s, d) => s + cents(debts.find(x => x.id === d.id).balance), 0),
+    order: order.map(i => list[i].id) };
+}
+// Minimums only: each debt pays just its own minimum, nothing rolls over.
+function minOnly(debts) {
+  let months = 0, interest = 0, never = false; const curve = [];
+  debts.forEach(d => {
+    let bal = cents(d.balance), min = cents(d.min), apr = Number(d.apr) || 0, m = 0;
+    if (bal <= 0) return;
+    if (min <= interestOf(bal, apr)) { never = true; }
+    while (bal > 0 && m < MAXM) { m++; const it = interestOf(bal, apr); interest += it; bal = Math.max(0, bal + it - Math.min(min, bal + it)); curve[m] = (curve[m] || 0) + bal; }
+    if (bal > 0) never = true;
+    months = Math.max(months, m);
+  });
+  return { never, months: never ? Infinity : months, interest, curve };
+}
+// Smallest whole-dollar extra that pays everything off within 50 years
+function neededExtra(debts, method) {
+  let lo = 0, hi = 100;
+  while (!simulate(debts, hi, method).done) { hi *= 2; if (hi > 1e7) return null; }
+  while (hi - lo > 1) { const md = Math.floor((lo + hi) / 2); if (simulate(debts, md, method).done) hi = md; else lo = md; }
+  return hi;
+}
+const shortDebts = () => S.debts.filter(d => cents(d.balance) > 0 && cents(d.min) <= interestOf(cents(d.balance), d.apr));
+let _cache = null, _ck = "";
+function plan() {
+  const k = JSON.stringify([S.debts, S.extra, S.method]);
+  if (k !== _ck) { _ck = k; _cache = { cur: simulate(S.debts, S.extra, S.method), snow: simulate(S.debts, S.extra, "snowball"), aval: simulate(S.debts, S.extra, "avalanche"), mins: minOnly(S.debts) }; }
+  return _cache;
+}
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const n = Math.round(Math.abs(v) * 100) / 100, neg = v < 0 && n > 0 ? "-" : "";
+  const d = dec ?? (Math.round(n * 100) % 100 ? 2 : 0);
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(c / 100, dec); // cents
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 1800); }
+const debtName = id => (S.debts.find(d => d.id === id) || { name: "Deleted debt" }).name;
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home";
+const M = () => document.getElementById("main");
+function go(v) {
+  VIEW = v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render();
+  M().focus({ preventScroll: true });
+}
+function render() {
+  applyTheme();
+  ({ home, debts: debtsV, schedule, progress, settings })[VIEW]();
+}
+const activeDebts = () => S.debts.filter(d => cents(d.balance) > 0);
+
+function welcome() {
+  M().innerHTML = `<h1>Your way out of debt 👋</h1><p class="sub">Add your debts, choose snowball or avalanche, and see the month you'll be debt-free.</p>
+  <div class="card hero" style="max-width:560px">
+   <div class="lab">Step 1</div><div class="mid" style="margin:4px 0 10px">Add your first debt</div>
+   <p class="sub" style="margin-bottom:16px">You'll need the balance, the interest rate (APR) and the minimum payment. They're on your statement or in your lender's app.</p>
+   <div class="actions" style="justify-content:flex-start"><button class="btn" id="firstDebt">+ Add a debt</button><button class="btn ghost" id="trySample">Try with sample data</button></div>
+  </div>`;
+  document.getElementById("firstDebt").onclick = () => debtDlg();
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); go("home"); };
+}
+
+function warnings(P) {
+  let h = "";
+  shortDebts().forEach(d => { h += `<div class="warnbox">⚠ <b>${esc(d.name)}:</b> the ${money(d.min)} minimum doesn't cover the ${mc(interestOf(cents(d.balance), d.apr))} of interest it adds each month. Paying only the minimum, this balance never goes down.</div>`; });
+  if (!P.cur.done) { const need = neededExtra(S.debts, S.method); h += `<div class="warnbox">⚠ <b>Your payments don't cover the interest.</b> With ${money(S.extra)} extra a month this plan never ends. ${need != null ? `Add at least <b>${money(need, 0)}</b> extra per month to get out of debt.` : ""}</div>`; }
+  return h;
+}
+
+function home() {
+  if (!activeDebts().length && !S.debts.length) return welcome();
+  const P = plan(), c = P.cur, saved = P.mins.never ? null : P.mins.interest - c.totalInterest;
+  if (!activeDebts().length) {
+    M().innerHTML = `<h1>Plan</h1><div class="card hero"><div class="lab">You did it</div><div class="big">Debt-free 🎉</div><p class="sub">Every balance is at ${money(0)}. Keep the habit: send that monthly payment to savings now.</p></div>`; return;
+  }
+  const end = c.done ? monthDate(c.months) : null;
+  const sooner = c.done && !P.mins.never ? P.mins.months - c.months : null;
+  M().innerHTML = `<h1>Plan</h1><p class="sub">${METHODS[S.method]} · ${mc(c.budget)} a month · starting ${fmtML(monthDate(1))}</p>
+  ${warnings(P)}
+  <div class="grid g2">
+   <div class="card hero"><div class="lab">Debt-free by</div>
+    <div class="big" id="freeDate">${end ? fmtML(end) : "Never"}</div>
+    <div style="font-weight:700;margin-bottom:12px">${c.done ? yrs(c.months) + " from now · " + c.months + " payments" : "Increase your extra payment"}</div>
+    <span class="pill ok">${mc(c.start)} to pay off</span> ${sooner > 0 ? `<span class="pill ok">${yrs(sooner)} sooner</span>` : ""}
+    <form id="quick" class="inline" style="margin-top:20px">
+     <div class="field"><label>Extra per month</label><input name="extra" type="number" min="0" step="1" inputmode="decimal" value="${S.extra}"></div>
+     <div class="field"><label>Method</label><select name="method">${Object.entries(METHODS).map(([k, t]) => `<option value="${k}" ${S.method === k ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+     <button class="btn" style="margin-bottom:1px">Update</button>
+    </form>
+    <p class="meta" style="color:var(--muted);font-size:13px;margin:10px 0 0">${METHOD_TXT[S.method]}</p>
+   </div>
+   <div class="card"><h2>The numbers</h2>
+    <div class="kv"><span>Total debt now</span><b>${mc(c.start)}</b></div>
+    <div class="kv"><span>Monthly payment (minimums + extra)</span><b>${mc(c.budget)}</b></div>
+    <div class="kv"><span>Interest in your plan</span><b id="planInt">${c.done ? mc(c.totalInterest, 0) : "—"}</b></div>
+    <div class="kv"><span>Interest paying minimums only</span><b>${P.mins.never ? "Never paid off" : mc(P.mins.interest, 0)}</b></div>
+    <div class="kv total"><span>You save</span><span class="t-ok" id="saved">${!c.done ? "—" : saved == null ? "Everything: minimums never finish" : mc(Math.max(0, saved), 0)}</span></div>
+    ${sooner > 0 ? `<p class="hint" style="margin:12px 0 0">Paying only minimums takes ${yrs(P.mins.months)}. Your plan is <b>${yrs(sooner)} faster</b>.</p>` : ""}
+   </div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+   <div class="card chart"><h2>Total balance over time</h2>${chartSVG(P)}
+    <div class="legend"><span><i style="background:var(--accent)"></i>Your plan</span><span><i style="background:var(--chart2)"></i>Minimums only</span></div></div>
+   <div class="card"><h2>Payoff order</h2>${c.order.map((id, i) => { const d = S.debts.find(x => x.id === id), m = c.payoff[id]; return `<div class="row"><div class="num">${i + 1}</div><div class="grow"><div class="name">${esc(d.name)}</div><div class="meta">${mc(cents(d.balance))} · ${Number(d.apr) || 0}% APR</div></div><div style="text-align:right"><div class="amt">${m ? fmtM(monthDate(m)) : "—"}</div><div class="meta">${m ? "month " + m : "not in 50 years"}</div></div></div>`; }).join("")}</div>
+  </div>
+  <div class="card" style="margin-top:16px"><h2>Snowball or avalanche?</h2>${compareTable(P)}
+   <p class="hint" style="margin:12px 0 0">💡 Either way, when a debt is paid off its payment rolls into the next one, so you keep paying the same ${mc(c.budget)} a month until you're free.</p></div>`;
+  const f = document.getElementById("quick");
+  f.onsubmit = e => { e.preventDefault(); S.extra = Math.max(0, +f.extra.value || 0); S.method = f.method.value; save(); render(); toast("Plan updated"); };
+  f.method.onchange = () => f.requestSubmit();
+}
+function compareTable(P) {
+  const r = (label, k, s, me) => `<tr class="${me ? "me" : ""}"><td>${label}</td><td>${s.done ? fmtM(monthDate(s.months)) : "Never"}</td><td>${s.done ? s.months : "—"}</td><td>${s.done ? mc(s.totalInterest, 0) : "—"}</td><td>${s.done && !P.mins.never ? mc(Math.max(0, P.mins.interest - s.totalInterest), 0) : "—"}</td></tr>`;
+  const m = P.mins;
+  return `<div class="tscroll"><table class="cmp"><tr><th>Method</th><th>Debt-free</th><th>Months</th><th>Interest</th><th>Saved</th></tr>
+   <tr><td>Minimums only</td><td>${m.never ? "Never" : fmtM(monthDate(m.months))}</td><td>${m.never ? "—" : m.months}</td><td>${m.never ? "—" : mc(m.interest, 0)}</td><td></td></tr>
+   ${r("Snowball", "snowball", P.snow, S.method === "snowball")}${r("Avalanche", "avalanche", P.aval, S.method === "avalanche")}
+   ${S.method === "custom" ? r("Custom order", "custom", P.cur, true) : ""}</table></div>`;
+}
+const axisMoney = c => { const v = c / 100; return v >= 1000 ? S.currency + (Math.round(v / 100) / 10).toLocaleString("en-US") + "k" : S.currency + Math.round(v); };
+function chartSVG(P) {
+  const narrow = matchMedia("(max-width:860px)").matches, c = P.cur, W = narrow ? 360 : 560, H = narrow ? 240 : 300, L = 52, R = 10, T = 10, B = 26;
+  const planPts = [c.start].concat(c.rows.map(r => r.total));
+  const minPts = [c.start]; for (let i = 1; i < P.mins.curve.length; i++) minPts.push(P.mins.curve[i] || 0);
+  let n = c.done ? Math.max(c.months, Math.min(minPts.length - 1, c.months * 2.5)) : Math.min(MAXM, 120);
+  n = Math.max(6, Math.round(n));
+  const all = planPts.slice(0, n + 1).concat(minPts.slice(0, n + 1)), max = Math.max(1, ...all);
+  const x = i => L + (W - L - R) * i / n, y = v => T + (H - T - B) * (1 - v / max);
+  const line = pts => pts.slice(0, n + 1).map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v ?? 0).toFixed(1)).join(" ");
+  let grid = "";
+  for (let k = 0; k <= 4; k++) { const v = max * k / 4; grid += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${axisMoney(v)}</text>`; }
+  const step = (n <= 24 ? 6 : n <= 60 ? 12 : n <= 180 ? 36 : 60) * (narrow && n > 24 ? 2 : 1);
+  for (let i = 0; i <= n; i += step) grid += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${i === 0 ? "Now" : monthDate(i).toLocaleDateString("en-US", { month: "short", year: "2-digit" })}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Total balance over time">${grid}<path d="${line(minPts)}" fill="none" stroke="var(--chart2)" stroke-width="2.5" stroke-dasharray="6 5"/><path d="${line(planPts)}" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linejoin="round"/></svg>`;
+}
+
+function debtsV() {
+  const P = plan(), c = P.cur, custom = S.method === "custom";
+  const tot = S.debts.reduce((s, d) => s + cents(d.balance), 0), mins = activeDebts().reduce((s, d) => s + cents(d.min), 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Debts</h1><p class="sub" style="margin:0">${S.debts.length} debts · ${mc(tot)} · minimums ${mc(mins)}/month</p></div><button class="btn" id="addDebt">+ Add a debt</button></div>
+  ${shortDebts().length ? warnings({ cur: { done: true } }) : ""}
+  <div class="card" style="margin-top:12px">${S.debts.length ? S.debts.map((d, i) => { const sh = shortDebts().includes(d), m = c.payoff[d.id], paidOff = cents(d.balance) <= 0;
+    const pr = d.orig > 0 ? Math.min(100, Math.max(0, (1 - d.balance / d.orig) * 100)) : 0;
+    return `<div class="row">${custom ? `<div style="display:grid;gap:4px"><button class="icon" data-up="${i}" aria-label="Move ${esc(d.name)} up" ${i ? "" : "disabled"}>↑</button><button class="icon" data-down="${i}" aria-label="Move ${esc(d.name)} down" ${i < S.debts.length - 1 ? "" : "disabled"}>↓</button></div>` : ""}
+     <div class="grow"><div class="name">${paidOff ? "✅ " : sh ? "⚠ " : ""}${esc(d.name)}</div>
+      <div class="meta">${Number(d.apr) || 0}% APR · min ${money(d.min)}/mo · ${paidOff ? "paid off" : m ? "paid off " + fmtM(monthDate(m)) : "not paid off in 50 years"}</div>
+      <div class="bar" style="margin-top:6px;max-width:320px" title="${Math.round(pr)}% paid"><i style="width:${pr}%"></i></div></div>
+     <div class="amt">${money(d.balance)}</div><button class="icon" data-editdebt="${d.id}" aria-label="Edit ${esc(d.name)}">✎</button></div>`; }).join("") : `<div class="empty">No debts yet. Add your first one.</div>`}</div>
+  <div class="card" style="margin-top:16px"><h2>Your plan</h2><form id="planF">
+   <div class="two"><div class="field"><label>Extra per month (on top of minimums)</label><input name="extra" type="number" min="0" step="0.01" inputmode="decimal" value="${S.extra}"></div>
+   <div class="field"><label>Plan starts</label><input name="start" type="month" value="${S.start}"></div></div>
+   <div class="field"><label>Method</label><div class="chips">${Object.entries(METHODS).map(([k, t]) => `<button type="button" class="chip" data-method="${k}" aria-pressed="${S.method === k}">${t}</button>`).join("")}</div><small>${METHOD_TXT[S.method]}</small></div>
+   <div class="actions"><button class="btn">Save plan</button></div></form></div>
+  <p class="hint" style="margin-top:16px">💡 Update a balance from your statement now and then: lenders add interest daily and fees, so real numbers drift a little from the plan.</p>`;
+  document.getElementById("addDebt").onclick = () => debtDlg();
+  const f = document.getElementById("planF");
+  f.onsubmit = e => { e.preventDefault(); S.extra = Math.max(0, +f.extra.value || 0); S.start = f.start.value || thisMonth(); save(); toast("Plan saved"); render(); };
+  M().querySelectorAll("[data-method]").forEach(b => b.onclick = () => { S.method = b.dataset.method; S.extra = Math.max(0, +f.extra.value || 0); S.start = f.start.value || S.start; save(); render(); });
+  M().querySelectorAll("[data-up]").forEach(b => b.onclick = () => { const i = +b.dataset.up; [S.debts[i - 1], S.debts[i]] = [S.debts[i], S.debts[i - 1]]; save(); render(); });
+  M().querySelectorAll("[data-down]").forEach(b => b.onclick = () => { const i = +b.dataset.down; [S.debts[i + 1], S.debts[i]] = [S.debts[i], S.debts[i + 1]]; save(); render(); });
+  wire();
+}
+
+function schedule() {
+  if (!activeDebts().length) { M().innerHTML = `<h1>Month by month</h1><div class="card empty">Add a debt to see your month-by-month plan.</div>`; return; }
+  const P = plan(), c = P.cur, ids = c.order, show = c.rows.slice(0, c.done ? c.rows.length : 120);
+  M().innerHTML = `<div class="tablebar"><div><h1>Month by month</h1><p class="sub" style="margin:0">${METHODS[S.method]} · ${c.done ? c.months + " months" : "first 10 years shown"} · green rows = a debt is paid off</p></div><button class="btn ghost" id="csv">⬇ Export CSV</button></div>
+  ${warnings(P)}
+  <div class="card" style="margin-top:12px"><div class="tscroll"><table class="plan"><thead><tr><th>Month</th>${ids.map(id => `<th class="dc">${esc(debtName(id))}</th>`).join("")}<th class="tp">Total paid</th><th>Interest</th><th>Balance left</th></tr></thead><tbody>
+  ${show.map(r => { const off = ids.filter(id => c.payoff[id] === r.m); return `<tr class="${off.length ? "off" : ""}"><td><b>${fmtM(monthDate(r.m))}</b>${off.length ? `<div class="meta" style="color:var(--good);font-size:12px">🎉 ${off.map(id => esc(debtName(id))).join(", ")} paid off</div>` : `<div class="meta mf">Focus: ${esc(debtName(ids.find(id => r.pay[id] > 0) || ids[0]))}</div>`}</td>${ids.map(id => `<td class="dc ${r.pay[id] ? "" : "z"}">${r.pay[id] ? mc(r.pay[id], 2) : "—"}</td>`).join("")}<td class="tp"><b>${mc(r.payment, 2)}</b></td><td>${mc(r.interest, 2)}</td><td>${mc(r.total, 2)}</td></tr>`; }).join("")}
+  </tbody></table></div></div>`;
+  document.getElementById("csv").onclick = exportCSV;
+}
+function csvText() {
+  const P = plan(), c = P.cur, ids = c.order, q = v => /[",\n]/.test(v) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f = v => (v / 100).toFixed(2);
+  const lines = [["Month #", "Month"].concat(ids.map(id => debtName(id) + " payment"), ["Total payment", "Interest", "Balance left", "Paid off this month"]).map(q).join(",")];
+  c.rows.forEach(r => lines.push([r.m, fmtM(monthDate(r.m))].concat(ids.map(id => f(r.pay[id] || 0)), [f(r.payment), f(r.interest), f(r.total), ids.filter(id => c.payoff[id] === r.m).map(debtName).join("; ")]).map(q).join(",")));
+  return lines.join("\r\n") + "\r\n";
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV() { download("debt-payoff-plan-" + iso(today()) + ".csv", "﻿" + csvText(), "text/csv"); toast("CSV downloaded"); }
+
+function progress() {
+  const orig = S.debts.reduce((s, d) => s + Math.max(cents(d.orig), cents(d.balance)), 0), now = S.debts.reduce((s, d) => s + cents(d.balance), 0);
+  const off = Math.max(0, orig - now), pct = orig ? off / orig * 100 : 0, done = S.debts.filter(d => cents(d.balance) <= 0).length;
+  const logged = S.payments.reduce((s, p) => s + cents(p.amount), 0), pays = S.payments.slice().sort((a, b) => b.date.localeCompare(a.date));
+  M().innerHTML = `<div class="tablebar"><div><h1>Progress</h1><p class="sub" style="margin:0">Log each payment and watch the balances fall.</p></div><button class="btn" id="logPay">+ Log a payment</button></div>
+  <div class="grid g3" style="margin-top:12px">
+   <div class="card"><div class="lab">Paid off so far</div><div class="mid t-ok" id="paidOff">${mc(off, 0)}</div><div class="bar" style="margin-top:10px"><i style="width:${pct}%"></i></div><div class="meta" style="color:var(--muted);font-size:13px;margin-top:6px">${Math.round(pct)}% of ${mc(orig, 0)}</div></div>
+   <div class="card"><div class="lab">Payments logged</div><div class="mid">${mc(logged, 0)}</div><div class="meta" style="color:var(--muted);font-size:13px">${S.payments.length} payments</div></div>
+   <div class="card"><div class="lab">Debts paid off</div><div class="mid">${done} of ${S.debts.length}</div><div class="meta" style="color:var(--muted);font-size:13px">${done ? "Nice work 🎉" : "The first one is the hardest"}</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+   <div class="card"><h2>Each debt</h2>${S.debts.length ? S.debts.map(d => { const o = Math.max(cents(d.orig), cents(d.balance)), b = cents(d.balance), p = o ? (o - b) / o * 100 : 0; return `<div class="row"><div class="grow"><div class="name">${b <= 0 ? "✅ " : ""}${esc(d.name)}</div><div class="bar" style="margin-top:6px"><i style="width:${p}%"></i></div><div class="meta">${mc(o - b, 0)} paid of ${mc(o, 0)} · ${Math.round(p)}%</div></div><div class="amt">${mc(b)}</div></div>`; }).join("") : `<div class="empty">No debts yet.</div>`}</div>
+   <div class="card"><h2>Payment log</h2>${pays.length ? pays.map(p => `<div class="row"><div class="grow"><div class="name">${esc(debtName(p.debt))}</div><div class="meta">${fmtD(parse(p.date))}${p.note ? " · " + esc(p.note) : ""}${p.applied ? " · balance lowered" : ""}</div></div><div class="amt">${money(p.amount)}</div><button class="icon" data-editpay="${p.id}" aria-label="Edit payment">✎</button></div>`).join("") : `<div class="empty">No payments yet. Tap + after you pay a bill.</div>`}</div>
+  </div>`;
+  document.getElementById("logPay").onclick = () => payDlg();
+  wire();
+}
+
+function settings() {
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this device. Download a backup now and then.</p>
+  <div class="grid g2">
+   <div class="card"><h2>Look</h2>
+    <div class="field"><label>Theme</label><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><label>Color</label><div class="chips">${[["green", "Sage"], ["rose", "Rose"], ["blue", "Blue"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
+    <form id="curF" class="inline"><div class="field"><label>Currency symbol</label><input name="currency" maxlength="3" value="${esc(S.currency)}"></div><button class="btn ghost">Save</button></form>
+   </div>
+   <div class="card"><h2>Backup</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+    <h2 style="margin-top:22px">Export</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csv2">⬇ Month-by-month plan (CSV)</button></div>
+    <h2 style="margin-top:22px">Start over</h2>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div>
+   </div>
+  </div>
+  <p class="foot">Debt Payoff App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice. Interest is estimated monthly (APR ÷ 12).</p>`;
+  document.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
+  document.querySelectorAll("[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
+  const cf = document.getElementById("curF"); cf.onsubmit = e => { e.preventDefault(); S.currency = cf.currency.value.trim() || "$"; save(); toast("Saved"); render(); };
+  document.getElementById("exp").onclick = () => { download("debt-payoff-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (d.v !== 1 || d.app !== "debt-payoff" || !Array.isArray(d.debts) || !Array.isArray(d.payments)) throw 0; S = Object.assign(blank(), d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Debt Payoff backup")); };
+  document.getElementById("csv2").onclick = () => activeDebts().length ? exportCSV() : toast("Add a debt first");
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with 6 sample debts. Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes all your debts and payments from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]),select"); first && first.focus();
+}
+const btns = (del) => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+
+function debtDlg(id) {
+  const d = S.debts.find(x => x.id === id) || { name: "", balance: "", apr: "", min: "", orig: "" };
+  openDlg(`<h2>${id ? "Edit debt" : "Add a debt"}</h2>
+   <div class="field"><label>Name</label><input name="name" required value="${esc(d.name)}" placeholder="Visa, car loan, student loan…"></div>
+   <div class="two"><div class="field"><label>Current balance</label><input name="balance" type="number" step="0.01" min="0" inputmode="decimal" required value="${d.balance}"></div>
+   <div class="field"><label>Interest rate (APR %)</label><input name="apr" type="number" step="0.01" min="0" max="100" inputmode="decimal" value="${d.apr}" placeholder="24.99"></div></div>
+   <div class="two"><div class="field"><label>Minimum payment / month</label><input name="min" type="number" step="0.01" min="0" inputmode="decimal" required value="${d.min}"></div>
+   <div class="field"><label>Starting balance <small>(for progress)</small></label><input name="orig" type="number" step="0.01" min="0" inputmode="decimal" value="${d.orig}" placeholder="Same as balance"></div></div>
+   <p id="dwarn" class="warnbox" hidden></p>
+   ${btns(!!id)}`, fd => {
+    const bal = Math.max(0, +fd.get("balance") || 0);
+    const o = { id: d.id || uid(), name: fd.get("name").trim() || "Debt", balance: bal, apr: Math.max(0, +fd.get("apr") || 0), min: Math.max(0, +fd.get("min") || 0), orig: Math.max(bal, +fd.get("orig") || 0) };
+    if (id) S.debts[S.debts.findIndex(x => x.id === id)] = o; else S.debts.push(o); toast(id ? "Debt updated" : "Debt added");
+  }, () => {
+    const f = F(), w = document.getElementById("dwarn");
+    const chk = () => { const b = cents(f.balance.value), it = interestOf(b, f.apr.value); const bad = b > 0 && f.min.value !== "" && cents(f.min.value) <= it; w.hidden = !bad; if (bad) w.innerHTML = `⚠ <b>This minimum doesn't cover the interest.</b> The balance adds about ${mc(it)} of interest a month, so paying ${money(+f.min.value || 0)} it never goes down. Your plan can still pay it off with the extra payment.`; };
+    ["balance", "apr", "min"].forEach(n => f[n].oninput = chk); chk();
+    const del = document.getElementById("delBtn"); if (del) del.onclick = () => { D().close(); confirmDlg("Delete " + esc(d.name) + "?", "Its payments stay in the log. This can't be undone.", "Delete", () => { S.debts = S.debts.filter(x => x.id !== id); save(); render(); toast("Debt deleted"); }); };
+  });
+}
+function payDlg(id) {
+  if (!S.debts.length) { toast("Add a debt first"); return; }
+  const p = S.payments.find(x => x.id === id) || { debt: (plan().cur.order[0] || S.debts[0].id), amount: "", date: iso(today()), note: "", applied: true };
+  const isNew = !id;
+  openDlg(`<h2>${id ? "Edit payment" : "Log a payment"}</h2>
+   <div class="field"><label>Debt</label><select name="debt">${S.debts.map(d => `<option value="${d.id}" ${p.debt === d.id ? "selected" : ""}>${esc(d.name)} (${money(d.balance)})</option>`).join("")}</select></div>
+   <div class="field"><label>Amount paid</label><input name="amount" type="number" step="0.01" min="0" inputmode="decimal" required value="${p.amount}" style="font-size:28px;font-weight:800"></div>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" value="${p.date}"></div><div class="field"><label>Note (optional)</label><input name="note" value="${esc(p.note)}" placeholder="Extra payment, tax refund…"></div></div>
+   <label style="display:flex;gap:10px;align-items:center;margin-bottom:10px;font-weight:650"><input type="checkbox" name="applied" ${p.applied ? "checked" : ""} style="width:20px;height:20px"> Lower this debt's balance by this amount</label>
+   ${btns(!isNew)}`, fd => {
+    const o = { id: p.id || uid(), debt: fd.get("debt"), amount: Math.abs(+fd.get("amount")) || 0, date: fd.get("date") || iso(today()), note: fd.get("note").trim(), applied: !!fd.get("applied") };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    if (!isNew) undoPay(p);
+    applyPay(o);
+    if (isNew) S.payments.push(o); else S.payments[S.payments.findIndex(x => x.id === id)] = o;
+    const d = S.debts.find(x => x.id === o.debt);
+    toast(d && cents(d.balance) <= 0 ? d.name + " is paid off! 🎉" : "Payment logged");
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { undoPay(p); S.payments = S.payments.filter(x => x.id !== id); save(); D().close(); render(); toast("Payment deleted"); }; });
+}
+function applyPay(p) { const d = S.debts.find(x => x.id === p.debt); if (p.applied && d) d.balance = Math.max(0, (cents(d.balance) - cents(p.amount)) / 100); }
+function undoPay(p) { const d = S.debts.find(x => x.id === p.debt); if (p.applied && d) d.balance = (cents(d.balance) + cents(p.amount)) / 100; }
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  M().querySelectorAll("[data-editdebt]").forEach(b => b.onclick = () => debtDlg(b.dataset.editdebt));
+  M().querySelectorAll("[data-editpay]").forEach(b => b.onclick = () => payDlg(b.dataset.editpay));
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => S.debts.length ? payDlg() : debtDlg();
+if (DEMO) { document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL; }
+window.__lp = { simulate, minOnly, neededExtra, plan, csvText, interestOf, get S() { return S; } };
+go("home");
+</script>
+</body>
+</html>
