@@ -73,6 +73,8 @@ dialog::backdrop{background:rgba(10,14,18,.45)}
 .field{display:grid;gap:6px;margin-bottom:14px}
 .field label{font-size:13px;font-weight:750;color:var(--muted)}
 .field input,.field select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+/*field-fix*/.field{align-content:start}.field input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]),.field select{height:48px;line-height:1.25}.field input[type=date]{display:block;min-width:0}
+/*field-fix-2*/@supports (grid-template-rows:subgrid){.two>.field{grid-row:span 3;grid-template-rows:subgrid;row-gap:6px}}
 .field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
 .field small{color:var(--muted);font-size:12px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
