@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1F5F4A">
+<title>Rental Property App · The Lemon Plans</title>
+<style>
+:root{--bg:#F4F3EE;--card:#FFFFFF;--ink:#1F2937;--muted:#6B7280;--line:#E3E1D8;--soft:#ECF3EF;--accent:#1F5F4A;--accent-ink:#fff;--fill:#2E7D5B;--fill2:#C9A227;--glass:#DCEAE2;--good:#2E7D5B;--warn:#B7791F;--bad:#B91C1C;--goodbg:#E6F2EC;--warnbg:#FBF0D9;--badbg:#FBE4E1;--lemon:#F2C94C;--shadow:0 10px 30px rgba(31,41,55,.07);--r:18px}
+:root[data-theme="dark"]{--bg:#0F1613;--card:#17201C;--ink:#E5ECE8;--muted:#9AA8A1;--line:#26332D;--soft:#1D2A24;--accent:#6FCB9F;--accent-ink:#0A1A12;--fill:#3E9B70;--fill2:#C9A227;--glass:#22352C;--good:#5CC497;--warn:#E3B45C;--bad:#F07A6E;--goodbg:#173027;--warnbg:#33291A;--badbg:#3A2020;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="ocean"]{--accent:#1F5A85;--fill:#3B82B8;--glass:#DCE7F1;--soft:#E9F0F6}:root[data-accent="ocean"][data-theme="dark"]{--accent:#7DB8E8;--accent-ink:#0B1622;--fill:#3B7DB0;--glass:#1F2E3B;--soft:#1B2630}
+:root[data-accent="clay"]{--accent:#9A4A2E;--fill:#C8714E;--fill2:#2E7D5B;--glass:#F3E1D8;--soft:#F6ECE6}:root[data-accent="clay"][data-theme="dark"]{--accent:#F0A07E;--accent-ink:#24110A;--fill:#B86444;--fill2:#3E9B70;--glass:#3A2A22;--soft:#2A211C}
+:root[data-accent="plum"]{--accent:#6B4C9A;--fill:#9479C4;--glass:#E9E2F3;--soft:#EEEAF5}:root[data-accent="plum"][data-theme="dark"]{--accent:#B9A0E6;--accent-ink:#170F24;--fill:#7E62AE;--glass:#2E2840;--soft:#231F30}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+nav.side{padding:22px 12px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-weight:800;font-size:18px;padding:0 10px 18px;letter-spacing:-.3px;line-height:1.2}
+.brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:2px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:17px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:26px 30px 120px;max-width:1180px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:18px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1.4fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2e{grid-template-columns:1fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
+.lab{font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.big{font-size:44px;font-weight:850;letter-spacing:-1.6px;line-height:1.05;margin:6px 0 4px;color:var(--accent)}
+.mid{font-size:25px;font-weight:800;letter-spacing:-.6px;margin-top:4px}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-weight:750;font-size:12.5px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.tight{background:var(--warnbg);color:var(--warn)}.short{background:var(--badbg);color:var(--bad)}.done{background:var(--good);color:#fff}.plain{background:var(--soft);color:var(--muted)}
+.t-ok{color:var(--good)}.t-short{color:var(--bad)}.t-warn{color:var(--warn)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dt{width:62px;flex:none;font-size:12.5px;font-weight:750;color:var(--muted);line-height:1.2}
+.dt b{display:block;font-size:17px;color:var(--ink)}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.amt.neg{color:var(--bad)}.amt.pos{color:var(--good)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;padding:11px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:13.5px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:34px;height:34px;cursor:pointer;display:grid;place-items:center;font-size:14px;flex:none}
+.bar{height:10px;border-radius:999px;background:var(--glass);overflow:hidden}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.fab{position:fixed;right:26px;bottom:26px;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.25);cursor:pointer;z-index:20}
+.app{position:relative}
+.themetog{position:absolute;top:22px;right:28px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;z-index:10;padding:0;transition:color .15s,border-color .15s}
+.themetog:hover,.themetog:focus-visible{color:var(--ink);border-color:var(--muted)}
+.themetog svg{width:18px;height:18px;display:block}
+main h1{padding-right:48px}
+@media (min-width:861px){main>.tablebar:first-child{padding-right:52px}}
+@media (max-width:860px){.themetog{top:14px;right:14px;width:36px;height:36px}}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right;white-space:nowrap}
+.kv.total{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--ink);font-weight:800}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+.filters select,.filters input{padding:9px 12px;border-radius:11px;border:1px solid var(--line);background:var(--card);min-width:0;max-width:100%}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.t{border-collapse:collapse;width:100%;font-size:13px}
+table.t th,table.t td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t th:first-child,table.t td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+table.t thead th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+table.t tr.sum td{font-weight:800;border-top:2px solid var(--line)}
+table.t tr.hd td{font-weight:800;color:var(--accent);font-size:11.5px;letter-spacing:.8px;text-transform:uppercase;padding-top:14px}
+table.t td.z{color:var(--muted)}
+.sc .ln{width:44px;flex:none;font-weight:800;color:var(--accent);text-align:center}
+.sc .row.tot{background:var(--soft);border-radius:10px;padding-left:4px;padding-right:8px;border-bottom:0;margin:4px 0}
+.chart{width:100%;height:auto;display:block}
+.chart .gi{fill:var(--fill)}.chart .ge{fill:var(--fill2)}.chart text{fill:var(--muted);font-size:11px;font-weight:700}.chart .ax{stroke:var(--line)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);font-weight:700}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.check:last-child{border-bottom:0}
+.check .ck{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:900}
+.check .ck.y{background:var(--good);color:#fff}.check .ck.n{background:var(--warnbg);color:var(--warn)}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(520px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:5px;margin-bottom:12px;min-width:0}
+.field label,.field .fl{font-size:12.5px;font-weight:750;color:var(--muted)}
+.field input,.field select{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:650;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tick{display:flex;gap:10px;align-items:center;font-weight:650;cursor:pointer;margin:2px 0 12px}
+.tick input{width:18px;height:18px;accent-color:var(--accent)}
+.catrow{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center;margin-bottom:6px}
+.catrow span{font-weight:800;color:var(--accent);text-align:center;font-size:13px}
+.catrow input{width:100%;padding:8px 11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.demo{background:#F2C94C;color:#1F2933;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#1F2933}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.yearsel{padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:750}
+.flag{color:var(--bad);font-weight:800}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10px;padding:6px 1px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:18px}
+ main{padding:20px 14px 150px}
+ .g2,.g3,.g2e{grid-template-columns:1fr}
+ .big{font-size:36px}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .card{padding:15px}
+ .dt{width:50px}
+ .two,.three{grid-template-columns:1fr 1fr}
+ .row.inv{flex-wrap:wrap;row-gap:6px}
+ .row.inv .grow{flex:1 1 calc(100% - 112px)}
+ .row.inv .pill{margin-left:62px}
+ .row.qrow{flex-wrap:wrap;row-gap:6px}
+ .row.qrow .grow{flex:1 1 100%}
+ .row.qrow .amt{margin-right:auto;text-align:left}
+ .row.inv .amt{min-width:0!important;margin-left:auto}
+ .g3 .mid,.g4 .mid{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.grid.g5{grid-template-columns:repeat(5,1fr)}
+.rg td,.rg th{padding:5px 3px!important}.rg th{font-size:10.5px!important}
+.rg td button{border:0;cursor:pointer;font:inherit;font-size:11.5px;font-weight:750;border-radius:8px;padding:5px 5px;min-width:0;white-space:nowrap}
+.rg td button.k-paid{background:var(--goodbg);color:var(--good)}.rg td button.k-late{background:var(--warnbg);color:var(--warn)}.rg td button.k-owes{background:var(--badbg);color:var(--bad)}
+.rg td button.k-due{background:var(--soft);color:var(--ink)}.rg td button.k-vac{background:transparent;color:var(--muted);border:1px dashed var(--line)}.rg td button.k-none{background:transparent;color:var(--muted)}
+.rg .fee{display:block;font-size:10.5px;color:var(--bad);font-weight:750;margin-top:2px}
+.prop{display:flex;flex-direction:column;gap:6px}
+.prop .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.prop .nm{font-weight:800;font-size:17px;letter-spacing:-.2px}
+.subtabs{display:flex;gap:8px;margin:0 0 14px}
+@media (max-width:1100px){.grid.g5{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:860px){.grid.g5{grid-template-columns:1fr 1fr}.grid.g4{grid-template-columns:1fr 1fr}.row.wk{flex-wrap:wrap;row-gap:6px}.row.wk .grow{flex:1 1 calc(100% - 112px)}.row.wk .pill{margin-left:62px}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Rental Property<small>Landlord app · by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="home"><span class="i">◉</span>Dashboard</button>
+  <button class="navbtn" data-view="props"><span class="i">⌂</span>Properties</button>
+  <button class="navbtn" data-view="rent"><span class="i">↓</span>Rent</button>
+  <button class="navbtn" data-view="expenses"><span class="i">↑</span>Expenses</button>
+  <button class="navbtn" data-view="repairs"><span class="i">⚒</span>Repairs</button>
+  <button class="navbtn" data-view="reports"><span class="i">▥</span>Reports</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <button class="themetog" id="themeTog" type="button"></button>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add" title="Add">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.gumroad.com/l/rental-property-app";
+const KEY = DEMO ? "lp-rental-demo" : "lp-rental-v1";
+const SAMPLE = {"set":{"owner":"Rivera Rentals","year":2026,"asof":"2026-11-06","grace":5,"rate1":0.725,"rdate":"2026-07-01","rate2":0.76,"remind":60},"props":[{"name":"Maple Ave House","address":"412 Maple Ave, Columbus, OH","type":"Single-family","acq":"2019-06-14","price":185000,"value":265000,"note":""},{"name":"Oak St Duplex A","address":"88 Oak St, Unit A, Columbus, OH","type":"Duplex unit","acq":"2021-03-30","price":140000,"value":175000,"note":""},{"name":"Oak St Duplex B","address":"88 Oak St, Unit B, Columbus, OH","type":"Duplex unit","acq":"2021-03-30","price":140000,"value":175000,"note":""},{"name":"Pine Ct Condo #12","address":"7 Pine Ct #12, Westerville, OH","type":"Condo","acq":"2023-09-01","price":158000,"value":168000,"note":""}],"cats":[["Advertising","5","Operating"],["Auto & travel","6","Operating"],["Cleaning & maintenance","7","Operating"],["Commissions","8","Operating"],["Insurance","9","Operating"],["Legal & professional fees","10","Operating"],["Management fees","11","Operating"],["Mortgage interest","12","Interest"],["Other interest","13","Interest"],["Repairs","14","Operating"],["Supplies","15","Operating"],["Taxes","16","Operating"],["Utilities","17","Operating"],["Depreciation","18","Depreciation"],["HOA fees","19","Operating"],["Other expenses","19","Operating"],["Mortgage principal","\u2014","Principal"],["Capital improvements","\u2014","Improvement"]],"leases":[{"prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","phone":"(614) 555-0142","email":"tia.johnson@example.com","start":"2025-08-01","end":"2026-07-31","rent":1850,"due":1,"fee":75,"grace":null,"deposit":null,"settled":"","returned":null,"note":"Renewed Aug 1, 2026: deposit moved to the new lease"},{"prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","phone":"(614) 555-0142","email":"tia.johnson@example.com","start":"2026-08-01","end":"2027-07-31","rent":1925,"due":1,"fee":75,"grace":null,"deposit":1850,"settled":"","returned":null,"note":"Renewal, +$75"},{"prop":"Oak St Duplex A","tenant":"Priya Shah","phone":"(614) 555-0187","email":"priya.shah@example.com","start":"2026-01-01","end":"2026-12-31","rent":1150,"due":1,"fee":50,"grace":null,"deposit":1150,"settled":"","returned":null,"note":"Asked about renewing for 2027"},{"prop":"Oak St Duplex B","tenant":"Kevin Brooks","phone":"(614) 555-0119","email":"kbrooks@example.com","start":"2025-05-01","end":"2026-04-30","rent":1100,"due":1,"fee":50,"grace":null,"deposit":1100,"settled":"2026-05-14","returned":820,"note":"Kept $280: cleaning and wall repair"},{"prop":"Oak St Duplex B","tenant":"Alicia Moreno","phone":"(614) 555-0163","email":"alicia.moreno@example.com","start":"2026-07-01","end":"2027-06-30","rent":1175,"due":1,"fee":50,"grace":null,"deposit":1175,"settled":"","returned":null,"note":"One cat: $35 pet rent"},{"prop":"Pine Ct Condo #12","tenant":"Daniel Kim","phone":"(614) 555-0108","email":"dkim@example.com","start":"2024-09-01","end":"","rent":1450,"due":1,"fee":60,"grace":null,"deposit":1450,"settled":"","returned":null,"note":"Month-to-month since Sep 2025"}],"pays":[{"date":"2026-01-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-01-01","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-01-01","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-01-03","prop":"Oak St Duplex B","tenant":"Kevin Brooks","type":"Rent","amount":1100,"for":"","method":"Check","note":""},{"date":"2026-02-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-02-01","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-02-02","prop":"Oak St Duplex B","tenant":"Kevin Brooks","type":"Rent","amount":1100,"for":"","method":"Check","note":""},{"date":"2026-02-03","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-03-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-03-02","prop":"Oak St Duplex B","tenant":"Kevin Brooks","type":"Rent","amount":1100,"for":"","method":"Check","note":""},{"date":"2026-03-03","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-03-09","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-03-09","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Late fee","amount":50,"for":"","method":"ACH / bank transfer","note":"Late fee for March"},{"date":"2026-03-27","prop":"Oak St Duplex A","tenant":"Coin laundry","type":"Other income","amount":64.75,"for":"","method":"Cash","note":"Shared laundry, Q1"},{"date":"2026-04-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-04-02","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-04-02","prop":"Oak St Duplex B","tenant":"Kevin Brooks","type":"Rent","amount":1100,"for":"","method":"Check","note":""},{"date":"2026-04-04","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-05-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-05-02","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-05-02","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-06-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-06-02","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-06-04","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-06-24","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Rent","amount":1175,"for":"2026-07","method":"Zelle","note":"July rent paid at lease signing"},{"date":"2026-06-26","prop":"Oak St Duplex A","tenant":"Coin laundry","type":"Other income","amount":58.5,"for":"","method":"Cash","note":"Shared laundry, Q2"},{"date":"2026-07-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1850,"for":"","method":"Zelle","note":""},{"date":"2026-07-01","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-07-02","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Other income","amount":35,"for":"","method":"Zelle","note":"Pet rent"},{"date":"2026-07-02","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-08-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1925,"for":"","method":"Zelle","note":""},{"date":"2026-08-01","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Rent","amount":1175,"for":"","method":"Zelle","note":""},{"date":"2026-08-01","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Other income","amount":35,"for":"","method":"Zelle","note":"Pet rent"},{"date":"2026-08-02","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-08-12","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-09-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1925,"for":"","method":"Zelle","note":""},{"date":"2026-09-02","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-09-03","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Rent","amount":1175,"for":"","method":"Zelle","note":""},{"date":"2026-09-03","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Other income","amount":35,"for":"","method":"Zelle","note":"Pet rent"},{"date":"2026-09-15","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""},{"date":"2026-09-15","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Late fee","amount":60,"for":"","method":"Venmo","note":"Late fee for September"},{"date":"2026-09-28","prop":"Oak St Duplex A","tenant":"Coin laundry","type":"Other income","amount":71.25,"for":"","method":"Cash","note":"Shared laundry, Q3"},{"date":"2026-10-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1925,"for":"","method":"Zelle","note":""},{"date":"2026-10-02","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Rent","amount":1175,"for":"","method":"Zelle","note":""},{"date":"2026-10-02","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Other income","amount":35,"for":"","method":"Zelle","note":"Pet rent"},{"date":"2026-10-02","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1000,"for":"","method":"Venmo","note":"Partial: says the rest is coming"},{"date":"2026-10-04","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-11-01","prop":"Maple Ave House","tenant":"Marcus & Tia Johnson","type":"Rent","amount":1925,"for":"","method":"Zelle","note":""},{"date":"2026-11-02","prop":"Oak St Duplex A","tenant":"Priya Shah","type":"Rent","amount":1150,"for":"","method":"ACH / bank transfer","note":""},{"date":"2026-11-02","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Rent","amount":1175,"for":"","method":"Zelle","note":""},{"date":"2026-11-02","prop":"Oak St Duplex B","tenant":"Alicia Moreno","type":"Other income","amount":35,"for":"","method":"Zelle","note":"Pet rent"},{"date":"2026-11-02","prop":"Pine Ct Condo #12","tenant":"Daniel Kim","type":"Rent","amount":1450,"for":"","method":"Venmo","note":""}],"expenses":[{"date":"2026-01-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":460.37,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":267.7,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":262.18,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":217.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":262.17,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":217.61,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":706.46,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":123.9,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-01-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-14","prop":"Maple Ave House","vendor":"Comfort Air Heating","desc":"Furnace igniter replaced","cat":"Repairs","amount":385,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-16","prop":"Maple Ave House","vendor":"Home Depot","desc":"Furnace filters (6-pack)","cat":"Supplies","amount":42.97,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-01-20","prop":"Maple Ave House","vendor":"Franklin County Treasurer","desc":"Property tax, half year","cat":"Taxes","amount":1820,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-20","prop":"Oak St Duplex A","vendor":"Franklin County Treasurer","desc":"Property tax, half year (half per unit)","cat":"Taxes","amount":1475,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-20","prop":"Oak St Duplex B","vendor":"Franklin County Treasurer","desc":"Property tax, half year (half per unit)","cat":"Taxes","amount":1475,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-20","prop":"Pine Ct Condo #12","vendor":"Delaware County Treasurer","desc":"Property tax, half year","cat":"Taxes","amount":1180,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":72.73,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-01-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":60.76,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":459.42,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":268.65,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":261.61,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":218.18,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":261.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":218.17,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":705.75,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":124.61,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-03","prop":"Maple Ave House","vendor":"City of Columbus","desc":"Rental registration","cat":"Taxes","amount":35,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-03","prop":"Oak St Duplex A","vendor":"City of Columbus","desc":"Rental registration","cat":"Taxes","amount":35,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-03","prop":"Oak St Duplex B","vendor":"City of Columbus","desc":"Rental registration","cat":"Taxes","amount":35,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-02-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-18","prop":"Oak St Duplex A","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-18","prop":"Oak St Duplex B","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":60.39,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-02-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":71.08,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Maple Ave House","vendor":"State Farm","desc":"Landlord policy, 12 months","cat":"Insurance","amount":1384,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-03-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":458.47,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":269.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":261.04,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":218.74,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":261.04,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":218.74,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":705.03,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":125.33,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-03-10","prop":"All properties (split)","vendor":"Hart & Co. CPA","desc":"2025 tax return, Schedule E","cat":"Legal & professional fees","amount":650,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-18","prop":"Oak St Duplex A","vendor":"Rooter Pros Plumbing","desc":"Leaking kitchen faucet","cat":"Repairs","amount":145,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":62.3,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-03-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":72.11,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":457.51,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":270.56,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":260.47,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":219.31,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":260.47,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":219.31,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":704.31,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":126.05,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-04-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-22","prop":"Maple Ave House","vendor":"A1 Gutters","desc":"Gutter section repaired","cat":"Repairs","amount":240,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":69.34,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":65.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-04-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":456.56,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":271.51,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":259.9,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":219.88,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":259.9,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":219.88,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":703.59,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":126.77,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-02","prop":"Oak St Duplex B","vendor":"Zillow Rental Manager","desc":"Listing, 30 days","cat":"Advertising","amount":29.99,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-05-02","prop":"Oak St Duplex B","vendor":"Signs Now","desc":"For Rent yard sign","cat":"Advertising","amount":18,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-05-02","prop":"Oak St Duplex B","vendor":"City parking","desc":"Parking at the rental","cat":"Auto & travel","amount":6,"method":"Cash","receipt":false,"note":""},{"date":"2026-05-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-05-09","prop":"Oak St Duplex B","vendor":"Sparkle Clean Co.","desc":"Move-out deep clean","cat":"Cleaning & maintenance","amount":325,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-16","prop":"Oak St Duplex B","vendor":"City parking","desc":"Parking at the rental","cat":"Auto & travel","amount":9,"method":"Cash","receipt":false,"note":""},{"date":"2026-05-16","prop":"Oak St Duplex B","vendor":"Ramos Painting","desc":"Patch drywall and repaint 2 rooms","cat":"Repairs","amount":640,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-16","prop":"Oak St Duplex B","vendor":"Home Depot","desc":"Smoke detectors, outlet covers, bulbs","cat":"Supplies","amount":86.43,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-05-18","prop":"Oak St Duplex A","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-18","prop":"Oak St Duplex B","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":54.74,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":70.79,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-05-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":455.59,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":272.48,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex A","vendor":"Erie Insurance","desc":"Duplex landlord policy (half)","cat":"Insurance","amount":980,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":259.32,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":220.46,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex B","vendor":"Zillow Rental Manager","desc":"Listing, 30 days","cat":"Advertising","amount":29.99,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex B","vendor":"Erie Insurance","desc":"Duplex landlord policy (half)","cat":"Insurance","amount":980,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":259.33,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":220.45,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":702.87,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":127.49,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-08","prop":"Oak St Duplex B","vendor":"TransUnion SmartMove","desc":"Tenant screening, 3 applicants","cat":"Other expenses","amount":120,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-12","prop":"Oak St Duplex B","vendor":"Miller Law Office","desc":"Lease review","cat":"Legal & professional fees","amount":250,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-17","prop":"Pine Ct Condo #12","vendor":"Mr. Appliance","desc":"Garbage disposal replaced","cat":"Repairs","amount":165,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-20","prop":"Oak St Duplex B","vendor":"Lowe's","desc":"New refrigerator, delivered","cat":"Capital improvements","amount":899,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-06-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":56.21,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":69.07,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-06-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":454.63,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":273.44,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":258.75,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":221.03,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":258.75,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":221.03,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":702.14,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":128.22,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-07-09","prop":"Maple Ave House","vendor":"Home Depot","desc":"Window screens, caulk","cat":"Supplies","amount":58.12,"method":"Rental credit card","receipt":false,"note":""},{"date":"2026-07-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-20","prop":"Maple Ave House","vendor":"Franklin County Treasurer","desc":"Property tax, half year","cat":"Taxes","amount":1820,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-20","prop":"Oak St Duplex A","vendor":"Franklin County Treasurer","desc":"Property tax, half year (half per unit)","cat":"Taxes","amount":1475,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-20","prop":"Oak St Duplex B","vendor":"Franklin County Treasurer","desc":"Property tax, half year (half per unit)","cat":"Taxes","amount":1475,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-20","prop":"Pine Ct Condo #12","vendor":"Delaware County Treasurer","desc":"Property tax, half year","cat":"Taxes","amount":1180,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":59.16,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":57.68,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-07-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":453.66,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":274.41,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":258.18,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":221.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":258.17,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":221.61,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":701.4,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":128.96,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-08-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-18","prop":"Oak St Duplex A","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-18","prop":"Oak St Duplex B","vendor":"Buckeye Pest Control","desc":"Quarterly pest control (half)","cat":"Cleaning & maintenance","amount":47.5,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-22","prop":"Maple Ave House","vendor":"City parking","desc":"Parking at the rental","cat":"Auto & travel","amount":12,"method":"Cash","receipt":false,"note":""},{"date":"2026-08-22","prop":"Maple Ave House","vendor":"Comfort Air Heating","desc":"New 50-gal water heater, installed","cat":"Capital improvements","amount":1480,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":54.16,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":73.67,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-08-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":452.69,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":275.38,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":257.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":222.18,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":257.6,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":222.18,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Pine Ct Condo #12","vendor":"Erie Insurance","desc":"Condo HO-6 policy","cat":"Insurance","amount":486,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-09-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":700.66,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":129.7,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-03","prop":"Oak St Duplex B","vendor":"Mr. Appliance","desc":"Dishwasher pump repair","cat":"Repairs","amount":210,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-09-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":116,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":68.76,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":60.49,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-09-30","prop":"All properties (split)","vendor":"Chase","desc":"Wire and bank fees","cat":"Other expenses","amount":30,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":451.71,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":276.36,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":257.02,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":222.76,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":257.02,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":222.76,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":699.92,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":130.44,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""},{"date":"2026-10-10","prop":"Pine Ct Condo #12","vendor":"Lakeside Property Mgmt","desc":"8% of rent collected","cat":"Management fees","amount":80,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-14","prop":"Maple Ave House","vendor":"A1 Gutters","desc":"Fall gutter cleaning","cat":"Cleaning & maintenance","amount":125,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-15","prop":"Pine Ct Condo #12","vendor":"Pine Court HOA","desc":"Monthly HOA dues","cat":"HOA fees","amount":285,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-21","prop":"Oak St Duplex A","vendor":"Kwik Key Locksmith","desc":"Back door lock rekeyed","cat":"Repairs","amount":95,"method":"Cash","receipt":false,"note":""},{"date":"2026-10-24","prop":"Oak St Duplex A","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":53.97,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-24","prop":"Oak St Duplex B","vendor":"Columbus Water & Sewer","desc":"Water, sewer and trash","cat":"Utilities","amount":55.9,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-10-28","prop":"Maple Ave House","vendor":"GreenCut Lawn Care","desc":"Mowing, monthly","cat":"Cleaning & maintenance","amount":60,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage interest","amount":450.73,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Maple Ave House","vendor":"Huntington Bank","desc":"Mortgage payment","cat":"Mortgage principal","amount":277.34,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":256.44,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Oak St Duplex A","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":223.34,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage interest","amount":256.44,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Oak St Duplex B","vendor":"Fifth Third Bank","desc":"Duplex mortgage, half per unit","cat":"Mortgage principal","amount":223.34,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage interest","amount":699.17,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-01","prop":"Pine Ct Condo #12","vendor":"Rocket Mortgage","desc":"Mortgage payment","cat":"Mortgage principal","amount":131.19,"method":"Rental checking","receipt":true,"note":""},{"date":"2026-11-03","prop":"Pine Ct Condo #12","vendor":"Home Depot","desc":"Bathroom fan (part)","cat":"Supplies","amount":64.98,"method":"Rental credit card","receipt":false,"note":""},{"date":"2026-11-05","prop":"All properties (split)","vendor":"RentReady","desc":"Rent collection app","cat":"Other expenses","amount":12,"method":"Rental credit card","receipt":true,"note":""}],"trips":[{"date":"2026-01-14","prop":"Maple Ave House","purpose":"Meet furnace tech","from":"Home","to":"412 Maple Ave","miles":6.2,"rt":true,"note":8.99},{"date":"2026-02-04","prop":"Oak St Duplex A","purpose":"Duplex walk-through","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-02-18","prop":"Maple Ave House","purpose":"Check on the house","from":"Home","to":"412 Maple Ave","miles":6.2,"rt":true,"note":8.99},{"date":"2026-02-21","prop":"Pine Ct Condo #12","purpose":"Condo check","from":"Home","to":"7 Pine Ct #12","miles":4.5,"rt":true,"note":6.53},{"date":"2026-03-03","prop":"Pine Ct Condo #12","purpose":"Condo check","from":"Home","to":"7 Pine Ct #12","miles":4.5,"rt":true,"note":6.53},{"date":"2026-03-18","prop":"Oak St Duplex A","purpose":"Meet plumber","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-04-03","prop":"Pine Ct Condo #12","purpose":"Condo check","from":"Home","to":"7 Pine Ct #12","miles":4.5,"rt":true,"note":6.53},{"date":"2026-04-07","prop":"Oak St Duplex A","purpose":"Duplex walk-through","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-04-11","prop":"All properties (split)","purpose":"Spring inspection, all units","from":"Home","to":"Maple, Oak, Pine (loop)","miles":24.6,"rt":false,"note":17.84},{"date":"2026-05-01","prop":"Oak St Duplex B","purpose":"Move-out inspection","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-05-03","prop":"Maple Ave House","purpose":"Check on the house","from":"Home","to":"412 Maple Ave","miles":6.2,"rt":true,"note":8.99},{"date":"2026-05-09","prop":"Oak St Duplex B","purpose":"Let in cleaners","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-05-16","prop":"Oak St Duplex B","purpose":"Painting, supplies","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-06-06","prop":"Oak St Duplex B","purpose":"Showings (3)","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-06-13","prop":"Oak St Duplex B","purpose":"Showings (2)","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-06-24","prop":"Oak St Duplex B","purpose":"Lease signing, keys","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.21},{"date":"2026-07-08","prop":"Pine Ct Condo #12","purpose":"Condo check","from":"Home","to":"7 Pine Ct #12","miles":4.5,"rt":true,"note":6.84},{"date":"2026-08-22","prop":"Oak St Duplex A","purpose":"Duplex walk-through","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.9},{"date":"2026-08-22","prop":"Maple Ave House","purpose":"Water heater install","from":"Home","to":"412 Maple Ave","miles":6.2,"rt":true,"note":9.42},{"date":"2026-08-25","prop":"Pine Ct Condo #12","purpose":"Condo check","from":"Home","to":"7 Pine Ct #12","miles":4.5,"rt":true,"note":6.84},{"date":"2026-10-10","prop":"All properties (split)","purpose":"Fall inspection, all units","from":"Home","to":"Maple, Oak, Pine (loop)","miles":24.6,"rt":false,"note":18.7},{"date":"2026-10-21","prop":"Oak St Duplex A","purpose":"Meet locksmith","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.9},{"date":"2026-10-26","prop":"Oak St Duplex A","purpose":"Duplex walk-through","from":"Home","to":"88 Oak St","miles":9.8,"rt":true,"note":14.9},{"date":"2026-11-05","prop":"Maple Ave House","purpose":"Check on the house","from":"Home","to":"412 Maple Ave","miles":6.2,"rt":true,"note":9.42}],"work":[{"rep":"2026-01-13","prop":"Maple Ave House","by":"Tia Johnson","req":"No heat: furnace won't light","pri":"Urgent","status":"Done","vendor":"Comfort Air Heating","sched":"2026-01-14","done":"2026-01-14","cost":385,"note":"Igniter replaced same day"},{"rep":"2026-03-16","prop":"Oak St Duplex A","by":"Priya Shah","req":"Kitchen faucet leaking","pri":"Normal","status":"Done","vendor":"Rooter Pros Plumbing","sched":"2026-03-18","done":"2026-03-18","cost":145,"note":""},{"rep":"2026-04-20","prop":"Maple Ave House","by":"Marcus Johnson","req":"Gutter pulling away over the porch","pri":"High","status":"Done","vendor":"A1 Gutters","sched":"2026-04-22","done":"2026-04-22","cost":240,"note":""},{"rep":"2026-05-01","prop":"Oak St Duplex B","by":"Move-out inspection","req":"Drywall holes, paint, deep clean","pri":"High","status":"Done","vendor":"Ramos Painting","sched":"2026-05-09","done":"2026-05-16","cost":965,"note":"Paint $640 + cleaning $325"},{"rep":"2026-06-15","prop":"Pine Ct Condo #12","by":"Daniel Kim","req":"Garbage disposal humming, not spinning","pri":"Normal","status":"Done","vendor":"Mr. Appliance","sched":"2026-06-17","done":"2026-06-17","cost":165,"note":""},{"rep":"2026-06-18","prop":"Oak St Duplex B","by":"Pre move-in check","req":"Fridge not cooling: replace","pri":"High","status":"Done","vendor":"Lowe's","sched":"2026-06-20","done":"2026-06-20","cost":899,"note":"Capital improvement"},{"rep":"2026-08-18","prop":"Maple Ave House","by":"Tia Johnson","req":"Water heater leaking at the base","pri":"Urgent","status":"Done","vendor":"Comfort Air Heating","sched":"2026-08-22","done":"2026-08-22","cost":1480,"note":"Replaced (capital improvement)"},{"rep":"2026-08-30","prop":"Oak St Duplex B","by":"Alicia Moreno","req":"Dishwasher not draining","pri":"Normal","status":"Done","vendor":"Mr. Appliance","sched":"2026-09-03","done":"2026-09-03","cost":210,"note":""},{"rep":"2026-10-02","prop":"Maple Ave House","by":"Marcus Johnson","req":"Bedroom window screen torn","pri":"Low","status":"Open","vendor":"","sched":"","done":"","cost":null,"note":"Fix at the fall visit"},{"rep":"2026-10-19","prop":"Oak St Duplex A","by":"Priya Shah","req":"Back door lock sticking","pri":"High","status":"Done","vendor":"Kwik Key Locksmith","sched":"2026-10-21","done":"2026-10-21","cost":95,"note":""},{"rep":"2026-10-29","prop":"Pine Ct Condo #12","by":"Daniel Kim","req":"Bathroom exhaust fan not working","pri":"Normal","status":"Waiting on parts","vendor":"Handyman Joe","sched":"2026-11-10","done":"","cost":null,"note":"Fan bought Nov 3"},{"rep":"2026-11-04","prop":"Oak St Duplex B","by":"Alicia Moreno","req":"Smoke detector chirping in hallway","pri":"Urgent","status":"Scheduled","vendor":"","sched":"2026-11-07","done":"","cost":null,"note":"Bring 9V batteries"}]}
+// IRS Schedule E (Form 1040) Part I categories, same list and logic as the Rental Property Tracker spreadsheet.
+// Type: op = operating (counts in NOI), int = interest, dep = depreciation (deductible, not cash); principal and improve = cash out, not deducted.
+const CATS = [
+  ["ads", "Advertising", "5", "op", "Listing sites, yard signs, rental ads"],
+  ["auto", "Auto & travel", "6", "op", "Parking, tolls and travel to your rentals. Mileage is added from the mileage log"],
+  ["clean", "Cleaning & maintenance", "7", "op", "Cleaning, lawn care, pest control, snow removal, routine upkeep"],
+  ["comm", "Commissions", "8", "op", "Leasing commissions paid to an agent"],
+  ["ins", "Insurance", "9", "op", "Landlord, hazard, flood and liability insurance"],
+  ["legal", "Legal & professional fees", "10", "op", "Lawyer, accountant, tax preparer, eviction filing"],
+  ["mgmt", "Management fees", "11", "op", "Property manager fees"],
+  ["mint", "Mortgage interest", "12", "int", "Interest part of your mortgage payment (Form 1098). Not the principal"],
+  ["oint", "Other interest", "13", "int", "Interest on other loans or cards used for the rental"],
+  ["repairs", "Repairs", "14", "op", "Fixing what's broken: plumber, electrician, appliance repair"],
+  ["supplies", "Supplies", "15", "op", "Small items: smoke detectors, filters, light bulbs, locks"],
+  ["taxes", "Taxes", "16", "op", "Property taxes and rental license fees"],
+  ["util", "Utilities", "17", "op", "Water, sewer, trash, gas or electric that you pay as the landlord"],
+  ["dep", "Depreciation", "18", "dep", "The yearly amount from your tax preparer (Form 4562). A tax deduction, not cash"],
+  ["hoa", "HOA fees", "19", "op", "Condo or homeowners association dues"],
+  ["other", "Other expenses", "19", "op", "Anything else ordinary and necessary: tenant screening, bank fees, software"],
+  ["principal", "Mortgage principal", "—", "principal", "Principal part of the mortgage payment. Not deductible, but it is cash out"],
+  ["improve", "Capital improvements", "—", "improve", "New roof, water heater, appliances, remodel. Depreciated over years, not deducted at once"]
+].map(([key, name, line, type, note]) => ({ key, name, line, type, note }));
+const DED = CATS.filter(c => c.line !== "—");
+const PTYPES = ["Single-family", "Duplex unit", "Triplex/fourplex unit", "Apartment", "Condo", "Townhouse", "Mobile home", "Other"];
+const PAY_TYPES = ["Rent", "Late fee", "Other income"];
+const PAY_METHODS = ["Zelle", "ACH / bank transfer", "Check", "Venmo", "Cash", "Money order", "Online portal", "Other"];
+const EXP_METHODS = ["Rental checking", "Rental credit card", "Personal card", "Cash", "Check", "Other"];
+const PRIORITIES = ["Urgent", "High", "Normal", "Low"], WSTATUS = ["Open", "Scheduled", "Waiting on parts", "Done"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const SPLIT = "split", SPLIT_TXT = "All properties (split)";
+
+/* ---------- dates (ISO yyyy-mm-dd strings; day numbers in UTC so DST never shifts a day) ---------- */
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const dn = s => { const [y, m, d] = String(s).split("-").map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
+const fromDn = n => { const d = new Date(n * 864e5); return d.getUTCFullYear() + "-" + String(d.getUTCMonth() + 1).padStart(2, "0") + "-" + String(d.getUTCDate()).padStart(2, "0"); };
+const ymd = (y, m, d) => y + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+const daysIn = (y, m) => new Date(Date.UTC(y, m, 0)).getUTCDate();
+const fmtD = s => { const d = parse(s); return MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); };
+const fmtS = s => { const d = parse(s); return MONTHS[d.getMonth()] + " " + d.getDate(); };
+const maxS = (a, b) => a > b ? a : b, minS = (a, b) => a < b ? a : b;
+
+/* ---------- state ---------- */
+function defaultSet(year) {
+  // 2026 IRS business mileage: 72.5¢ through June 30, 76¢ from July 1 (same as the spreadsheet). Other years: check irs.gov.
+  return year === 2026 ? { owner: "", year, asof: "", grace: 5, rate1: 0.725, rdate: "2026-07-01", rate2: 0.76, remind: 60 }
+    : { owner: "", year, asof: "", grace: 5, rate1: 0.76, rdate: "", rate2: "", remind: 60 };
+}
+function blank() {
+  return { v: 1, app: "rental", currency: "$", theme: "auto", accent: "forest", set: defaultSet(today().getFullYear()), names: {}, props: [], leases: [], pays: [], expenses: [], trips: [], work: [] };
+}
+const LISTS = ["props", "leases", "pays", "expenses", "trips", "work"];
+function valid(s) { return s && s.v === 1 && s.app === "rental" && s.set && LISTS.every(k => Array.isArray(s[k])); }
+function normalize(s) {
+  const o = Object.assign(blank(), s);
+  o.set = Object.assign(defaultSet(Number(s.set.year) || today().getFullYear()), s.set); o.set.year = Number(o.set.year) || today().getFullYear();
+  if (!o.names || typeof o.names !== "object") o.names = {};
+  return o;
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+let save = function () { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } };
+const uid = () => Math.random().toString(36).slice(2, 9);
+function sample() {
+  const s = blank(), ids = {};
+  s.set = Object.assign({}, SAMPLE.set);
+  s.props = SAMPLE.props.map(p => { const id = uid(); ids[p.name] = id; return Object.assign({ id }, p); });
+  const pid = n => n === SPLIT_TXT ? SPLIT : ids[n] || "";
+  const ck = n => (CATS.find(c => c.name === n) || CATS[CATS.length - 3]).key;
+  s.leases = SAMPLE.leases.map(x => Object.assign({ id: uid() }, x, { prop: pid(x.prop) }));
+  s.pays = SAMPLE.pays.map(x => Object.assign({ id: uid() }, x, { prop: pid(x.prop) }));
+  s.expenses = SAMPLE.expenses.map(x => Object.assign({ id: uid() }, x, { prop: pid(x.prop), cat: ck(x.cat) }));
+  s.trips = SAMPLE.trips.map(x => Object.assign({ id: uid() }, x, { prop: pid(x.prop) }));
+  s.work = SAMPLE.work.map(x => Object.assign({ id: uid() }, x, { prop: pid(x.prop) }));
+  return s;
+}
+let S = load();
+
+/* ---------- the math (cents; rounded like the spreadsheet: half away from zero) ---------- */
+function rh(x) { const y = Number(Math.abs(x).toPrecision(12)); return (x < 0 ? -1 : 1) * Math.round(y) || 0; }
+const cents = v => rh((Number(v) || 0) * 100);
+const nz = v => v === null || v === undefined || v === "" ? 0 : Number(v) || 0;
+const catOf = k => CATS.find(c => c.key === k) || CATS.find(c => c.key === "other");
+const catName = k => S.names[k] || catOf(k).name;
+const propOf = id => S.props.find(p => p.id === id);
+const propName = id => id === SPLIT ? SPLIT_TXT : (propOf(id) || { name: "(deleted property)" }).name;
+const inYear = (d, y = S.set.year) => !!d && d.slice(0, 4) === String(y);
+const monthOf = d => +d.slice(5, 7);
+const tripMiles = t => Number(((Number(t.miles) || 0) * (t.rt ? 2 : 1)).toFixed(4));
+const rateFor = (date, st = S.set) => (st.rdate && st.rate2 !== "" && st.rate2 != null && Number(st.rate2) > 0 && date >= st.rdate) ? Number(st.rate2) : Number(st.rate1) || 0;
+const tripDed = (t, st = S.set) => rh(tripMiles(t) * rateFor(t.date, st) * 100);
+// "Rent counted through": the setting, or today; never past Dec 31 of the tax year
+const asOf = (st = S.set) => minS(st.asof || iso(today()), st.year + "-12-31");
+const kept = x => x.settled && x.deposit !== null && x.deposit !== undefined && x.deposit !== "" ? Math.max(0, cents(x.deposit) - cents(x.returned)) : 0;
+function leaseStatus(x, st = S.set) {
+  const A = asOf(st);
+  if (!x.start) return "";
+  if (x.start > A) return "Starts " + fmtD(x.start);
+  if (x.end && x.end < A) return x.deposit !== null && x.deposit !== undefined && x.deposit !== "" && !x.settled ? "Ended · settle deposit" : "Ended";
+  if (!x.end) return "Month-to-month";
+  const n = dn(x.end) - dn(A);
+  if (n <= (Number(st.remind) || 0)) return "Ends in " + n + (n === 1 ? " day" : " days");
+  return "Active";
+}
+const leaseActiveOn = (x, day) => x.start && x.start <= day && day <= (x.end || "2999-12-31");
+function zero() { const o = { rent: 0, fees: 0, other: 0, kept: 0, mile: 0, cat: {} }; CATS.forEach(c => o.cat[c.key] = 0); return o; }
+function fin(b) {
+  const TI = b.rent + b.fees + b.other + b.kept, TE = DED.reduce((a, c) => a + b.cat[c.key], 0) + b.mile, NP = TI - TE, addback = b.cat.dep + b.mile;
+  return Object.assign(b, { TI, TE, NP, addback, CF: NP + addback - b.cat.principal - b.cat.improve, NOI: TI - CATS.filter(c => c.type === "op").reduce((a, c) => a + b.cat[c.key], 0) });
+}
+// Everything for the tax year. Buckets: [property index][month 1..12], plus the "all properties" bucket.
+function compute(s = S) {
+  const st = s.set, Y = st.year, A = asOf(st), YS = Y + "-01-01", P = s.props, NP_ = P.length, idx = {};
+  P.forEach((p, i) => idx[p.id] = i);
+  const monthsN = A < YS ? 0 : +A.slice(5, 7);
+  const B = P.map(() => Array.from({ length: 13 }, zero)), ALL = Array.from({ length: 13 }, zero);
+  const add = (prop, m, f) => { // f(bucket, share)
+    if (prop === SPLIT) { if (!NP_) return; P.forEach((p, i) => f(B[i][m], 1 / NP_)); f(ALL[m], 1); }
+    else if (prop in idx) { f(B[idx[prop]][m], 1); f(ALL[m], 1); }
+  };
+  s.pays.forEach(x => { if (!inYear(x.date, Y) || x.prop === SPLIT) return; const k = x.type === "Late fee" ? "fees" : x.type === "Other income" ? "other" : "rent", c = cents(x.amount); add(x.prop, monthOf(x.date), (b, sh) => b[k] += c * sh); });
+  s.leases.forEach(x => { const k = kept(x); if (k && inYear(x.settled, Y) && x.prop !== SPLIT) add(x.prop, monthOf(x.settled), (b, sh) => b.kept += k * sh); });
+  s.expenses.forEach(x => { if (!inYear(x.date, Y)) return; const k = catOf(x.cat).key, c = cents(x.amount); add(x.prop, monthOf(x.date), (b, sh) => b.cat[k] += c * sh); });
+  s.trips.forEach(t => { if (!inYear(t.date, Y)) return; const c = tripDed(t, st); add(t.prop, monthOf(t.date), (b, sh) => b.mile += c * sh); });
+  const total = arr => { const o = zero(); for (let m = 1; m <= 12; m++) { const b = arr[m]; ["rent", "fees", "other", "kept", "mile"].forEach(k => o[k] += b[k]); CATS.forEach(c => o.cat[c.key] += b.cat[c.key]); } return fin(o); };
+  for (let m = 1; m <= 12; m++) { fin(ALL[m]); B.forEach(b => fin(b[m])); }
+  let allDue = 0, allRec = 0, noiV = 0, valV = 0, occAll = 0, availAll = 0;
+  const props = P.map((p, i) => {
+    const L = s.leases.filter(x => x.prop === p.id), R = s.pays.filter(x => x.prop === p.id && x.type === "Rent");
+    const forM = x => (x.for || x.date.slice(0, 7));
+    const rows = [];
+    let due_ = 0, rec_ = 0, fee_ = 0;
+    for (let m = 1; m <= 12; m++) {
+      const d1 = ymd(Y, m, 1), key = d1.slice(0, 7), act = L.filter(x => leaseActiveOn(x, d1));
+      const due = d1 > A ? 0 : act.reduce((a, x) => a + cents(x.rent), 0);
+      const rec = R.filter(x => forM(x) === key).reduce((a, x) => a + cents(x.amount), 0);
+      let fee = 0, st_ = "", k = "none", dl = "";
+      if (due) {
+        const dueDay = Math.min(daysIn(Y, m), act.reduce((a, x) => a + (nz(x.due) || 1), 0));
+        dl = fromDn(dn(ymd(Y, m, dueDay)) + act.reduce((a, x) => a + (x.grace === null || x.grace === undefined || x.grace === "" ? Number(st.grace) || 0 : Number(x.grace)), 0));
+        const pbd = R.filter(x => forM(x) === key && x.date <= dl).reduce((a, x) => a + cents(x.amount), 0);
+        fee = dl >= A || pbd >= due ? 0 : act.reduce((a, x) => a + cents(x.fee), 0);
+        if (rec >= due) { st_ = pbd >= due ? "✓ Paid" : "✓ Late"; k = pbd >= due ? "paid" : "late"; }
+        else if (dl >= A) { st_ = "Due " + fmtS(dl); k = "due"; }
+        else { st_ = "Owes " + S.currency + rh((due - rec) / 100).toLocaleString("en-US"); k = "owes"; }
+      } else if (d1 <= A) {
+        const eom = ymd(Y, m, daysIn(Y, m));
+        if (p.acq && eom < p.acq) st_ = "—"; else { st_ = "Vacant"; k = "vac"; }
+      }
+      rows.push({ m, due, rec, fee, st: st_, k, dl, tenant: act[0] ? act[0].tenant : "" });
+      due_ += due; rec_ += rec; fee_ += fee;
+    }
+    const feesPaid = s.pays.filter(x => x.prop === p.id && x.type === "Late fee" && inYear(x.date, Y)).reduce((a, x) => a + cents(x.amount), 0);
+    const owedRent = Math.max(0, due_ - rec_), owedFees = Math.max(0, fee_ - feesPaid);
+    allDue += due_; allRec += rec_;
+    const y = total(B[i]), value = nz(p.value);
+    const cap = !value || !monthsN ? null : y.NOI / 100 * 12 / monthsN / value;
+    if (value > 0) { noiV += y.NOI; valV += value; }
+    const avail = Math.max(0, dn(A) - dn(maxS(YS, p.acq || "1899-12-30")) + 1);
+    let occ = 0; L.forEach(x => { if (x.start) occ += Math.max(0, dn(minS(x.end || "2999-12-31", A)) - dn(maxS(x.start, YS)) + 1); });
+    occ = Math.min(avail, occ); occAll += occ; availAll += avail;
+    const now = L.filter(x => leaseActiveOn(x, A));
+    return { p, rows, due: due_, rec: rec_, fee: fee_, feesPaid, owedRent, owedFees, owed: owedRent + owedFees, y, months: B[i].slice(1), cap, occ, avail, vac: avail ? 1 - occ / avail : null,
+      held: L.filter(x => !x.settled).reduce((a, x) => a + cents(x.deposit), 0), open: s.work.filter(w => w.prop === p.id && isOpen(w)).length,
+      tenant: now[0] ? now[0].tenant : "Vacant", lease: now[0] || null, rentNow: now.reduce((a, x) => a + cents(x.rent), 0),
+      nowSt: A.slice(0, 4) === String(Y) && monthsN ? rows[+A.slice(5, 7) - 1] : null };
+  });
+  const all = total(ALL), status = {};
+  s.leases.forEach(x => status[x.id] = leaseStatus(x, st));
+  const ending = s.leases.map((x, i) => [x, i]).filter(([x]) => status[x.id].startsWith("Ends in") && (x.prop in idx)).sort((a, b) => a[0].end.localeCompare(b[0].end) || a[1] - b[1]).map(([x]) => x);
+  const rank = { Urgent: 1, High: 2, Normal: 3, Low: 4 };
+  const openList = s.work.filter(isOpen).sort((a, b) => (rank[a.pri] || 3) - (rank[b.pri] || 3) || a.rep.localeCompare(b.rep));
+  return { year: Y, asof: A, monthsN, props, all, months: ALL.slice(1), status, ending, openList,
+    owed: props.reduce((a, x) => a + x.owed, 0), held: s.leases.filter(x => !x.settled && (x.prop in idx)).reduce((a, x) => a + cents(x.deposit), 0),
+    due: allDue, rec: allRec, collected: allDue ? Math.min(1, allRec / allDue) : null, cap: !valV || !monthsN ? null : noiV / 100 * 12 / monthsN / valV,
+    occ: occAll, avail: availAll, vac: availAll ? 1 - occAll / availAll : null, receipts: s.expenses.filter(x => inYear(x.date, Y) && !x.receipt).length,
+    miles: Math.round(s.trips.filter(t => inYear(t.date, Y)).reduce((a, t) => a + tripMiles(t), 0) * 100) / 100, trips: s.trips.filter(t => inYear(t.date, Y)).length };
+}
+function isOpen(w) { return w.status !== "Done" && !w.done; }
+
+/* ---------- formatting ---------- */
+function money(v, dec) {
+  const d = dec ?? 2, n = Math.round(Math.abs(v) * 10 ** d) / 10 ** d, neg = v < 0 && n > 0 ? "-" : "";
+  return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+const mc = (c, dec) => money(rh(c) / 100, dec);
+const pct = (v, d = 1) => v === null || v === undefined ? "–" : (v * 100).toFixed(d) + "%";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2200); }
+const plural = (n, w) => n.toLocaleString("en-US") + " " + w + (n === 1 ? "" : "s");
+const fmtMiles = n => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+const dateCell = d => { const x = parse(d); return `<div class="dt"><b>${x.getDate()}</b>${MONTHS[x.getMonth()]}${x.getFullYear() !== S.set.year ? " " + x.getFullYear() : ""}</div>`; };
+const otherYear = d => !inYear(d) ? ` · <span class="flag">not in ${S.set.year}</span>` : "";
+const empty = () => !S.props.length;
+const opts = (list, sel) => list.map(([v, t]) => `<option value="${esc(v)}" ${String(sel) === String(v) ? "selected" : ""}>${esc(t)}</option>`).join("");
+const propOpts = (sel, split) => opts([...S.props.map(p => [p.id, p.name]), ...(split ? [[SPLIT, "All properties (split evenly)"]] : [])], sel);
+const monthOpts = sel => `<option value="">All months</option>` + MONTHS.map((m, i) => `<option value="${i + 1}" ${+sel === i + 1 ? "selected" : ""}>${m}</option>`).join("");
+const sortDesc = (list, k = "date") => list.slice().sort((a, b) => (b[k] || "").localeCompare(a[k] || ""));
+const statusPill = t => `<span class="pill ${/^Ends in|settle/.test(t) ? "tight" : /^Ended/.test(t) ? "plain" : /^Starts/.test(t) ? "plain" : "ok"}">${esc(t)}</span>`;
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+  paintThemeToggle();
+}
+function paintThemeToggle() {
+  const b = document.getElementById("themeTog"); if (!b) return;
+  const dark = document.documentElement.dataset.theme === "dark";
+  b.innerHTML = dark ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  const t = dark ? "Switch to light mode" : "Switch to dark mode";
+  b.setAttribute("aria-label", t); b.title = t;
+}
+document.getElementById("themeTog").addEventListener("click", ev => {
+  ev.stopPropagation();
+  S.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  save(); render();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "home";
+const M = () => document.getElementById("main");
+function go(v) {
+  VIEW = v;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render(); window.scrollTo(0, 0); M().focus({ preventScroll: true });
+}
+function render() { applyTheme(); ({ home, props, rent, expenses, repairs, reports, settings })[VIEW](); }
+const yearsInData = () => [...new Set([S.set.year, today().getFullYear(), ...S.pays.map(x => x.date), ...S.expenses.map(x => x.date), ...S.trips.map(x => x.date)].map(d => typeof d === "number" ? d : +String(d).slice(0, 4)).filter(Boolean))].sort();
+const yearSel = () => `<select class="yearsel" id="yearSel" aria-label="Tax year">${yearsInData().map(y => `<option ${y === S.set.year ? "selected" : ""}>${y}</option>`).join("")}</select>`;
+function wireYear() { const y = document.getElementById("yearSel"); if (y) y.onchange = () => { S.set.year = +y.value; save(); render(); toast("Showing tax year " + S.set.year); }; }
+const asofTxt = R => !S.set.asof && R.asof === iso(today()) ? "today" : fmtD(R.asof);
+
+function welcome() {
+  M().innerHTML = `<h1>Your rentals, in one place 👋</h1><p class="sub">Track rent and late fees, tenants and leases, expenses on their IRS Schedule E lines, miles and repairs. The app works out profit, cash flow, vacancy and cap rate for each property.</p>
+  <div class="card" style="max-width:640px;padding:26px">
+   <div class="lab">Step 1</div><div class="mid" style="margin:4px 0 10px">Add your first property</div>
+   <p class="sub" style="margin-bottom:16px">One entry per rental unit: a duplex is two units, so each has its own tenant, rent and vacancy. Then add the lease and log the rent as it comes in.</p>
+   <div class="actions" style="justify-content:flex-start"><button class="btn" id="firstProp">+ Add a property</button><button class="btn ghost" id="goSetup">Settings</button><button class="btn ghost" id="trySample">Try with sample data</button></div>
+  </div>
+  <p class="meta" style="margin-top:18px;max-width:640px">Record-keeping tool, not tax, legal or investment advice. Check the numbers with your tax preparer.</p>`;
+  document.getElementById("goSetup").onclick = () => go("settings");
+  document.getElementById("firstProp").onclick = () => propDlg();
+  document.getElementById("trySample").onclick = () => { S = sample(); save(); go("home"); toast("Sample loaded: Rivera Rentals, 4 units, 2026"); };
+}
+
+function chartSVG(R) {
+  const W = 640, H = 210, pad = 26, vals = R.months.map(x => Math.max(x.TI, x.TE)), max = Math.max(1, ...vals), bw = (W - pad) / 12;
+  const y = v => H - 22 - (H - 40) * Math.max(0, v) / max;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Rental income and expenses by month">
+   <line class="ax" x1="${pad}" x2="${W}" y1="${H - 22}" y2="${H - 22}"/>
+   ${R.months.map((x, i) => { const x0 = pad + i * bw + bw * .14, w = bw * .34;
+     return `<rect class="gi" x="${x0.toFixed(1)}" y="${y(x.TI).toFixed(1)}" width="${w.toFixed(1)}" height="${(H - 22 - y(x.TI)).toFixed(1)}" rx="3"><title>${MONTHS[i]} income ${mc(x.TI, 0)}</title></rect>
+     <rect class="ge" x="${(x0 + w + 2).toFixed(1)}" y="${y(x.TE).toFixed(1)}" width="${w.toFixed(1)}" height="${(H - 22 - y(x.TE)).toFixed(1)}" rx="3"><title>${MONTHS[i]} expenses ${mc(x.TE, 0)}</title></rect>
+     <text x="${(pad + i * bw + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${MONTHS[i]}</text>`; }).join("")}
+   <text x="0" y="16">${mc(max, 0)}</text></svg>`;
+}
+const kpi = (lab, val, meta, id, cls = "") => `<div class="card"><div class="lab">${lab}</div><div class="mid ${cls}" id="${id}">${val}</div><div class="meta">${meta}</div></div>`;
+
+function home() {
+  if (empty()) return welcome();
+  const R = compute(), A = R.all, st = S.set;
+  M().innerHTML = `<div class="tablebar"><div><h1>${esc(st.owner || "My rentals")}</h1><p class="sub" style="margin:0">Tax year ${yearSel()} · ${plural(S.props.length, "unit")} · rent counted through ${asofTxt(R)}</p></div><button class="btn ghost" data-go="reports">Schedule E &amp; reports →</button></div>
+  <div class="grid g5" style="margin-top:14px">
+   ${kpi("Rental income", mc(A.TI, 0), "Schedule E line 3", "dIncome", "t-ok")}
+   ${kpi("Expenses", mc(A.TE, 0), "deductible, with miles", "dExpenses")}
+   ${kpi("Net profit", mc(A.NP, 0), "line 21, before tax", "dProfit", A.NP < 0 ? "t-short" : "")}
+   ${kpi("Cash flow", mc(A.CF, 0), "after mortgage principal", "dCF", A.CF < 0 ? "t-short" : "")}
+   ${kpi("Rent owed", mc(R.owed, 0), R.collected === null ? "no rent due yet" : Math.round(R.collected * 100) + "% of rent due collected", "dOwed", R.owed ? "t-short" : "t-ok")}
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><div class="tablebar"><h2 style="margin:0">Month by month</h2><div class="legend"><span><i style="background:var(--fill)"></i>Income</span><span><i style="background:var(--fill2)"></i>Expenses</span></div></div>${chartSVG(R)}
+    <div class="meta" style="margin-top:6px">NOI so far ${mc(A.NOI, 0)} · ${plural(R.trips, "trip")} · ${fmtMiles(R.miles)} miles</div></div>
+   <div class="card"><h2>Rent this month</h2>${R.props.map(x => { const n = x.nowSt; return `<div class="row"><div class="grow"><div class="name">${esc(x.p.name)}</div><div class="meta">${esc(x.tenant)}${x.rentNow ? " · " + mc(x.rentNow, 0) : ""}</div></div>${n && n.st ? `<span class="pill ${{ paid: "ok", late: "tight", owes: "short", due: "plain", vac: "plain" }[n.k] || "plain"}">${esc(n.st)}</span>` : ""}${n && (n.k === "due" || n.k === "owes") ? `<button class="btn small" data-payprop="${x.p.id}" data-paym="${n.m}">Record</button>` : ""}</div>`; }).join("")}</div>
+  </div>
+  <div class="grid g5" style="margin-top:14px">
+   ${kpi("Vacancy", pct(R.vac), R.avail ? plural(R.avail - R.occ, "empty day") + " so far" : "", "dVac")}
+   ${kpi("Cap rate", pct(R.cap, 2), "NOI × 12 / months ÷ value", "dCap")}
+   ${kpi("Deposits held", mc(R.held, 0), "security deposits", "dHeld")}
+   ${kpi("Open repairs", R.openList.length, R.openList.filter(w => w.pri === "Urgent").length + " urgent", "dOpen", R.openList.length ? "t-warn" : "t-ok")}
+   ${kpi("Leases ending", R.ending.length, "within " + st.remind + " days", "dEnding", R.ending.length ? "t-warn" : "")}
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+   <div class="card"><h2>By property</h2><div class="scroll"><table class="t" id="propTable"><thead><tr><th>Property</th><th>Rent</th><th>Profit</th><th>Cash flow</th><th>Cap rate</th><th>Vacancy</th></tr></thead><tbody>
+    ${R.props.map(x => `<tr><td><b>${esc(x.p.name)}</b><div class="meta">${esc(x.tenant)}</div></td><td>${x.rentNow ? mc(x.rentNow, 0) : "–"}</td><td class="${x.y.NP < 0 ? "t-short" : ""}">${mc(x.y.NP, 0)}</td><td class="${x.y.CF < 0 ? "t-short" : ""}">${mc(x.y.CF, 0)}</td><td>${pct(x.cap, 2)}</td><td>${pct(x.vac)}</td></tr>`).join("")}
+    <tr class="sum"><td>All properties</td><td>${mc(R.props.reduce((a, x) => a + x.rentNow, 0), 0)}</td><td>${mc(A.NP, 0)}</td><td>${mc(A.CF, 0)}</td><td>${pct(R.cap, 2)}</td><td>${pct(R.vac)}</td></tr></tbody></table></div></div>
+   <div class="card"><h2>Needs attention</h2>${attention(R)}</div>
+  </div>
+  <p class="foot">Record-keeping tool, not tax, legal or investment advice. Lines follow IRS Schedule E (Form 1040), Part I; check them with your tax preparer.</p>`;
+  wire(); wireYear();
+}
+function attention(R) {
+  const items = [];
+  R.props.forEach(x => { if (x.owedRent) items.push(["short", "Rent owed", `${esc(x.p.name)}: ${mc(x.owedRent, 0)}`, "rent"]); if (x.owedFees) items.push(["tight", "Late fee", `${esc(x.p.name)}: ${mc(x.owedFees, 0)} not paid yet`, "rent"]); });
+  R.ending.slice(0, 3).forEach(x => items.push(["tight", R.status[x.id], `${esc(propName(x.prop))} · ${esc(x.tenant)} · ${fmtD(x.end)}`, "props"]));
+  S.leases.filter(x => R.status[x.id] === "Ended · settle deposit").forEach(x => items.push(["tight", "Deposit", `${esc(propName(x.prop))}: settle ${mc(cents(x.deposit), 0)} for ${esc(x.tenant)}`, "props"]));
+  R.openList.slice(0, 5).forEach(w => items.push([w.pri === "Urgent" ? "short" : w.pri === "High" ? "tight" : "plain", w.pri, `${esc(w.req)} · ${esc(propName(w.prop))}`, "repairs"]));
+  if (R.receipts) items.push(["tight", "Receipts", plural(R.receipts, "expense") + " without a receipt", "expenses"]);
+  return items.length ? `<div id="attn">${items.map(([k, t, s, v]) => `<div class="row"><span class="pill ${k}" style="min-width:92px;justify-content:center">${esc(t)}</span><div class="grow"><div class="meta" style="color:var(--ink)">${s}</div></div><button class="btn small ghost" data-go="${v}">Open</button></div>`).join("")}</div>` : `<div class="empty" id="attn">All caught up ✓</div>`;
+}
+
+let PSUB = "units";
+function props() {
+  const R = compute();
+  M().innerHTML = `<div class="tablebar"><div><h1>Properties &amp; tenants</h1><p class="sub" style="margin:0">${plural(S.props.length, "unit")} · ${plural(S.leases.length, "lease")}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="addLease">+ Lease</button><button class="btn" id="addProp">+ Property</button></div></div>
+  <div class="grid g2e" style="margin-top:12px" id="propList">${R.props.map(x => { const p = x.p;
+    return `<div class="card prop"><div class="top"><div><div class="nm">${esc(p.name)}</div><div class="meta">${esc(p.address || "")}${p.type ? " · " + esc(p.type) : ""}</div></div><button class="icon" data-editprop="${p.id}" aria-label="Edit ${esc(p.name)}">✎</button></div>
+     <div class="kv"><span>Tenant</span><b>${esc(x.tenant)}</b></div>
+     <div class="kv"><span>Rent</span><b>${x.rentNow ? mc(x.rentNow, 0) + " / month" : "–"}</b></div>
+     <div class="kv"><span>Lease</span><b>${x.lease ? statusPill(R.status[x.lease.id]) : "<span class='pill plain'>No active lease</span>"}</b></div>
+     <div class="kv"><span>Cash flow ${R.year}</span><b class="${x.y.CF < 0 ? "t-short" : ""}">${mc(x.y.CF, 0)}</b></div>
+     <div class="kv"><span>Value · cap rate</span><b>${nz(p.value) ? money(nz(p.value), 0) + " · " + pct(x.cap, 2) : "add a value for the cap rate"}</b></div>
+     <div class="kv"><span>Vacancy · deposits held</span><b>${pct(x.vac)} · ${mc(x.held, 0)}</b></div></div>`; }).join("") || `<div class="card empty">No properties yet.</div>`}</div>
+  <div class="card" style="margin-top:14px"><div class="tablebar"><h2 style="margin:0">Tenants &amp; leases</h2><span class="meta">Blank end date = month-to-month</span></div>
+   <div id="leaseList">${S.leases.slice().sort((a, b) => propName(a.prop).localeCompare(propName(b.prop)) || (b.start || "").localeCompare(a.start || "")).map(x => `<div class="row wk"><div class="grow"><div class="name">${esc(x.tenant || "(no name)")} · ${esc(propName(x.prop))}</div><div class="meta">${x.start ? fmtD(x.start) : "?"} → ${x.end ? fmtD(x.end) : "month-to-month"} · ${mc(cents(x.rent), 0)}/mo, due day ${nz(x.due) || 1}${nz(x.fee) ? " · late fee " + mc(cents(x.fee), 0) : ""}${x.deposit !== null && x.deposit !== "" && x.deposit !== undefined ? " · deposit " + mc(cents(x.deposit), 0) + (x.settled ? (kept(x) ? ", kept " + mc(kept(x), 0) : ", returned") : "") : ""}${x.phone ? " · " + esc(x.phone) : ""}</div></div>${statusPill(R.status[x.id])}<button class="icon" data-editlease="${x.id}" aria-label="Edit lease">✎</button></div>`).join("") || `<div class="empty">No leases yet. Add one with “+ Lease”.</div>`}</div></div>
+  <p class="hint" style="margin-top:14px">💡 Renewing? End the old lease the day before and add a new one from the renewal date. Move the deposit to the new lease (blank deposit on the old one), like the sample does.</p>`;
+  document.getElementById("addProp").onclick = () => propDlg();
+  document.getElementById("addLease").onclick = () => S.props.length ? leaseDlg() : toast("Add a property first");
+  wire();
+}
+
+let RF = { prop: "", m: "", type: "" };
+function rent() {
+  if (empty()) return welcome();
+  const R = compute(), Y = R.year;
+  const list = sortDesc(S.pays.filter(x => (!RF.prop || x.prop === RF.prop) && (!RF.m || (inYear(x.date) && monthOf(x.date) === +RF.m)) && (!RF.type || x.type === RF.type)));
+  const shown = list.filter(x => inYear(x.date)).reduce((a, x) => a + cents(x.amount), 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Rent</h1><p class="sub" style="margin:0">Rent due, received and late · counted through ${asofTxt(R)} · grace ${S.set.grace} days</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvR">⬇ Rent log CSV</button><button class="btn" id="addPay">+ Record payment</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   ${kpi("Rent due so far", mc(R.due, 0), "from your leases", "rDue")}
+   ${kpi("Rent received", mc(R.rec, 0), R.collected === null ? "" : Math.round(R.collected * 100) + "% collected", "rRec", "t-ok")}
+   ${kpi("Late fees", mc(R.props.reduce((a, x) => a + x.fee, 0), 0), mc(R.props.reduce((a, x) => a + x.feesPaid, 0), 0) + " paid", "rFees")}
+   ${kpi("Still owed", mc(R.owed, 0), "rent + late fees", "rOwed", R.owed ? "t-short" : "t-ok")}
+  </div>
+  <div class="card" style="margin-top:14px"><div class="tablebar"><h2 style="margin:0">Rent tracker ${Y}</h2><span class="meta">Click a month to record or see the payment</span></div>
+   <div class="scroll"><table class="t rg" id="rentGrid"><thead><tr><th>Property</th>${MONTHS.map(m => `<th>${m}</th>`).join("")}<th>Owed</th></tr></thead><tbody>
+   ${R.props.map(x => `<tr><td><b>${esc(x.p.name)}</b><div class="meta">${esc(x.tenant)}</div></td>${x.rows.map(r => `<td>${r.st ? `<button class="k-${r.k}" data-cell="${x.p.id}" data-m="${r.m}" title="${MONTHS[r.m - 1]}: due ${mc(r.due, 0)}, received ${mc(r.rec, 0)}${r.dl ? ", late after " + fmtS(r.dl) : ""}">${esc(r.st)}</button>${r.fee ? `<span class="fee">+${mc(r.fee, 0)} fee</span>` : ""}` : ""}</td>`).join("")}<td class="${x.owed ? "t-short" : ""}"><b>${mc(x.owed, 0)}</b></td></tr>`).join("")}
+   </tbody></table></div>
+   <p class="meta" style="margin:10px 0 0">Late = paid after the due day + grace days. The lease's late fee is added when rent for that month wasn't paid in full by then. Rent paid ahead? Set “Rent for” to the month it covers.</p></div>
+  <div class="filters"><select id="fp" aria-label="Property"><option value="">All properties</option>${propOpts(RF.prop)}</select><select id="fm" aria-label="Month">${monthOpts(RF.m)}</select><select id="ft" aria-label="Type"><option value="">All types</option>${opts(PAY_TYPES.map(t => [t, t]), RF.type)}</select><span class="meta">${plural(list.length, "payment")} · ${mc(shown)}</span></div>
+  <div class="card" style="margin-top:10px" id="payList">${list.length ? list.map(x => `<div class="row">${dateCell(x.date)}<div class="grow"><div class="name">${esc(x.tenant || propName(x.prop))}</div><div class="meta">${esc(propName(x.prop))} · ${esc(x.type)}${x.for && x.for !== x.date.slice(0, 7) ? " for " + MONTHS[+x.for.slice(5, 7) - 1] + " " + x.for.slice(0, 4) : ""}${x.method ? " · " + esc(x.method) : ""}${x.note ? " · " + esc(x.note) : ""}${otherYear(x.date)}</div></div><div class="amt pos">${mc(cents(x.amount))}</div><button class="icon" data-editpay="${x.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">No payments here yet. Record one with + or click a month above.</div>`}</div>`;
+  filt("fp", v => RF.prop = v); filt("fm", v => RF.m = v); filt("ft", v => RF.type = v);
+  document.getElementById("addPay").onclick = () => payDlg();
+  document.getElementById("csvR").onclick = () => exportCSV("rent-log");
+  M().querySelectorAll("[data-cell]").forEach(b => b.onclick = () => {
+    const x = R.props.find(p => p.p.id === b.dataset.cell), r = x.rows[+b.dataset.m - 1];
+    if (r.k === "due" || r.k === "owes") payForMonth(x.p.id, r.m, r);
+    else { RF = { prop: x.p.id, m: "", type: "" }; render(); const el = document.getElementById("payList"); el && el.scrollIntoView({ block: "start" }); }
+  });
+  wire();
+}
+function payForMonth(pid, m, r) {
+  payDlg(null, { prop: pid, tenant: r.tenant, type: "Rent", amount: Math.max(0, r.due - r.rec) / 100, for: ymd(S.set.year, m, 1).slice(0, 7), date: iso(today()) });
+}
+function filt(id, set) { document.getElementById(id).onchange = e => { set(e.target.value); render(); }; }
+function search(id, set) { const el = document.getElementById(id); el.oninput = () => { set(el.value); clearTimeout(search.h); search.h = setTimeout(() => { render(); const n = document.getElementById(id); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 250); }; }
+
+let ESUB = "expenses", EF = { prop: "", cat: "", m: "", missing: false, q: "" }, MF = { prop: "", m: "" };
+function expenses() {
+  if (empty()) return welcome();
+  const R = compute(), sub = `<div class="subtabs chips"><button class="chip" data-sub="expenses" aria-pressed="${ESUB === "expenses"}">Expenses</button><button class="chip" data-sub="mileage" aria-pressed="${ESUB === "mileage"}">Mileage log</button></div>`;
+  if (ESUB === "mileage") return mileage(R, sub);
+  const list = sortDesc(S.expenses.filter(x => (!EF.prop || x.prop === EF.prop) && (!EF.cat || x.cat === EF.cat) && (!EF.m || (inYear(x.date) && monthOf(x.date) === +EF.m)) && (!EF.missing || !x.receipt) && (!EF.q || (x.vendor + " " + x.desc).toLowerCase().includes(EF.q.toLowerCase()))));
+  const shown = list.filter(x => inYear(x.date)).reduce((a, x) => a + cents(x.amount), 0), A = R.all, cash = A.cat.principal + A.cat.improve;
+  M().innerHTML = `<div class="tablebar"><div><h1>Expenses</h1><p class="sub" style="margin:0">Each expense goes on its IRS Schedule E line · tax year ${S.set.year}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvE">⬇ Expenses CSV</button><button class="btn" id="addExp">+ Add expense</button></div></div>
+  ${sub}
+  <div class="grid g3">
+   ${kpi("Deductible", mc(A.TE - A.mile, 0), "Schedule E lines 5–19 (miles: " + mc(A.mile, 0) + ")", "eDed", "t-ok")}
+   ${kpi("Not deductible", mc(cash, 0), "mortgage principal + capital improvements (cash out)", "eCash")}
+   <button class="card" id="missBtn" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><div class="lab">Receipts to find</div><div class="mid ${R.receipts ? "t-warn" : "t-ok"}">${R.receipts}</div><div class="meta">${EF.missing ? "showing only these · click to show all" : "click to show only these"}</div></button>
+  </div>
+  <div class="filters"><select id="fp" aria-label="Property"><option value="">All properties</option>${propOpts(EF.prop, true)}</select><select id="fc" aria-label="Category"><option value="">All categories</option>${opts(CATS.map(c => [c.key, catName(c.key) + (c.line === "—" ? " · not deductible" : " · line " + c.line)]), EF.cat)}</select><select id="fm" aria-label="Month">${monthOpts(EF.m)}</select><input id="fq" type="search" placeholder="Search vendor…" value="${esc(EF.q)}" aria-label="Search"><span class="meta">${plural(list.length, "expense")} · ${mc(shown)}</span></div>
+  <div class="card" style="margin-top:10px" id="expList">${list.length ? list.slice(0, 400).map(x => { const c = catOf(x.cat);
+    return `<div class="row">${dateCell(x.date)}<div class="grow"><div class="name">${esc(x.vendor || x.desc)}${x.receipt ? "" : ` <span class="pill tight">no receipt</span>`}</div><div class="meta">${esc(propName(x.prop))} · ${esc(catName(c.key))} · ${c.line === "—" ? "not deductible" : "line " + c.line}${x.desc ? " · " + esc(x.desc) : ""}${otherYear(x.date)}</div></div><div class="amt">${mc(cents(x.amount))}</div><button class="icon" data-editexp="${x.id}" aria-label="Edit">✎</button></div>`; }).join("") + (list.length > 400 ? `<div class="empty">Showing the latest 400. Filter to see the rest.</div>` : "") : `<div class="empty">No expenses here. Add one with +.</div>`}</div>
+  <p class="hint" style="margin-top:14px">💡 A cost for all your rentals (tax preparer, bank fees, software)? Choose “All properties (split evenly)” and each unit gets its share.</p>`;
+  filt("fp", v => EF.prop = v); filt("fc", v => EF.cat = v); filt("fm", v => EF.m = v); search("fq", v => EF.q = v);
+  document.getElementById("missBtn").onclick = () => { EF.missing = !EF.missing; render(); };
+  document.getElementById("addExp").onclick = () => expenseDlg();
+  document.getElementById("csvE").onclick = () => exportCSV("expenses");
+  wireSub(); wire();
+}
+function wireSub() { M().querySelectorAll("[data-sub]").forEach(b => b.onclick = () => { ESUB = b.dataset.sub; render(); }); }
+function mileage(R, sub) {
+  const st = S.set, list = sortDesc(S.trips.filter(t => (!MF.prop || t.prop === MF.prop) && (!MF.m || (inYear(t.date) && monthOf(t.date) === +MF.m))));
+  const r1 = (st.rate1 * 100).toFixed(1).replace(/\.0$/, ""), rates = st.rdate && Number(st.rate2) > 0 ? `${r1}¢ a mile until ${fmtD(fromDn(dn(st.rdate) - 1))}, then ${(st.rate2 * 100).toFixed(1).replace(/\.0$/, "")}¢` : `${r1}¢ a mile`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Mileage log</h1><p class="sub" style="margin:0">Trips to your rentals by car · ${rates} (Settings)</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvM">⬇ Mileage CSV</button><button class="btn" id="addTrip">+ Add trip</button></div></div>
+  ${sub}
+  <div class="grid g3">
+   ${kpi("Miles " + R.year, fmtMiles(R.miles), plural(R.trips, "trip"), "mMiles")}
+   ${kpi("Mileage deduction", mc(R.all.mile), "miles × IRS standard rate, line 6", "mDed", "t-ok")}
+   ${kpi("Parking, tolls & travel", mc(R.all.cat.auto), "logged as Auto &amp; travel expenses", "mAuto")}
+  </div>
+  <div class="filters"><select id="fp" aria-label="Property"><option value="">All properties</option>${propOpts(MF.prop, true)}</select><select id="fm" aria-label="Month">${monthOpts(MF.m)}</select><span class="meta">${plural(list.length, "trip")}</span></div>
+  <div class="card" style="margin-top:10px" id="tripList">${list.length ? list.map(t => `<div class="row">${dateCell(t.date)}<div class="grow"><div class="name">${esc(t.purpose)}</div><div class="meta">${esc(propName(t.prop))} · ${esc(t.from)}${t.to ? " → " + esc(t.to) : ""}${t.rt ? " · round trip" : ""} · ${(rateFor(t.date) * 100).toFixed(1).replace(/\.0$/, "")}¢${otherYear(t.date)}</div></div><div class="amt">${fmtMiles(tripMiles(t))} mi<div class="meta">${mc(tripDed(t))}</div></div><button class="icon" data-edittrip="${t.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">No trips yet. Log each drive to a rental: showings, repairs, inspections, collecting rent.</div>`}</div>
+  <p class="hint" style="margin-top:14px">💡 Keep the log as you go: date, purpose, where and the miles. A loop to several rentals? Pick “All properties (split evenly)”.</p>`;
+  filt("fp", v => MF.prop = v); filt("fm", v => MF.m = v);
+  document.getElementById("addTrip").onclick = () => tripDlg();
+  document.getElementById("csvM").onclick = () => exportCSV("mileage");
+  wireSub(); wire();
+}
+
+let WF = "open";
+function repairs() {
+  if (empty()) return welcome();
+  const R = compute(), all = S.work.slice().sort((a, b) => b.rep.localeCompare(a.rep)), list = all.filter(w => WF === "all" || (WF === "open" ? isOpen(w) : !isOpen(w)));
+  const spent = S.work.filter(w => w.done && inYear(w.done)).reduce((a, w) => a + cents(w.cost), 0), done = S.work.filter(w => w.done && inYear(w.done));
+  const avgDays = done.length ? Math.round(done.reduce((a, w) => a + dn(w.done) - dn(w.rep), 0) / done.length * 10) / 10 : null;
+  M().innerHTML = `<div class="tablebar"><div><h1>Maintenance &amp; repairs</h1><p class="sub" style="margin:0">Requests from tenants and your own to-do list</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvW">⬇ Repairs CSV</button><button class="btn" id="addWork">+ New request</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   ${kpi("Open", R.openList.length, R.openList.filter(w => w.pri === "Urgent").length + " urgent", "wOpen", R.openList.length ? "t-warn" : "t-ok")}
+   ${kpi("Done in " + R.year, done.length, avgDays === null ? "" : avgDays + " days to fix, on average", "wDone")}
+   ${kpi("Repair costs", mc(spent, 0), "of finished requests", "wSpent")}
+   ${kpi("Waiting on parts", S.work.filter(w => isOpen(w) && w.status === "Waiting on parts").length, "or scheduled: " + S.work.filter(w => isOpen(w) && w.status === "Scheduled").length, "wWait")}
+  </div>
+  <div class="filters"><div class="chips">${[["open", "Open " + R.openList.length], ["done", "Done " + (S.work.length - R.openList.length)], ["all", "All " + S.work.length]].map(([k, t]) => `<button class="chip" data-wf="${k}" aria-pressed="${WF === k}">${t}</button>`).join("")}</div></div>
+  <div class="card" style="margin-top:10px" id="workList">${list.length ? list.map(w => `<div class="row wk">${dateCell(w.rep)}<div class="grow"><div class="name">${esc(w.req)}</div><div class="meta">${esc(propName(w.prop))}${w.by ? " · " + esc(w.by) : ""}${w.vendor ? " · " + esc(w.vendor) : ""}${w.sched && isOpen(w) ? " · scheduled " + fmtS(w.sched) : ""}${w.done ? " · done " + fmtD(w.done) : " · open " + plural(Math.max(0, dn(iso(today())) - dn(w.rep)), "day")}${w.cost !== null && w.cost !== "" && w.cost !== undefined ? " · " + mc(cents(w.cost)) : ""}</div></div><span class="pill ${w.pri === "Urgent" ? "short" : w.pri === "High" ? "tight" : "plain"}">${esc(w.pri)}</span><span class="pill ${isOpen(w) ? "plain" : "ok"}">${esc(isOpen(w) ? w.status : "Done")}</span><button class="icon" data-editwork="${w.id}" aria-label="Edit">✎</button></div>`).join("") : `<div class="empty">${WF === "open" ? "No open requests ✓" : "Nothing here yet."}</div>`}</div>
+  <p class="hint" style="margin-top:14px">💡 The repair cost goes on Schedule E when you log it as an expense (Repairs). Tick “Also add the cost to Expenses” when you close a request.</p>`;
+  M().querySelectorAll("[data-wf]").forEach(b => b.onclick = () => { WF = b.dataset.wf; render(); });
+  document.getElementById("addWork").onclick = () => workDlg();
+  document.getElementById("csvW").onclick = () => exportCSV("repairs");
+  wire();
+}
+
+let REP = "";
+function seRows(R) {
+  const rows = [["hd", "Income"], ["Rent", "", x => x.rent], ["Late fees", "", x => x.fees], ["Other income", "", x => x.other], ["Deposits kept", "", x => x.kept], ["sum", "Total rental income", "3", x => x.TI],
+    ["hd", "Expenses (Schedule E)"]];
+  DED.forEach(c => { rows.push([catName(c.key), c.line, x => x.cat[c.key]]); if (c.key === "auto") rows.push(["Mileage (standard rate)", "6", x => x.mile]); });
+  rows.push(["sum", "Total expenses", "20", x => x.TE], ["sum", "Net profit (or loss)", "21", x => x.NP], ["hd", "Cash flow"], ["+ Depreciation and mileage (not cash)", "", x => x.addback],
+    ["− " + catName("principal"), "", x => x.cat.principal], ["− " + catName("improve"), "", x => x.cat.improve], ["sum", "Cash flow", "", x => x.CF], ["sum", "NOI (income − operating expenses)", "", x => x.NOI]);
+  return rows;
+}
+function reports() {
+  if (empty()) return welcome();
+  const R = compute(), rows = seRows(R), sel = R.props.find(x => x.p.id === REP), cell = c => Math.abs(c) >= 0.5 ? `<td class="${c < 0 ? "t-short" : ""}">${mc(c, 0)}</td>` : `<td class="z">–</td>`;
+  const cols = [...R.props.map(x => x.y), R.all], mrows = sel ? sel.months : R.months, myear = sel ? sel.y : R.all;
+  const tr = (r, vals) => r[0] === "hd" ? `<tr class="hd"><td colspan="${vals.length + 2}">${r[1]}</td></tr>` : r[0] === "sum" ? `<tr class="sum"><td>${esc(r[1])}</td><td>${r[2]}</td>${vals.map(v => cell(r[3](v))).join("")}</tr>` : `<tr><td>${esc(r[0])}</td><td>${r[1]}</td>${vals.map(v => cell(r[2](v))).join("")}</tr>`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Reports</h1><p class="sub" style="margin:0">${esc(S.set.owner || "My rentals")} · tax year ${yearSel()} · counted through ${asofTxt(R)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvS">⬇ Schedule E CSV</button><button class="btn ghost" id="csvMo">⬇ Monthly CSV</button></div></div>
+  <div class="card" style="margin-top:12px"><h2>Schedule E summary, by property</h2>
+   <div class="scroll"><table class="t" id="seTable"><thead><tr><th>${R.year}</th><th>Line</th>${R.props.map(x => `<th>${esc(x.p.name)}</th>`).join("")}<th>All</th></tr></thead><tbody>
+   ${rows.map(r => tr(r, cols)).join("")}
+   <tr class="hd"><td colspan="${cols.length + 2}">Property numbers</td></tr>
+   <tr><td>Current value</td><td></td>${R.props.map(x => `<td>${nz(x.p.value) ? money(nz(x.p.value), 0) : "–"}</td>`).join("")}<td>${money(R.props.reduce((a, x) => a + nz(x.p.value), 0), 0)}</td></tr>
+   <tr><td>Cap rate (NOI × 12 / months ÷ value)</td><td></td>${R.props.map(x => `<td>${pct(x.cap, 2)}</td>`).join("")}<td id="capAll">${pct(R.cap, 2)}</td></tr>
+   <tr><td>Days rented · owned</td><td></td>${R.props.map(x => `<td>${x.occ} · ${x.avail}</td>`).join("")}<td>${R.occ} · ${R.avail}</td></tr>
+   <tr><td>Vacancy rate</td><td></td>${R.props.map(x => `<td>${pct(x.vac)}</td>`).join("")}<td id="vacAll">${pct(R.vac)}</td></tr>
+   <tr><td>Rent and late fees owed</td><td></td>${R.props.map(x => cell(x.owed)).join("")}${cell(R.owed)}</tr>
+   <tr><td>Security deposits held</td><td></td>${R.props.map(x => cell(x.held)).join("")}${cell(R.held)}</tr>
+   <tr><td>Open repair requests</td><td></td>${R.props.map(x => `<td>${x.open}</td>`).join("")}<td>${R.openList.filter(w => R.props.some(x => x.p.id === w.prop)).length}</td></tr>
+   </tbody></table></div>
+   <p class="meta" style="margin:10px 0 0">Line 3 = rent, late fees, other income and deposits you kept. Schedule E has room for three properties per form (A, B, C): copy each column. Mortgage principal and capital improvements are cash out but not deductions; ask your tax preparer for the depreciation amount (line 18).</p></div>
+  <div class="card" style="margin-top:14px"><div class="tablebar"><h2 style="margin:0">Month by month</h2><select id="repProp" class="yearsel" aria-label="Property"><option value="">All properties</option>${propOpts(REP)}</select></div>
+   <div class="scroll"><table class="t" id="moTable"><thead><tr><th>${sel ? esc(sel.p.name) : "All properties"}</th><th>Line</th>${MONTHS.map(m => `<th>${m}</th>`).join("")}<th>Year</th></tr></thead><tbody>
+   ${rows.map(r => tr(r, [...mrows, myear])).join("")}
+   <tr class="hd"><td colspan="15">Rent</td></tr>
+   <tr><td>Rent due</td><td></td>${Array.from({ length: 12 }, (_, i) => cell((sel ? [sel] : R.props).reduce((a, x) => a + x.rows[i].due, 0))).join("")}${cell(sel ? sel.due : R.due)}</tr>
+   <tr><td>Rent received (for the month)</td><td></td>${Array.from({ length: 12 }, (_, i) => cell((sel ? [sel] : R.props).reduce((a, x) => a + x.rows[i].rec, 0))).join("")}${cell(sel ? sel.rec : R.rec)}</tr>
+   </tbody></table></div></div>
+  <p class="foot">Record-keeping tool, not tax, legal or investment advice. Lines follow IRS Schedule E (Form 1040), Part I. Check everything with your tax preparer before you file.</p>`;
+  document.getElementById("repProp").onchange = e => { REP = e.target.value; render(); };
+  document.getElementById("csvS").onclick = () => exportCSV("schedule-e");
+  document.getElementById("csvMo").onclick = () => exportCSV("monthly");
+  wire(); wireYear();
+}
+
+function settings() {
+  const st = S.set;
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then.</p>
+  <div class="grid g2e">
+   <div class="card"><h2>Your rentals</h2><form id="setF">
+    <div class="two"><div class="field"><label for="sOwner">Owner or business name</label><input id="sOwner" name="owner" value="${esc(st.owner)}" placeholder="Rivera Rentals"></div><div class="field"><label for="sYear">Tax year</label><input id="sYear" name="year" type="number" min="2000" max="2100" value="${st.year}"></div></div>
+    <div class="two"><div class="field"><label for="sAsof">Rent counted through</label><input id="sAsof" name="asof" type="date" value="${esc(st.asof || "")}"><small>Blank = today. Rent due after this date isn't counted yet</small></div><div class="field"><label for="sGrace">Grace period (days)</label><input id="sGrace" name="grace" type="number" min="0" step="1" value="${st.grace}"><small>Rent paid after due day + grace is late. A lease can have its own</small></div></div>
+    <div class="three"><div class="field"><label for="sR1">Mileage rate ($/mile)</label><input id="sR1" name="rate1" type="number" step="0.001" min="0" value="${st.rate1}"></div><div class="field"><label for="sRd">New rate from</label><input id="sRd" name="rdate" type="date" value="${esc(st.rdate || "")}"></div><div class="field"><label for="sR2">New rate</label><input id="sR2" name="rate2" type="number" step="0.001" min="0" value="${st.rate2 ?? ""}"></div></div>
+    <small class="meta" style="display:block;margin:-6px 0 12px">2026: 72.5¢ through June 30 and 76¢ from July 1. Leave the new rate blank if it didn't change. Check irs.gov for your year.</small>
+    <div class="two"><div class="field"><label for="sRem">Lease reminder (days)</label><input id="sRem" name="remind" type="number" min="0" step="1" value="${st.remind}"><small>Leases ending within this many days are flagged</small></div><div class="field"><label for="sCur">Currency symbol</label><input id="sCur" name="currency" maxlength="3" value="${esc(S.currency)}" style="max-width:120px"></div></div>
+    <button class="btn" id="saveSet">Save</button></form></div>
+   <div>
+    <div class="card"><h2>Look</h2>
+     <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+     <div class="field"><span class="fl">Color</span><div class="chips">${[["forest", "Forest"], ["ocean", "Ocean"], ["clay", "Clay"], ["plum", "Plum"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
+    <div class="card" style="margin-top:14px"><h2>For your tax preparer</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel, Google Sheets and most tax software.</p>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" id="cS">⬇ Schedule E CSV</button><button class="btn ghost small" id="cMo">⬇ Monthly CSV</button><button class="btn ghost small" id="cR">⬇ Rent log CSV</button><button class="btn ghost small" id="cE">⬇ Expenses CSV</button><button class="btn ghost small" id="cM">⬇ Mileage CSV</button><button class="btn ghost small" id="cL">⬇ Leases CSV</button><button class="btn ghost small" id="cW">⬇ Repairs CSV</button></div></div>
+    <div class="card" style="margin-top:14px"><h2>Backup</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+     <h2 style="margin-top:20px">Start over</h2>
+     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>Category names</h2><p class="meta" style="margin:-6px 0 12px">Rename a category to suit you. The Schedule E line stays the same.</p><form id="catF">
+   <div class="grid g2e" style="gap:0 18px">${CATS.map(c => `<div class="catrow"><span>${c.line}</span><input name="${c.key}" value="${esc(catName(c.key))}" aria-label="Name for ${esc(c.name)}" title="${esc(c.note)}"></div>`).join("")}</div>
+   <div class="actions"><button type="button" class="btn ghost" id="resetCats">Reset names</button><button class="btn" id="saveCats">Save names</button></div></form></div>
+  <p class="foot">Rental Property App v1.0 · © The Lemon Plans · Record-keeping tool for your own rentals, not tax, legal or investment advice. Line numbers follow IRS Schedule E (Form 1040), Part I; check with your tax preparer.</p>`;
+  M().querySelectorAll("button[data-theme]").forEach(x => x.onclick = () => { S.theme = x.dataset.theme; save(); render(); });
+  M().querySelectorAll("button[data-accent]").forEach(x => x.onclick = () => { S.accent = x.dataset.accent; save(); render(); });
+  const f = document.getElementById("setF");
+  f.onsubmit = e => { e.preventDefault(); const n = k => f[k].value === "" ? "" : Number(f[k].value);
+    Object.assign(S.set, { owner: f.owner.value.trim(), year: Math.round(n("year")) || today().getFullYear(), asof: f.asof.value, grace: Math.max(0, Math.round(n("grace") || 0)), rate1: Math.max(0, n("rate1") || 0), rdate: f.rdate.value, rate2: f.rate2.value === "" ? "" : Math.max(0, n("rate2")), remind: Math.max(0, Math.round(n("remind") || 0)) });
+    S.currency = f.currency.value.trim() || "$"; save(); render(); toast("Saved"); };
+  const cf = document.getElementById("catF");
+  cf.onsubmit = e => { e.preventDefault(); S.names = {}; CATS.forEach(c => { const v = cf[c.key].value.trim(); if (v && v !== c.name) S.names[c.key] = v; }); save(); render(); toast("Names saved"); };
+  document.getElementById("resetCats").onclick = () => { S.names = {}; save(); render(); toast("Names reset"); };
+  Object.entries({ cS: "schedule-e", cMo: "monthly", cR: "rent-log", cE: "expenses", cM: "mileage", cL: "leases", cW: "repairs" }).forEach(([id, k]) => document.getElementById(id).onclick = () => exportCSV(k));
+  document.getElementById("exp").onclick = () => { download("rental-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Rental Property backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with a sample year (Rivera Rentals, 4 units, 2026). Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes all your properties, leases, payments, expenses, trips and repairs from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n\r]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v), f2 = c => (rh(c) / 100).toFixed(2);
+const asc = (list, k = "date") => list.slice().sort((a, b) => (a[k] || "").localeCompare(b[k] || ""));
+function csvText(kind) {
+  const R = compute(), out = (head, rows) => [head, ...rows].map(r => r.map(v => q(v ?? "")).join(",")).join("\r\n") + "\r\n", yes = (d) => inYear(d) ? "Yes" : "No";
+  if (kind === "rent-log") return out(["Date received", "Property / unit", "Tenant", "Type", "Amount", "Rent for", "Paid by", "Notes", "In tax year"], asc(S.pays).map(x => [x.date, propName(x.prop), x.tenant, x.type, f2(cents(x.amount)), x.for || x.date.slice(0, 7), x.method, x.note, yes(x.date)]));
+  if (kind === "expenses") return out(["Date", "Property / unit", "Vendor / payee", "Description", "Category", "Schedule E line", "Amount", "Paid with", "Receipt", "Notes", "In tax year"], asc(S.expenses).map(x => [x.date, propName(x.prop), x.vendor, x.desc, catName(x.cat), catOf(x.cat).line === "—" ? "not deductible" : catOf(x.cat).line, f2(cents(x.amount)), x.method, x.receipt ? "Yes" : "No", x.note, yes(x.date)]));
+  if (kind === "mileage") return out(["Date", "Property / unit", "Purpose", "From", "To", "Miles (one way)", "Round trip", "Total miles", "Rate", "Deduction", "Notes", "In tax year"], asc(S.trips).map(t => [t.date, propName(t.prop), t.purpose, t.from, t.to, t.miles, t.rt ? "Yes" : "No", tripMiles(t), rateFor(t.date).toFixed(3), f2(tripDed(t)), t.note, yes(t.date)]));
+  if (kind === "leases") return out(["Property / unit", "Tenant(s)", "Phone", "Email", "Lease start", "Lease end", "Monthly rent", "Due day", "Late fee", "Grace days", "Security deposit", "Deposit settled on", "Returned to tenant", "Kept", "Status", "Notes"], S.leases.map(x => [propName(x.prop), x.tenant, x.phone, x.email, x.start, x.end || "month-to-month", f2(cents(x.rent)), nz(x.due) || 1, f2(cents(x.fee)), x.grace ?? "", x.deposit === null || x.deposit === "" || x.deposit === undefined ? "" : f2(cents(x.deposit)), x.settled, x.returned ?? "", f2(kept(x)), R.status[x.id], x.note]));
+  if (kind === "repairs") return out(["Reported", "Property / unit", "Reported by", "Request", "Priority", "Status", "Vendor", "Scheduled for", "Completed on", "Cost", "Days open", "Notes"], asc(S.work, "rep").map(w => [w.rep, propName(w.prop), w.by, w.req, w.pri, isOpen(w) ? w.status : "Done", w.vendor, w.sched, w.done, w.cost === null || w.cost === "" || w.cost === undefined ? "" : f2(cents(w.cost)), dn(w.done || iso(today())) - dn(w.rep), w.note]));
+  const rows = seRows(R), line = (r, vals) => r[0] === "hd" ? [r[1]] : r[0] === "sum" ? [r[1], r[2], ...vals.map(v => f2(r[3](v)))] : [r[0], r[1], ...vals.map(v => f2(r[2](v)))];
+  if (kind === "monthly") {
+    const sel = R.props.find(x => x.p.id === REP), vals = sel ? [...sel.months, sel.y] : [...R.months, R.all], who = sel || null;
+    const body = rows.map(r => line(r, vals));
+    body.push(["Rent"], ["Rent due", "", ...Array.from({ length: 12 }, (_, i) => f2((who ? [who] : R.props).reduce((a, x) => a + x.rows[i].due, 0))), f2(who ? who.due : R.due)],
+      ["Rent received (for the month)", "", ...Array.from({ length: 12 }, (_, i) => f2((who ? [who] : R.props).reduce((a, x) => a + x.rows[i].rec, 0))), f2(who ? who.rec : R.rec)]);
+    return out([(sel ? sel.p.name : "All properties") + " · " + R.year, "Line", ...MONTHS, "Year"], body);
+  }
+  const vals = [...R.props.map(x => x.y), R.all], body = [["Address", "", ...R.props.map(x => x.p.address || ""), ""], ["Type", "", ...R.props.map(x => x.p.type || ""), ""], ...rows.map(r => line(r, vals))];
+  body.push(["Property numbers"], ["Current value", "", ...R.props.map(x => nz(x.p.value).toFixed(2)), R.props.reduce((a, x) => a + nz(x.p.value), 0).toFixed(2)],
+    ["Cap rate", "", ...R.props.map(x => x.cap === null ? "" : (x.cap * 100).toFixed(2) + "%"), R.cap === null ? "" : (R.cap * 100).toFixed(2) + "%"],
+    ["Days rented", "", ...R.props.map(x => x.occ), R.occ], ["Days owned", "", ...R.props.map(x => x.avail), R.avail],
+    ["Vacancy rate", "", ...R.props.map(x => x.vac === null ? "" : (x.vac * 100).toFixed(1) + "%"), R.vac === null ? "" : (R.vac * 100).toFixed(1) + "%"],
+    ["Rent and late fees owed", "", ...R.props.map(x => f2(x.owed)), f2(R.owed)], ["Security deposits held", "", ...R.props.map(x => f2(x.held)), f2(R.held)],
+    [], ["", (S.set.owner || "My rentals") + " · tax year " + R.year + " · counted through " + R.asof + " · from The Lemon Plans Rental Property App. Not tax advice."]);
+  return out(["Schedule E (Form 1040) · " + R.year, "Line", ...R.props.map(x => x.p.name), "All properties"], body);
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { download("rental-" + kind + "-" + S.set.year + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after) {
+  if (D().open) D().close();
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=checkbox]),select"); first && first.focus();
+}
+const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
+const num = (fd, k) => { const v = fd.get(k); return v === "" || v === null ? null : Number(v); };
+const r2 = v => v === null ? null : Math.round(v * 100) / 100;
+const dlist = (id, vals) => `<datalist id="${id}">${[...new Set(vals.filter(Boolean))].slice(0, 60).map(v => `<option value="${esc(v)}">`).join("")}</datalist>`;
+function delWire(listKey, id, what) { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S[listKey] = S[listKey].filter(x => x.id !== id); save(); D().close(); render(); toast(what + " deleted"); }; }
+const upsert = (k, id, o) => { if (id) S[k][S[k].findIndex(v => v.id === id)] = o; else S[k].push(o); };
+
+function propDlg(id) {
+  const x = S.props.find(v => v.id === id) || { name: "", address: "", type: "Single-family", acq: "", price: null, value: null, note: "" };
+  openDlg(`<h2>${id ? "Edit property" : "Add a property"}</h2>
+   <div class="field"><label>Short name (one per rental unit)</label><input name="name" required value="${esc(x.name)}" placeholder="Maple Ave House, Oak St Unit A…"></div>
+   <div class="field"><label>Address</label><input name="address" value="${esc(x.address)}"></div>
+   <div class="two"><div class="field"><label>Type</label><select name="type">${opts(PTYPES.map(t => [t, t]), x.type)}</select></div><div class="field"><label>Purchase date</label><input name="acq" type="date" value="${esc(x.acq || "")}"><small>Days before it aren't vacant</small></div></div>
+   <div class="two"><div class="field"><label>Purchase price</label><input name="price" type="number" min="0" step="1" value="${x.price ?? ""}"></div><div class="field"><label>Current value</label><input name="value" type="number" min="0" step="1" value="${x.value ?? ""}"><small>For the cap rate: appraisal or best estimate</small></div></div>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const name = fd.get("name").trim();
+    if (S.props.some(p => p.id !== id && p.name.toLowerCase() === name.toLowerCase())) { toast("You already have a property with that name"); return false; }
+    const o = { id: id || uid(), name, address: fd.get("address").trim(), type: fd.get("type"), acq: fd.get("acq"), price: num(fd, "price"), value: num(fd, "value"), note: fd.get("note").trim() };
+    upsert("props", id, o); toast(id ? "Property updated" : "Property added · now add the lease");
+  }, () => {
+    const del = document.getElementById("delBtn"); if (!del) return;
+    del.onclick = () => { const n = ["leases", "pays", "expenses", "trips", "work"].reduce((a, k) => a + S[k].filter(v => v.prop === id).length, 0);
+      confirmDlg("Delete " + esc(x.name) + "?", n ? `This also deletes its ${plural(n, "entry")} (leases, payments, expenses, trips and repairs). Split expenses stay.` : "It has no entries.", "Delete", () => {
+        S.props = S.props.filter(p => p.id !== id); ["leases", "pays", "expenses", "trips", "work"].forEach(k => S[k] = S[k].filter(v => v.prop !== id)); save(); render(); toast("Property deleted"); }); };
+  });
+}
+function leaseDlg(id, pre) {
+  const x = S.leases.find(v => v.id === id) || Object.assign({ prop: S.props[0].id, tenant: "", phone: "", email: "", start: iso(today()), end: "", rent: "", due: 1, fee: "", grace: null, deposit: null, settled: "", returned: null, note: "" }, pre || {});
+  openDlg(`<h2>${id ? "Edit lease" : "Add a lease"}</h2>
+   <div class="two"><div class="field"><label>Property / unit</label><select name="prop">${propOpts(x.prop)}</select></div><div class="field"><label>Tenant(s)</label><input name="tenant" required value="${esc(x.tenant)}"></div></div>
+   <div class="two"><div class="field"><label>Phone</label><input name="phone" type="tel" value="${esc(x.phone)}"></div><div class="field"><label>Email</label><input name="email" type="email" value="${esc(x.email)}"></div></div>
+   <div class="two"><div class="field"><label>Lease start</label><input name="start" type="date" required value="${esc(x.start)}"></div><div class="field"><label>Lease end</label><input name="end" type="date" value="${esc(x.end || "")}"><small>Blank = month-to-month</small></div></div>
+   <div class="three"><div class="field"><label>Monthly rent</label><input name="rent" type="number" min="0" step="0.01" required value="${x.rent}" style="font-weight:800"></div><div class="field"><label>Due day</label><input name="due" type="number" min="1" max="31" step="1" value="${x.due ?? 1}"></div><div class="field"><label>Late fee ($)</label><input name="fee" type="number" min="0" step="0.01" value="${x.fee ?? ""}"></div></div>
+   <div class="two"><div class="field"><label>Grace days</label><input name="grace" type="number" min="0" step="1" value="${x.grace ?? ""}" placeholder="${S.set.grace}"><small>Blank = ${S.set.grace} (Settings)</small></div><div class="field"><label>Security deposit</label><input name="deposit" type="number" min="0" step="0.01" value="${x.deposit ?? ""}"></div></div>
+   <div class="two"><div class="field"><label>Deposit settled on</label><input name="settled" type="date" value="${esc(x.settled || "")}"><small>When the tenant moved out and you settled</small></div><div class="field"><label>Returned to tenant</label><input name="returned" type="number" min="0" step="0.01" value="${x.returned ?? ""}"><small id="keptPrev"></small></div></div>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: id || uid(), prop: fd.get("prop"), tenant: fd.get("tenant").trim(), phone: fd.get("phone").trim(), email: fd.get("email").trim(), start: fd.get("start"), end: fd.get("end"),
+      rent: r2(num(fd, "rent")) || 0, due: Math.min(31, Math.max(1, Math.round(num(fd, "due") || 1))), fee: r2(num(fd, "fee")) || 0, grace: num(fd, "grace"), deposit: r2(num(fd, "deposit")), settled: fd.get("settled"), returned: r2(num(fd, "returned")), note: fd.get("note").trim() };
+    if (o.end && o.end < o.start) { toast("The lease ends before it starts"); return false; }
+    upsert("leases", id, o); toast(id ? "Lease updated" : "Lease added");
+  }, () => {
+    const f = F(), p = document.getElementById("keptPrev"), chk = () => { const k = kept({ settled: f.settled.value, deposit: f.deposit.value, returned: f.returned.value }); p.textContent = f.settled.value && f.deposit.value !== "" ? "You keep " + mc(k) + " (counted as income)" : ""; };
+    ["settled", "deposit", "returned"].forEach(k => f[k].oninput = chk); chk(); delWire("leases", id, "Lease");
+  });
+}
+function payDlg(id, pre) {
+  const x = S.pays.find(v => v.id === id) || Object.assign({ date: iso(today()), prop: (S.props[0] || {}).id, tenant: "", type: "Rent", amount: "", for: "", method: "", note: "" }, pre || {});
+  openDlg(`<h2>${id ? "Edit payment" : "Record a payment"}</h2>
+   <div class="two"><div class="field"><label>Date received</label><input name="date" type="date" required value="${esc(x.date)}"></div><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" inputmode="decimal" required value="${x.amount}" style="font-weight:800"></div></div>
+   <div class="two"><div class="field"><label>Property / unit</label><select name="prop">${propOpts(x.prop)}</select></div><div class="field"><label>Type</label><select name="type">${opts(PAY_TYPES.map(t => [t, t]), x.type)}</select></div></div>
+   <div class="two"><div class="field"><label>Tenant / payer</label><input name="tenant" list="dlTen" value="${esc(x.tenant)}">${dlist("dlTen", [...S.leases.map(v => v.tenant), ...S.pays.map(v => v.tenant)])}</div><div class="field"><label>Rent for (month)</label><input name="for" type="month" value="${esc(x.for || "")}"><small>Blank = the month it was paid</small></div></div>
+   <div class="two"><div class="field"><label>Paid by</label><select name="method"><option value=""></option>${opts(PAY_METHODS.map(v => [v, v]), x.method)}</select></div><div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: id || uid(), date: fd.get("date"), prop: fd.get("prop"), tenant: fd.get("tenant").trim(), type: fd.get("type"), amount: r2(num(fd, "amount")) || 0, for: fd.get("for") === fd.get("date").slice(0, 7) ? "" : fd.get("for"), method: fd.get("method"), note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    upsert("pays", id, o); toast(id ? "Payment updated" : o.type + " recorded" + (inYear(o.date) ? "" : " (not in tax year " + S.set.year + ")"));
+  }, () => {
+    const f = F(); if (id) return delWire("pays", id, "Payment");
+    const fill = () => { const mine = S.leases.filter(v => v.prop === f.prop.value), L = mine.find(v => leaseActiveOn(v, f.date.value || iso(today()))) || mine.sort((a, b) => (b.start || "").localeCompare(a.start || ""))[0]; if (L && !pre) { f.tenant.value = L.tenant; if (f.type.value === "Rent") f.amount.value = L.rent; else if (f.type.value === "Late fee") f.amount.value = L.fee || ""; } };
+    f.prop.onchange = fill; f.type.onchange = fill; if (!pre) fill();
+  });
+}
+function expenseDlg(id) {
+  const x = S.expenses.find(v => v.id === id) || { date: iso(today()), prop: (S.props[0] || {}).id, vendor: "", desc: "", cat: "repairs", amount: "", method: "", receipt: true, note: "" };
+  openDlg(`<h2>${id ? "Edit expense" : "Add expense"}</h2>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" required value="${esc(x.date)}"></div><div class="field"><label>Amount</label><input name="amount" type="number" step="0.01" inputmode="decimal" required value="${x.amount}" style="font-weight:800"></div></div>
+   <div class="field"><label>Property / unit</label><select name="prop">${propOpts(x.prop, true)}</select></div>
+   <div class="field"><label>Category (Schedule E line)</label><select name="cat">${opts(CATS.map(c => [c.key, catName(c.key) + (c.line === "—" ? " · not deductible" : " · line " + c.line)]), x.cat)}</select><small id="catNote"></small></div>
+   <div class="two"><div class="field"><label>Vendor / payee</label><input name="vendor" required list="dlVen" value="${esc(x.vendor)}">${dlist("dlVen", S.expenses.map(v => v.vendor))}</div><div class="field"><label>Paid with</label><select name="method"><option value=""></option>${opts(EXP_METHODS.map(v => [v, v]), x.method)}</select></div></div>
+   <div class="field"><label>Description</label><input name="desc" value="${esc(x.desc)}"></div>
+   <label class="tick"><input type="checkbox" name="receipt" ${x.receipt ? "checked" : ""}> I have the receipt</label>
+   <p class="hint" id="splitPrev" style="margin:0 0 10px" hidden></p>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: id || uid(), date: fd.get("date"), prop: fd.get("prop"), vendor: fd.get("vendor").trim(), desc: fd.get("desc").trim(), cat: fd.get("cat"), amount: r2(num(fd, "amount")) || 0, method: fd.get("method"), receipt: fd.get("receipt") === "on", note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter an amount"); return false; }
+    upsert("expenses", id, o); toast(id ? "Expense updated" : "Expense added" + (inYear(o.date) ? "" : " (not in tax year " + S.set.year + ")"));
+  }, () => {
+    const f = F(), n = document.getElementById("catNote"), p = document.getElementById("splitPrev");
+    const chk = () => { n.textContent = catOf(f.cat.value).note; const sp = f.prop.value === SPLIT && S.props.length; p.hidden = !sp; if (sp) p.innerHTML = `Each of your ${S.props.length} units gets <b>${mc(cents(f.amount.value) / S.props.length)}</b>`; };
+    f.cat.onchange = chk; f.prop.onchange = chk; f.amount.oninput = chk; chk(); delWire("expenses", id, "Expense");
+  });
+}
+function tripDlg(id) {
+  const last = S.trips[S.trips.length - 1] || {}, x = S.trips.find(v => v.id === id) || { date: iso(today()), prop: (S.props[0] || {}).id, purpose: "", from: last.from || "Home", to: "", miles: "", rt: true, note: "" };
+  openDlg(`<h2>${id ? "Edit trip" : "Add a trip"}</h2>
+   <div class="two"><div class="field"><label>Date</label><input name="date" type="date" required value="${esc(x.date)}"></div><div class="field"><label>Miles (one way)</label><input name="miles" type="number" step="0.1" min="0.1" inputmode="decimal" required value="${x.miles}" style="font-weight:800"></div></div>
+   <label class="tick"><input type="checkbox" name="rt" ${x.rt ? "checked" : ""}> Round trip (counts the miles twice)</label>
+   <div class="field"><label>Property / unit</label><select name="prop">${propOpts(x.prop, true)}</select></div>
+   <div class="field"><label>Purpose</label><input name="purpose" required list="dlPur" value="${esc(x.purpose)}" placeholder="Showing, meet plumber, inspection…">${dlist("dlPur", S.trips.map(v => v.purpose))}</div>
+   <div class="two"><div class="field"><label>From</label><input name="from" list="dlPl" value="${esc(x.from)}"></div><div class="field"><label>To</label><input name="to" list="dlPl" value="${esc(x.to)}">${dlist("dlPl", S.trips.flatMap(v => [v.from, v.to]))}</div></div>
+   <p class="hint" id="tPrev" style="margin:0 0 10px"></p>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: id || uid(), date: fd.get("date"), prop: fd.get("prop"), purpose: fd.get("purpose").trim(), from: fd.get("from").trim(), to: fd.get("to").trim(), miles: Math.round((num(fd, "miles") || 0) * 10) / 10, rt: fd.get("rt") === "on", note: fd.get("note").trim() };
+    if (!o.miles) { toast("Enter the miles"); return false; }
+    upsert("trips", id, o); toast(id ? "Trip updated" : "Trip added");
+  }, () => {
+    const f = F(), p = document.getElementById("tPrev"), chk = () => { const t = { miles: +f.miles.value || 0, rt: f.rt.checked, date: f.date.value }; p.innerHTML = `${fmtMiles(tripMiles(t))} miles × ${(rateFor(t.date) * 100).toFixed(1).replace(/\.0$/, "")}¢ = <b>${mc(tripDed(t))}</b>`; };
+    f.miles.oninput = chk; f.rt.onchange = chk; f.date.oninput = chk; chk(); delWire("trips", id, "Trip");
+  });
+}
+function workDlg(id) {
+  const x = S.work.find(v => v.id === id) || { rep: iso(today()), prop: (S.props[0] || {}).id, by: "", req: "", pri: "Normal", status: "Open", vendor: "", sched: "", done: "", cost: null, note: "" };
+  openDlg(`<h2>${id ? "Edit request" : "New repair request"}</h2>
+   <div class="field"><label>Request</label><input name="req" required value="${esc(x.req)}" placeholder="Kitchen faucet leaking"></div>
+   <div class="two"><div class="field"><label>Property / unit</label><select name="prop">${propOpts(x.prop)}</select></div><div class="field"><label>Reported on</label><input name="rep" type="date" required value="${esc(x.rep)}"></div></div>
+   <div class="three"><div class="field"><label>Priority</label><select name="pri">${opts(PRIORITIES.map(v => [v, v]), x.pri)}</select></div><div class="field"><label>Status</label><select name="status">${opts(WSTATUS.map(v => [v, v]), x.status)}</select></div><div class="field"><label>Reported by</label><input name="by" value="${esc(x.by)}"></div></div>
+   <div class="two"><div class="field"><label>Vendor</label><input name="vendor" list="dlWv" value="${esc(x.vendor)}">${dlist("dlWv", [...S.work.map(v => v.vendor), ...S.expenses.map(v => v.vendor)])}</div><div class="field"><label>Scheduled for</label><input name="sched" type="date" value="${esc(x.sched || "")}"></div></div>
+   <div class="two"><div class="field"><label>Completed on</label><input name="done" type="date" value="${esc(x.done || "")}"></div><div class="field"><label>Cost</label><input name="cost" type="number" min="0" step="0.01" value="${x.cost ?? ""}"></div></div>
+   <label class="tick"><input type="checkbox" name="addexp"> Also add the cost to Expenses (Repairs)</label>
+   <div class="field"><label>Notes</label><input name="note" value="${esc(x.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    let done = fd.get("done"), status = fd.get("status");
+    if (status === "Done" && !done) done = iso(today());
+    if (done) status = "Done";
+    const o = { id: id || uid(), rep: fd.get("rep"), prop: fd.get("prop"), by: fd.get("by").trim(), req: fd.get("req").trim(), pri: fd.get("pri"), status, vendor: fd.get("vendor").trim(), sched: fd.get("sched"), done, cost: r2(num(fd, "cost")), note: fd.get("note").trim() };
+    upsert("work", id, o);
+    if (fd.get("addexp") === "on" && o.cost) S.expenses.push({ id: uid(), date: o.done || o.rep, prop: o.prop, vendor: o.vendor, desc: o.req, cat: "repairs", amount: o.cost, method: "", receipt: true, note: "" });
+    toast((id ? "Request updated" : "Request added") + (fd.get("addexp") === "on" && o.cost ? " · cost added to Expenses" : ""));
+  }, () => delWire("work", id, "Request"));
+}
+function addChooser() {
+  openDlg(`<h2>Add</h2><div class="grid g2e" style="margin-bottom:6px">${[["pay", "↓ Payment", "rent, late fee, other income"], ["exp", "↑ Expense", "something you paid for"], ["trip", "⛟ Trip", "miles to a rental"], ["work", "⚒ Repair", "a maintenance request"], ["lease", "▤ Lease", "a tenant and their lease"], ["prop", "⌂ Property", "a rental unit"]].map(([k, t, s]) => `<button type="button" class="card" data-add="${k}" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><div style="font-weight:800;font-size:17px">${t}</div><div class="meta">${s}</div></button>`).join("")}</div><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button></div>`, () => false,
+    () => F().querySelectorAll("[data-add]").forEach(b => b.onclick = () => { D().close(); if (!S.props.length && b.dataset.add !== "prop") return propDlg(); ({ pay: payDlg, exp: expenseDlg, trip: tripDlg, work: workDlg, lease: leaseDlg, prop: propDlg })[b.dataset.add](); }));
+}
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  const on = (attr, fn) => M().querySelectorAll(`[data-${attr}]`).forEach(b => b.onclick = () => fn(b.dataset[attr.replace(/-./g, s => s[1].toUpperCase())], b));
+  on("editprop", propDlg); on("editlease", leaseDlg); on("editpay", payDlg); on("editexp", expenseDlg); on("edittrip", tripDlg); on("editwork", workDlg);
+  on("payprop", (pid, b) => { const R = compute(), x = R.props.find(p => p.p.id === pid); payForMonth(pid, +b.dataset.paym, x.rows[+b.dataset.paym - 1]); });
+  on("go", v => go(v));
+}
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => {
+  if (!S.props.length) return propDlg();
+  return ({ rent: () => payDlg(), expenses: () => ESUB === "mileage" ? tripDlg() : expenseDlg(), repairs: () => workDlg() })[VIEW]?.() ?? addChooser();
+};
+if (DEMO) {
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
+window.__lp = { compute, tripDed, tripMiles, rateFor, leaseStatus, csvText, sample, rh, kept, get S() { return S; }, set S(v) { S = v; } };
+go("home");
+</script>
+</body>
+</html>
