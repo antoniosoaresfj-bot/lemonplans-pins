@@ -112,8 +112,8 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .gchip.picked{outline:3px solid var(--gold);outline-offset:1px;background:var(--soft)}
 .gchip.dragging{opacity:.4}
 /* floor plan */
-:root{--s-p1:#C2577A;--s-p2:#3F6FB5;--s-both:#9A7520;--seatink:#fff;--m0:#A79A9F;--m1:#C07A1E;--m2:#A4473C;--m3:#2F7FA8;--m4:#4C9A5B;--m5:#6E8A1F;--m6:#8A5BB0}
-:root[data-theme="dark"]{--s-p1:#E796B0;--s-p2:#8FB0EC;--s-both:#E3C274;--seatink:#1B1316;--m0:#8A7D82;--m1:#E8AE5E;--m2:#E0857A;--m3:#79B9DE;--m4:#86CB93;--m5:#B9D46A;--m6:#BE98E0}
+:root{--s-p1:#C2577A;--s-p2:#3F6FB5;--s-both:#9A7520;--seatink:#fff;--m0:#A79A9F;--m1:#C07A1E;--m2:#A4473C;--m3:#2F7FA8;--m4:#4C9A5B;--m5:#6E8A1F;--m6:#8A5BB0;--h0:#C2577A;--h1:#3F6FB5;--h2:#2E8B6A;--h3:#B7791F;--h4:#7A4FB0;--h5:#A4473C;--h6:#4F7F2A;--h7:#2F8FA8}
+:root[data-theme="dark"]{--s-p1:#E796B0;--s-p2:#8FB0EC;--s-both:#E3C274;--seatink:#1B1316;--m0:#8A7D82;--m1:#E8AE5E;--m2:#E0857A;--m3:#79B9DE;--m4:#86CB93;--m5:#B9D46A;--m6:#BE98E0;--h0:#E796B0;--h1:#8FB0EC;--h2:#74CBA8;--h3:#E3B45C;--h4:#BE98E0;--h5:#E0857A;--h6:#A9CF7A;--h7:#79C6DE}
 .modetabs{margin:12px 0 14px}
 .planwrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;grid-template-areas:"plan pool" "plan info";grid-template-rows:auto 1fr;gap:16px;align-items:start}
 .plancard{grid-area:plan;padding:12px}.ppool{grid-area:pool}.pinfo{grid-area:info}
@@ -154,7 +154,30 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .gchip{user-select:none;-webkit-user-select:none}
 .gchip .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
 .gghost{position:fixed;z-index:70;pointer-events:none;padding:5px 12px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:750;font-size:13.5px;transform:translate(-50%,-140%);box-shadow:0 8px 20px rgba(0,0,0,.25);white-space:nowrap}
-.ppool .gchips{max-height:min(48vh,460px);overflow:auto;align-content:flex-start}
+.ppool .plist{max-height:min(52vh,520px);overflow:auto;align-content:flex-start}
+.plist{display:block}.plist>.singles{display:flex;flex-wrap:wrap;gap:6px}
+.hh{margin:0 0 4px}.hhrow{display:flex;align-items:center;gap:2px}
+.hhtog{border:0;background:none;width:30px;height:30px;flex:none;cursor:pointer;color:var(--muted);font-size:13px;border-radius:8px;padding:0}.hhtog:hover{background:var(--soft)}
+.gchip.hchip{font-weight:800;min-width:0;border-color:var(--fill);background:var(--card)}.hh.hhdone .hchip small{color:var(--good)}
+.hhm{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 6px 32px;min-height:0}
+.gchip.seated{background:var(--soft);border-color:transparent;color:var(--muted)}
+.gchip small.tno2{font-weight:800;color:var(--muted)}
+.plab{font-size:12px;font-weight:800;color:var(--muted);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px}.plab:empty{display:none}
+.hico{width:17px;height:14px;margin-right:6px;vertical-align:-2px;fill:var(--muted)}
+.el.clash .tb{stroke:var(--bad);stroke-width:3;stroke-dasharray:6 3}
+.cbadge circle{fill:var(--bad)}.cbadge text{fill:#fff;font-size:.86px;font-weight:900;text-anchor:middle;dominant-baseline:central}
+.seat .clr{fill:none;stroke:var(--bad);stroke-width:2.2;stroke-dasharray:3 2;vector-effect:non-scaling-stroke}
+.seat.hl circle{stroke:var(--gold);stroke-width:4;stroke-dasharray:none}
+.el.warnhot .tb{stroke:var(--bad);fill:var(--badbg)}
+.gghost.bad{background:var(--bad);color:#fff}
+.zone.warnhot{outline:3px dashed var(--bad);outline-offset:2px}
+.hpill{border:0;background:var(--soft);color:var(--ink);border-radius:999px;padding:1px 9px;font-size:12px;font-weight:750;cursor:pointer;margin-left:4px;vertical-align:1px}
+.gtools{margin-bottom:12px}.gtools .chip{display:inline-flex;align-items:center;gap:2px}
+.mrows{display:grid;gap:6px}.mrow{display:flex;gap:6px;align-items:center}.mrow input{flex:1}
+.rlist .row,.hlist .row{padding:9px 0}.rlist .pill{flex:none}
+.wrapbtns .btn{white-space:normal}.segw label{white-space:normal}
+.autores{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:9px 12px;margin:0 0 10px;border-radius:12px;background:var(--goodbg);color:var(--good);font-weight:650;font-size:14px}.autores .grow{flex:1;min-width:0}
+.el.autofill .tb{fill:var(--goodbg)}.tcard.autofill{box-shadow:0 0 0 2px var(--good)}
 .ppool input{width:100%;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);margin-bottom:10px}
 .warns{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;font-size:14px}
 .warns li{padding:9px 11px;border-radius:12px;background:var(--soft)}
@@ -169,7 +192,7 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .tile:hover,.tile:focus-visible{border-color:var(--accent);outline:none}
 .tile svg{width:46px;height:30px}.tile svg *{fill:var(--glass);stroke:var(--fill);stroke-width:1.5}
 #printArea{display:none}
-@media (max-width:980px){.planwrap{grid-template-columns:1fr;grid-template-areas:"pool" "plan" "info"}.ppool .gchips{max-height:150px}}
+@media (max-width:980px){.planwrap{grid-template-columns:1fr;grid-template-areas:"pool" "plan" "info"}.ppool .plist{max-height:240px}}
 @media (max-width:860px){.tiles{grid-template-columns:repeat(2,1fr)}.plancard{padding:10px}}
 @media print{
  @page{size:landscape;margin:10mm}
@@ -183,6 +206,11 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
  .ptab h3{font-size:10.5pt;margin:0 0 1mm}.ptab h3 small{color:#666;font-weight:600}
  .ptab ol{margin:0;padding-left:5mm}.ptab .pd{color:#B7791F;margin-top:1mm}
  .ptab.unseated{border-color:#B7791F}
+ #printArea{--h0:#C2577A;--h1:#3F6FB5;--h2:#2E8B6A;--h3:#B7791F;--h4:#7A4FB0;--h5:#A4473C;--h6:#4F7F2A;--h7:#2F8FA8}
+ .pg{display:inline-block;border:1px solid #888;border-radius:1mm;padding:0 .8mm;font-size:7pt;font-weight:700;line-height:1.3;color:#333}
+ .ptab .pcl,.pnotes .pcl{color:#C0392B;font-weight:700}
+ .plegend ul,.pnotes ul{margin:0;padding:0;list-style:none}.plegend li,.pnotes li{margin:.6mm 0}.plegend small{color:#666}
+ .plegend,.pnotes{border-color:#999}
 }
 /* checklist */
 .task{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -304,8 +332,8 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 const defaultCats = () => CATS.map(([name, pct]) => ({ id: uid(), name, pct }));
 const defaultTasks = () => WHEN.flatMap(([when, days, list]) => list.map(text => ({ id: uid(), when, days, text, done: false })));
 function blank() {
-  return { v: 1, app: "wedding-planner", currency: "$", theme: "auto", accent: "blush", p1: "", p2: "", date: "", budget: 0, guestGoal: 0,
-    cats: defaultCats(), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks(), plan: blankPlan() };
+  return { v: 1, app: "wedding-planner", currency: "$", theme: "light", accent: "blush", p1: "", p2: "", date: "", budget: 0, guestGoal: 0,
+    cats: defaultCats(), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks(), plan: blankPlan(), households: [], rules: [] };
 }
 // Floor plan: the room (feet), the non-table items, seat colors. Tables keep their place in tables[] (x, y = center in feet; rot in degrees).
 const blankPlan = () => ({ w: 80, l: 60, snap: true, color: "side", items: [] });
@@ -317,15 +345,28 @@ function normalize(s) {
   o.plan = Object.assign(blankPlan(), s.plan && typeof s.plan === "object" ? s.plan : {});
   if (!Array.isArray(o.plan.items)) o.plan.items = [];
   o.plan.w = clampN(o.plan.w, 20, 400, 80); o.plan.l = clampN(o.plan.l, 20, 400, 60);
-  if (!["side", "meal"].includes(o.plan.color)) o.plan.color = "side";
   o.plan.items = o.plan.items.filter(it => it && typeof it === "object" && ITEMS[it.kind]);
   o.plan.items.forEach(it => { if (!it.id) it.id = uid(); if (it.label == null) it.label = ""; it.w = clampN(it.w, 1, 200, ITEMS[it.kind].w); it.h = clampN(it.h, .5, 200, ITEMS[it.kind].h); it.rot = Number(it.rot) || 0; it.x = isFinite(it.x) && it.x !== null ? +it.x : o.plan.w / 2; it.y = isFinite(it.y) && it.y !== null ? +it.y : o.plan.l / 2; });
   o.tables.forEach(t => { if (!SHAPES[t.shape]) t.shape = "round"; t.rot = Number(t.rot) || 0; if (!isFinite(t.x) || !isFinite(t.y) || t.x === null || t.y === null) { delete t.x; delete t.y; } });
   o.guests.forEach(g => { if (g.diet == null) g.diet = ""; if (!Number.isInteger(g.seat)) g.seat = null; });
+  // v2.1: the app starts light. "auto" was the old default, so it becomes light; "device" is the Auto chosen in Settings.
+  if (!["light", "dark", "device"].includes(o.theme)) o.theme = "light";
+  if (!["side", "meal", "group"].includes(o.plan.color)) o.plan.color = "side";
+  // v2.1: groups (households / parties) and seating rules (keep apart / keep together). Old backups have none: nothing to lose.
+  o.households = (Array.isArray(s.households) ? s.households : []).filter(h => h && typeof h === "object").map(h => ({ id: String(h.id || uid()), name: String(h.name || "").trim() || "Group" }));
+  const hids = new Set(o.households.map(h => h.id));
+  o.guests.forEach(g => { if (!hids.has(g.hh)) g.hh = null; if (g.head !== true) delete g.head; });
+  o.rules = Array.isArray(s.rules) ? s.rules.filter(r => r && typeof r === "object" && Array.isArray(r.m)).map(r => ({ id: String(r.id || uid()), kind: r.kind === "together" ? "together" : "apart", m: r.m.map(String) })) : [];
+  tidyRules(o);
   layoutMissing(o);
   return o;
 }
 /* ---------- floor plan geometry (feet; x across the room, y down the room) ---------- */
+// A rule keeps only members that still exist (a guest or a group), each once; a rule with fewer than 2 members goes away
+function tidyRules(st) {
+  const ok = new Set(st.guests.map(g => g.id).concat(st.households.map(h => h.id)));
+  st.rules = st.rules.filter(r => { r.m = [...new Set(r.m)].filter(id => ok.has(id)); return r.m.length >= 2; });
+}
 function capOf(t) { return Math.max(1, Math.min(24, Math.round(Number(t.seats) || 1))); }
 // Table size and seat spots around it (local coordinates, before rotation). Seat order goes clockwise from the top left.
 // count > seats draws the extra (over capacity) seats too.
@@ -411,16 +452,25 @@ function sample() {
     [4, "Glow Beauty Co.", 200, "Card", "Trial + deposit"]
   ].map(([d, v, amount, method, note]) => ({ id: uid(), vendor: ven(v), amount, date: ago(d), method, note }));
   s.tables = ["Close family", "Friends", "Friends & work", "Extended family", "College friends", "Neighbors"].map(name => ({ id: uid(), name, seats: 8 }));
-  const FIRST = ["Olivia", "Liam", "Ava", "Noah", "Sophia", "Mason", "Isabella", "Ethan", "Mia", "Lucas", "Charlotte", "Logan", "Amelia", "Jacob", "Harper", "Henry", "Evelyn", "Owen", "Abigail", "Jack", "Emily", "Wyatt", "Ella", "Leo", "Grace", "Julian", "Chloe", "Levi", "Lily", "Caleb", "Zoe", "Nathan", "Hannah", "Ryan", "Nora", "Aaron", "Layla", "Eli"];
-  const LAST = ["Carter", "Bennett", "Hayes", "Brooks", "Reed", "Foster", "Parker", "Collins", "Morgan", "Hughes"];
-  s.guests = FIRST.map((f, i) => {
-    const rsvp = i < 22 ? "Attending" : i < 33 ? "Invited" : "Declined";
-    return { id: uid(), name: f + " " + LAST[i % LAST.length] + (i % 4 === 0 ? " & guest" : ""), side: ["p1", "p2", "both"][i % 3], group: ["Family", "Friends", "Work", "Friends", "Family"][i % 5],
-      size: i % 4 === 0 ? 2 : 1, rsvp, meal: rsvp === "Attending" ? MEALS[i % 4] : "", table: rsvp === "Attending" && i < 18 ? s.tables[Math.floor(i / 6)].id : i >= 22 && i < 26 ? s.tables[4].id : i >= 26 && i < 30 ? s.tables[3].id : i >= 30 && i < 33 ? s.tables[5].id : null,
-      gift: ["", "", "Kitchen mixer (registry)", "", "", "$150 card", "", "", "", "Crystal vase"][i] || "", thanks: i === 2, notes: "" };
-  });
-  const DIET = { 4: "Gluten-free", 9: "Nut allergy", 13: "Dairy-free", 19: "Shellfish allergy" };
-  s.guests.forEach((g, i) => { g.diet = DIET[i] || ""; g.seat = null; });
+  // 38 guest lines in 5 groups (families and a party of college friends) + singles. [name, side, category, rsvp, table (1-6), seat, group, meal, diet, gift]
+  const H = { carter: "The Carter family", bennett: "The Bennett family", hayes: "The Hayes family", morgan: "The Morgan family", college: "College friends" };
+  s.households = Object.entries(H).map(([k, name]) => ({ id: "h-" + k, name }));
+  const A = "Attending", I = "Invited", X = "Declined";
+  [["Olivia Carter", "p1", "Family", A, 1, 0, "carter", "Chicken"], ["Charlotte Carter", "p1", "Family", A, 1, 1, "carter", "Fish", "Gluten-free", "Kitchen mixer (registry)"], ["Henry Carter", "p1", "Family", A, 1, 2, "carter", "Beef"], ["Lily Carter", "p1", "Family", A, 1, 3, "carter", "Kids meal"],
+   ["Liam Bennett & guest", "p2", "Family", A, 1, 4, "bennett", "Beef"], ["Ava Bennett", "p2", "Family", A, 1, 6, "bennett", "Vegetarian", "", "$150 card"], ["Noah Bennett", "p2", "Family", A, 1, 7, "bennett", "Chicken"],
+   ["Sophia Hayes", "p1", "Family", A, 0, null, "hayes", "Fish"], ["Mason Hayes", "p1", "Family", A, 0, null, "hayes", "Beef"], ["Ella Hayes", "p1", "Family", A, 0, null, "hayes", "Kids meal"], ["Leo Hayes", "p1", "Family", A, 0, null, "hayes", "Kids meal", "Nut allergy"],
+   ["Grace Morgan & guest", "both", "Family", A, 4, 0, "morgan", "Chicken"], ["Julian Morgan", "both", "Family", A, 4, 2, "morgan", "Vegan", "Dairy-free"],
+   ["Ethan Brooks", "p2", "Friends", A, 5, 0, "college", "Beef"], ["Mia Reed", "p2", "Friends", A, 5, 1, "college", "Vegetarian", "Nut allergy"], ["Lucas Foster", "p2", "Friends", A, 5, 2, "college", "Chicken"], ["Zoe Parker", "p2", "Friends", A, 5, 3, "college", "Fish"], ["Ryan Collins", "p2", "Friends", A, 5, 4, "college", "Beef"],
+   ["Emily Reed", "p1", "Friends", A, 2, null, "", "Chicken", "", "Crystal vase"], ["Wyatt Foster & guest", "p2", "Friends", A, 2, null, "", "Beef"], ["Chloe Parker", "p1", "Friends", A, 2, null, "", "Vegetarian"], ["Hannah Collins", "both", "Friends", A, 2, null, "", "Fish"], ["Levi Brooks", "both", "Friends", A, 2, null, "", "Chicken"],
+   ["Owen Parker", "p2", "Work", A, 3, null, "", "Fish", "Shellfish allergy"], ["Nathan Reed", "p1", "Work", A, 3, null, "", "Beef"], ["Harper Hughes", "p1", "Work", A, 3, null, "", "Chicken"], ["Jack Morgan", "p2", "Work", A, 3, null, "", "Vegetarian"],
+   ["Evelyn Carter", "p1", "Family", A, 4, null, "", "Fish"], ["Abigail Hughes", "p1", "Friends", A, 0, null, "", "Chicken"], ["Caleb Reed", "p2", "Work", A, 0, null, "", "Beef"],
+   ["Isabella Hughes & guest", "both", "Neighbors", I, 6, null, ""], ["Aaron Collins", "both", "Neighbors", I, 6, null, ""], ["Layla Brooks", "p2", "Friends", I, 0, null, ""], ["Eli Foster", "p1", "Work", I, 0, null, ""],
+   ["Amelia Collins", "p1", "Friends", X, 0, null, ""], ["Jacob Hughes", "p2", "Work", X, 0, null, ""], ["Logan Bennett", "p2", "Family", X, 0, null, ""], ["Nora Parker", "both", "Neighbors", X, 0, null, ""]]
+  .forEach(([name, side, group, rsvp, tab, seat, hh, meal, diet, gift], i) => s.guests.push({ id: "g" + (i + 1), name, side, group, size: /& guest/.test(name) ? 2 : 1, rsvp, meal: meal || "", table: tab ? s.tables[tab - 1].id : null, seat,
+    gift: gift || "", thanks: i === 1, notes: "", diet: diet || "", hh: hh ? "h-" + hh : null }));
+  const gid = n => s.guests.find(g => g.name === n).id;
+  // Keep apart: one broken on purpose (the floor plan flags Table 3), one kept; keep together: two friends outside a group
+  s.rules = [{ id: "r1", kind: "apart", m: [gid("Owen Parker"), gid("Nathan Reed")] }, { id: "r2", kind: "apart", m: ["h-morgan", gid("Layla Brooks")] }, { id: "r3", kind: "together", m: [gid("Hannah Collins"), gid("Levi Brooks")] }];
   // The sample floor plan: a 72 × 54 ft garden ballroom, dance floor in the middle, the couple facing it
   Object.assign(s.plan, { w: 60, l: 46 });
   [[10, 10], [10, 22], [10, 34], [46, 10], [46, 22], [46, 34]].forEach(([x, y], i) => Object.assign(s.tables[i], { shape: "round", x, y, rot: 0 }));
@@ -477,6 +527,152 @@ function seating() {
   const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table)).reduce((s, g) => s + people(g), 0);
   return { seats, seated, need, over: S.tables.filter(t => tableSeated(t) > (Number(t.seats) || 0)).length, used: S.tables.filter(t => tableSeated(t) > 0).length };
 }
+/* ---------- groups (households / parties) and seating rules ---------- */
+const hhOf = id => S.households.find(h => h.id === id);
+const gOf = id => S.guests.find(g => g.id === id);
+const membersOf = hid => S.guests.filter(g => g.hh === hid);
+const activeOf = hid => membersOf(hid).filter(g => g.rsvp !== "Declined");
+const sumPeople = gs => gs.reduce((a, g) => a + people(g), 0);
+const hhSeats = hid => sumPeople(activeOf(hid));
+const hhSeated = hid => sumPeople(activeOf(hid).filter(g => tabOf(g.table)));
+const hhTables = hid => [...new Set(activeOf(hid).filter(g => tabOf(g.table)).map(g => g.table))].sort((a, b) => tableNo(a) - tableNo(b));
+const hhIdx = id => S.households.findIndex(h => h.id === id);
+const ruleName = id => { const g = gOf(id); if (g) return g.name; const h = hhOf(id); return h ? h.name : ""; };
+const ruleGuests = id => hhOf(id) ? membersOf(id) : S.guests.filter(g => g.id === id);
+const andList = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+const tablesText = ids => andList(ids.map(t => "Table " + tableNo(t)));
+// Every rule broken right now: "keep apart" = 2+ of its members at one table; "keep together" = its seated members at 2+ tables
+function clashes() {
+  const out = [];
+  S.rules.forEach(r => {
+    const mem = r.m.map(id => ({ id, name: ruleName(id), tabs: new Set(ruleGuests(id).filter(g => g.rsvp !== "Declined" && tabOf(g.table)).map(g => g.table)) }));
+    if (r.kind === "apart") {
+      const at = new Map(); mem.forEach(x => x.tabs.forEach(t => { if (!at.has(t)) at.set(t, []); at.get(t).push(x); }));
+      at.forEach((xs, t) => { if (xs.length > 1) out.push({ r, kind: "apart", t, ids: xs.map(x => x.id), names: xs.map(x => x.name) }); });
+    } else {
+      const tabs = new Set(); mem.forEach(x => x.tabs.forEach(t => tabs.add(t)));
+      if (tabs.size > 1) out.push({ r, kind: "together", tabs: [...tabs].sort((a, b) => tableNo(a) - tableNo(b)), ids: mem.map(x => x.id), names: mem.map(x => x.name) });
+    }
+  });
+  return out.sort((a, b) => (a.kind === "apart" ? 0 : 1) - (b.kind === "apart" ? 0 : 1) || tableNo(a.t || a.tabs[0]) - tableNo(b.t || b.tabs[0]));
+}
+const clashText = c => c.kind === "apart" ? `${andList(c.names)} are at Table ${tableNo(c.t)} — marked keep apart` : `${andList(c.names)} are at ${tablesText(c.tabs)} — marked keep together`;
+// Tables and guests to flag on the floor plan ("keep apart" broken)
+function clashMarks(cl) {
+  const t = new Set(), g = new Set();
+  cl.filter(c => c.kind === "apart").forEach(c => { t.add(c.t); c.ids.forEach(id => ruleGuests(id).forEach(x => { if (x.table === c.t) g.add(x.id); })); });
+  return { t, g };
+}
+// "Keep apart" rules that seating these guests at this table would break (asked before anything moves)
+function wouldClash(gids, tid) {
+  const moved = S.guests.filter(g => gids.includes(g.id)); if (!moved.length || !tabOf(tid)) return [];
+  const before = new Set(clashes().filter(c => c.kind === "apart").map(c => c.r.id + "@" + c.t)), old = moved.map(g => g.table);
+  moved.forEach(g => g.table = tid);
+  const now = clashes().filter(c => c.kind === "apart" && c.t === tid && !before.has(c.r.id + "@" + c.t));
+  moved.forEach((g, i) => g.table = old[i]);
+  return now;
+}
+// One guest's seating rules, for the CSV and the table panel
+function ruleNotes(g, cl) {
+  const mine = id => id === g.id || (g.hh && id === g.hh);
+  return S.rules.filter(r => r.m.some(mine)).map(r => {
+    const others = r.m.filter(id => !mine(id)).map(ruleName);
+    const bad = cl.some(c => c.r === r && c.ids.some(mine) && (c.kind === "together" ? tabOf(g.table) : c.t === g.table));
+    return (r.kind === "apart" ? "Keep apart from " : "Keep together with ") + andList(others) + (bad ? (r.kind === "apart" ? " (CONFLICT: same table)" : " (CONFLICT: different tables)") : "");
+  }).join("; ");
+}
+// Seats these guests together at a table, side by side when there's a run of free seats. Guests already there don't move,
+// unless the free seats are scattered: then only guests with a chosen seat stay put and the others fill in around the group.
+function placeTogether(gs, t) {
+  const ids = new Set(gs.map(g => g.id)), need = sumPeople(gs), cap = capOf(t);
+  gs.forEach(g => { g.table = t.id; g.seat = null; });
+  if (need > cap) return false;
+  const others = S.guests.filter(g => g.table === t.id && !ids.has(g.id));
+  const run = taken => { for (let i = 0; i < cap; i++) { let k = 0; while (k < need && !taken[(i + k) % cap]) k++; if (k === need) return i; } return null; };
+  let st = run(seatMap(t, others).map(Boolean));
+  if (st == null) { const fixed = []; others.forEach(g => { if (g.rsvp !== "Declined" && Number.isInteger(g.seat)) for (let k = 0; k < people(g); k++) fixed[(g.seat + k) % cap] = 1; }); st = run(fixed); }
+  if (st == null) return false;
+  let i = st; gs.forEach(g => { g.seat = i % cap; i += people(g); });
+  return true;
+}
+// The members that fit in the table's free seats, in list order
+function fitList(hid, t) {
+  const gs = activeOf(hid); let free = capOf(t) - tableSeated(t) + sumPeople(gs.filter(g => g.table === t.id));
+  return gs.filter(g => { if (people(g) <= free) { free -= people(g); return true; } return false; });
+}
+const freeAt = (t, gs) => capOf(t) - tableSeated(t) + sumPeople(gs.filter(g => g.table === t.id));
+/* ---------- auto-seat: fills the tables, then you adjust by hand ---------- */
+let AUTO = null; // the last auto-seat (not saved): { text, tables: Set, undo: Map guest id → [table, seat] or null once something else changed }
+const isHeadT = t => t.shape === "head" || /\bhead table\b/i.test(t.name || "");
+// o.pending: also guests who haven't replied; o.all: re-seat everyone. Deterministic: same plan + list = same result.
+// Groups and "keep together" sit at one table side by side (a group too big for any table is split over the fewest tables);
+// "keep apart" is never broken; head tables only take guests marked "head table"; sides sit together when there's room;
+// no table goes over; tables it opens for just 1–2 people are merged into others when possible. Guests already seated don't move.
+function autoSeat(o) {
+  const undo = new Map(S.guests.map(g => [g.id, [g.table, g.seat]]));
+  if (o.all) S.guests.forEach(g => { g.table = null; g.seat = null; });
+  const want = g => !tabOf(g.table) && (g.rsvp === "Attending" || (o.pending && g.rsvp === "Invited"));
+  // who belongs together: same group, or a "keep together" rule (union-find over guests and groups)
+  const par = new Map(), find = x => { while (par.get(x) !== x) { par.set(x, par.get(par.get(x))); x = par.get(x); } return x; };
+  const add = x => { if (!par.has(x)) par.set(x, x); }, uni = (a, b) => { add(a); add(b); a = find(a); b = find(b); if (a !== b) par.set(b, a); };
+  S.guests.forEach(g => { add(g.id); if (g.hh) uni("h:" + g.hh, g.id); });
+  S.rules.filter(r => r.kind === "together").forEach(r => { const ids = r.m.flatMap(m => ruleGuests(m).map(g => g.id)); ids.slice(1).forEach(id => uni(ids[0], id)); });
+  // who must not share a table
+  const enemy = new Map(); S.guests.forEach(g => enemy.set(g.id, new Set()));
+  S.rules.filter(r => r.kind === "apart").forEach(r => { const sets = r.m.map(m => ruleGuests(m).map(g => g.id)); sets.forEach((a, i) => sets.forEach((b, j) => { if (i !== j) a.forEach(x => b.forEach(y => enemy.get(x).add(y))); })); });
+  // the tables as they are now
+  const T = S.tables.map(t => ({ t, cap: capOf(t), occ: 0, who: new Set(), side: { p1: 0, p2: 0, both: 0 }, head: isHeadT(t), was: 0 })), byId = new Map(T.map(x => [x.t.id, x]));
+  const put = (x, g, k) => { x.occ += k * people(g); x.side[["p1", "p2"].includes(g.side) ? g.side : "both"] += k * people(g); if (k > 0) x.who.add(g.id); else x.who.delete(g.id); };
+  S.guests.forEach(g => { const x = byId.get(g.table); if (x && g.rsvp !== "Declined") put(x, g, 1); });
+  T.forEach(x => x.was = x.occ);
+  const anyHead = T.some(x => x.head);
+  // the units to seat (in a stable order: list order inside a unit)
+  const U = new Map();
+  S.guests.forEach(g => { const r = find(g.id); if (!U.has(r)) U.set(r, { gs: [], pref: new Map() }); const u = U.get(r);
+    if (want(g)) u.gs.push(g); else if (byId.has(g.table) && g.rsvp !== "Declined") u.pref.set(g.table, (u.pref.get(g.table) || 0) + 1); });
+  const units = [...U.values()].filter(u => u.gs.length).map(u => {
+    const n = sumPeople(u.gs), sd = { p1: 0, p2: 0, both: 0 }; u.gs.forEach(g => sd[["p1", "p2"].includes(g.side) ? g.side : "both"] += people(g));
+    const hh = hhOf(u.gs[0].hh), name = u.gs.length > 1 ? (hh && u.gs.every(g => g.hh === hh.id) ? hh.name : andList(u.gs.map(g => g.name))) : u.gs[0].name;
+    return { ...u, n, side: sd.p1 > sd.p2 + sd.both ? "p1" : sd.p2 > sd.p1 + sd.both ? "p2" : "both", head: anyHead && u.gs.some(g => g.head), name };
+  }).sort((a, b) => (b.head - a.head) || (b.pref.size - a.pref.size) || (b.n - a.n) || a.name.localeCompare(b.name));
+  const ok = (u, x, gs) => x.head === u.head && !(gs || u.gs).some(g => [...enemy.get(g.id)].some(e => x.who.has(e)));
+  const score = (u, x) => {
+    if (u.pref.has(x.t.id)) return 10000 + u.pref.get(x.t.id);
+    const same = u.side === "both" ? .5 : x.occ ? (x.side[u.side] + x.side.both / 2) / x.occ : .5;
+    return (x.occ ? 200 + 300 * same + (x.occ <= 2 ? 200 : 0) : 250) - Math.abs(x.cap - x.occ - u.n) * .01 - T.indexOf(x) * .0001;
+  };
+  const best = (u, gs, n, skip) => { let b = null, bs = -Infinity; T.forEach(x => { if (x === skip || x.cap - x.occ < n || !ok(u, x, gs)) return; const sc = score(u, x); if (sc > bs) { bs = sc; b = x; } }); return b; };
+  const seatAt = (gs, x) => { placeTogether(gs, x.t); gs.forEach(g => put(x, g, 1)); };
+  const placed = [], left = [], splits = [];
+  units.forEach(u => {
+    const x = best(u, u.gs, u.n); if (x) { seatAt(u.gs, x); placed.push({ u, gs: u.gs, x }); return; }
+    // too big for any table with room: split over the fewest tables (most room first), whole guest lines only
+    let rest = u.gs.slice(); const used = [];
+    while (rest.length) {
+      const cands = T.filter(x => x.cap - x.occ >= Math.min(...rest.map(people)) && ok(u, x, rest.filter(g => people(g) <= x.cap - x.occ)));
+      if (!cands.length) break;
+      cands.sort((a, b) => (b.cap - b.occ) - (a.cap - a.occ) || score(u, b) - score(u, a));
+      const y = cands[0]; let free = y.cap - y.occ; const take = rest.filter(g => { if (people(g) <= free && ok(u, y, [g])) { free -= people(g); return true; } return false; });
+      if (!take.length) break;
+      seatAt(take, y); placed.push({ u, gs: take, x: y }); used.push(y); rest = rest.filter(g => !take.includes(g));
+    }
+    if (used.length > 1) splits.push({ name: u.name, tabs: used.map(y => y.t.id) });
+    rest.forEach(g => { const room = T.some(x => x.head === u.head && x.cap - x.occ >= people(g)); left.push({ g, why: room ? "keep apart" : u.head ? "head table full" : "no free seat" }); });
+  });
+  // no table opened for just 1–2 people when they fit somewhere already in use
+  T.filter(x => !x.was && x.occ && x.occ <= 2).forEach(x => {
+    placed.filter(p => p.x === x && p.gs.length === p.u.gs.length).forEach(p => {
+      p.gs.forEach(g => { put(x, g, -1); g.table = null; g.seat = null; });
+      let y = null, bs = -Infinity; T.forEach(z => { if (z === x || !z.occ || z.cap - z.occ < p.u.n || !ok(p.u, z)) return; const sc = score(p.u, z); if (sc > bs) { bs = sc; y = z; } });
+      seatAt(p.gs, y || x); p.x = y || x;
+    });
+  });
+  const tabs = new Set(placed.map(p => p.x.t.id)), n = sumPeople(placed.flatMap(p => p.gs));
+  const text = (n ? `Seated ${plural(n, "guest")} at ${plural(tabs.size, "table")}` : "Nobody could be seated")
+    + splits.map(sp => ` · ${sp.name} split over ${tablesText(sp.tabs)} (too big for one table)`).join("")
+    + (left.length ? ` · ${left.length} couldn't be seated: ${left.slice(0, 6).map(l => `${l.g.name} (${l.why})`).join(", ")}${left.length > 6 ? " and " + (left.length - 6) + " more" : ""}` : "");
+  return { n, tabs, left, splits, text, undo, none: !units.length };
+}
 // Checklist: target date = wedding date minus the days before
 const taskDue = t => S.date ? addDays(parse(S.date), -(Number(t.days) || 0)) : null;
 function taskState(t) { if (t.done) return "done"; const d = taskDue(t); if (!d) return ""; const n = dayDiff(today(), d); return n < 0 ? "overdue" : n <= 7 ? "week" : ""; }
@@ -509,7 +705,7 @@ function tableSVG(t, size = 74) {
 
 /* ---------- theme ---------- */
 function applyTheme() {
-  const dark = S.theme === "dark" || (S.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  const dark = S.theme === "dark" || (S.theme === "device" && matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.dataset.theme = dark ? "dark" : "light";
   document.documentElement.dataset.accent = S.accent;
   paintThemeToggle();
@@ -586,7 +782,7 @@ function home() {
     <div class="kv"><span>Waiting to hear</span><b>${h.awaiting}</b></div><div class="kv"><span>Declined</span><b>${h.declined}</b></div><div class="kv"><span>Not invited yet</span><b>${h.notyet}</b></div>
     <div class="meta" style="margin-top:6px">${Object.entries(m).filter(([, n]) => n).map(([k, n]) => esc(k) + " " + n).join(" · ") || "No meals chosen yet"}</div></div>
    <div class="card"><div class="lab">Seating</div><div class="mid" style="margin-top:6px">${st.seated} <span class="meta">seated at ${plural(st.used, "table")}</span></div>
-    <div class="kv"><span>Seats set up</span><b>${st.seats}</b></div><div class="kv"><span>Attending, no table yet</span><b class="${st.need ? "t-warn" : ""}">${st.need}</b></div><div class="kv"><span>Tables over capacity</span><b class="${st.over ? "t-short" : ""}">${st.over}</b></div>
+    <div class="kv"><span>Seats set up</span><b>${st.seats}</b></div><div class="kv"><span>Attending, no table yet</span><b class="${st.need ? "t-warn" : ""}">${st.need}</b></div><div class="kv"><span>Tables over capacity</span><b class="${st.over ? "t-short" : ""}">${st.over}</b></div>${S.rules.length ? (n => `<div class="kv"><span>Keep-apart / together conflicts</span><b class="${n ? "t-short" : ""}" id="hClash">${n}</b></div>`)(clashes().length) : ""}
     <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="seating">Open the floor plan</button></div></div>
   </div>
   <div class="card" style="margin-top:16px"><div class="tablebar"><h2 style="margin:0">Payments coming up</h2><button class="btn small ghost" data-go="vendors">All vendors</button></div>${up.length ? up.map(([v, n]) => dueRow(v, n)).join("") : `<div class="empty">No payments due. Add your vendors to track deposits and balances.</div>`}</div>`;
@@ -657,11 +853,13 @@ function payRow(p) {
 }
 
 /* --- guests --- */
-let GF = { q: "", rsvp: "", side: "" };
+let GF = { q: "", rsvp: "", side: "", hh: "" };
 function guestsV() {
+  if (GF.hh && GF.hh !== "-" && !hhOf(GF.hh)) GF.hh = "";
   const h = headcount(), m = meals();
-  const list = S.guests.filter(g => (!GF.rsvp || g.rsvp === GF.rsvp) && (!GF.side || g.side === GF.side) && (!GF.q || (g.name + " " + g.group).toLowerCase().includes(GF.q.toLowerCase())));
-  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button><button class="btn" id="addG">+ Add a guest</button></div></div>
+  const list = S.guests.filter(g => (!GF.rsvp || g.rsvp === GF.rsvp) && (!GF.side || g.side === GF.side) && (!GF.hh || (GF.hh === "-" ? !g.hh : g.hh === GF.hh)) && (!GF.q || (g.name + " " + g.group + " " + (hhOf(g.hh) ? hhOf(g.hh).name : "")).toLowerCase().includes(GF.q.toLowerCase())));
+  const cl = clashes(), mk = clashMarks(cl), inRule = new Set(S.rules.flatMap(r => r.m));
+  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button><button class="btn ghost" id="addH">+ Add a family</button><button class="btn" id="addG">+ Add a guest</button></div></div>
   <div class="grid g4" style="margin-top:12px">
    <div class="card"><div class="lab">Attending</div><div class="mid t-ok" id="gAtt">${h.attending}</div><div class="meta">${S.guestGoal ? Math.round(h.attending / S.guestGoal * 100) + "% of your goal" : "people"}</div></div>
    <div class="card"><div class="lab">Waiting to hear</div><div class="mid" id="gWait">${h.awaiting}</div><div class="meta">invited, no reply yet</div></div>
@@ -669,11 +867,13 @@ function guestsV() {
    <div class="card"><div class="lab">Meals</div><div class="meta" style="margin-top:6px;font-size:13.5px;line-height:1.55" id="gMeals">${Object.entries(m).filter(([, n]) => n).map(([k, n]) => `<b style="color:var(--ink)">${n}</b> ${esc(k)}`).join(" · ") || "None yet"}</div></div>
   </div>
   <div class="card" style="margin-top:16px">
-   <div class="tools"><div class="field" style="flex:1;min-width:160px"><label for="gq">Search</label><input id="gq" value="${esc(GF.q)}" placeholder="Name or group"></div>
+   <div class="chips gtools"><button class="chip" id="manageH">${HICON} Groups · ${S.households.length}</button><button class="chip" id="rulesBtn">↔ Keep apart · ${S.rules.length}${cl.length ? ` <b class="t-short">⚠ ${cl.length}</b>` : ""}</button></div>
+   <div class="tools"><div class="field" style="flex:1;min-width:160px"><label for="gq">Search</label><input id="gq" value="${esc(GF.q)}" placeholder="Name, group or category"></div>
     <div class="field"><label for="gr">RSVP</label><select id="gr"><option value="">All</option>${RSVP.map(r => `<option ${GF.rsvp === r ? "selected" : ""}>${r}</option>`).join("")}</select></div>
-    <div class="field"><label for="gs">Side</label><select id="gs"><option value="">Both sides</option>${["p1", "p2", "both"].map(s => `<option value="${s}" ${GF.side === s ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div></div>
+    <div class="field"><label for="gs">Side</label><select id="gs"><option value="">Both sides</option>${["p1", "p2", "both"].map(s => `<option value="${s}" ${GF.side === s ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div>
+    ${S.households.length ? `<div class="field"><label for="gh">Group</label><select id="gh"><option value="">All groups</option><option value="-" ${GF.hh === "-" ? "selected" : ""}>No group</option>${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}" ${GF.hh === h.id ? "selected" : ""}>${esc(h.name)}</option>`).join("")}</select></div>` : ""}</div>
    <div class="tscroll"><table class="t" id="gTable"><thead><tr><th>Guest</th><th class="l">Side</th><th>Party</th><th class="l">RSVP</th><th class="l">Meal</th><th class="l">Table</th><th></th></tr></thead><tbody>
-   ${list.length ? list.map(g => `<tr data-g="${g.id}"><td><b>${esc(g.name)}</b><div class="meta">${esc(g.group || "")}${g.gift ? " · 🎁 " + esc(g.gift) + (g.thanks ? " ✓ thanked" : "") : ""}</div></td><td class="l">${esc(sideName(g.side))}</td><td>${people(g)}</td>
+   ${list.length ? list.map(g => `<tr data-g="${g.id}"><td><b>${esc(g.name)}</b>${hhOf(g.hh) ? ` <button type="button" class="hpill" data-edith="${g.hh}" title="Edit the group">${esc(hhOf(g.hh).name)}</button>` : ""}<div class="meta">${esc(g.group || "")}${inRule.has(g.id) || (g.hh && inRule.has(g.hh)) ? ` · <span class="${mk.g.has(g.id) ? "t-short" : ""}" title="${esc(ruleNotes(g, cl))}">↔ ${esc(ruleNotes(g, cl))}</span>` : ""}${g.gift ? " · 🎁 " + esc(g.gift) + (g.thanks ? " ✓ thanked" : "") : ""}</div></td><td class="l">${esc(sideName(g.side))}</td><td>${people(g)}</td>
      <td class="l"><select class="rs" data-rsvp="${g.id}" aria-label="RSVP for ${esc(g.name)}">${RSVP.map(r => `<option ${g.rsvp === r ? "selected" : ""}>${r}</option>`).join("")}</select></td>
      <td class="l"><select class="rs" data-meal="${g.id}" aria-label="Meal for ${esc(g.name)}"><option value="">—</option>${MEALS.map(x => `<option ${g.meal === x ? "selected" : ""}>${x}</option>`).join("")}</select></td>
      <td class="l">${g.rsvp === "Declined" ? (tabOf(g.table) ? `<span class="t-short">${esc(tableLabel(g.table))} · declined</span>` : `<span class="meta">—</span>`) : tabOf(g.table) ? esc(tableLabel(g.table)) : `<span class="meta">Not seated</span>`}</td><td><button class="icon" data-editg="${g.id}" aria-label="Edit ${esc(g.name)}">✎</button></td></tr>`).join("") : `<tr><td colspan="7"><div class="empty">${S.guests.length ? "No guests match." : "No guests yet. Add them one by one or paste a list with + Add several."}</div></td></tr>`}
@@ -681,6 +881,11 @@ function guestsV() {
   const q = document.getElementById("gq"); q.oninput = () => { GF.q = q.value; const pos = q.selectionStart; render(); const n = document.getElementById("gq"); n.focus(); n.setSelectionRange(pos, pos); };
   document.getElementById("gr").onchange = e => { GF.rsvp = e.target.value; render(); };
   document.getElementById("gs").onchange = e => { GF.side = e.target.value; render(); };
+  const gh = document.getElementById("gh"); if (gh) gh.onchange = e => { GF.hh = e.target.value; render(); };
+  document.getElementById("addH").onclick = () => groupDlg();
+  document.getElementById("manageH").onclick = () => groupsDlg();
+  document.getElementById("rulesBtn").onclick = () => rulesDlg();
+  M().querySelectorAll("[data-edith]").forEach(b => b.onclick = () => groupDlg(b.dataset.edith));
   M().querySelectorAll("[data-rsvp]").forEach(s => s.onchange = () => { const g = S.guests.find(x => x.id === s.dataset.rsvp); g.rsvp = s.value; save(); render(); if (g.rsvp === "Declined" && tabOf(g.table)) toast(g.name + " is still at Table " + tableNo(g.table) + ". Unseat them in the floor plan"); });
   M().querySelectorAll("[data-meal]").forEach(s => s.onchange = () => { S.guests.find(x => x.id === s.dataset.meal).meal = s.value; save(); render(); });
   document.getElementById("addG").onclick = () => guestDlg();
@@ -690,18 +895,19 @@ function guestsV() {
 }
 
 /* --- seating: floor plan (default) and the table list --- */
-let PICKG = null, SEATMODE = "plan", SEL = null, VB = null, PQ = "";
+let PICKG = null, PICKH = null, SEATMODE = "plan", SEL = null, VB = null, PQ = "";
+const HOPEN = new Map(); // which groups are open in the side list (not saved)
 const modeTabs = () => `<div class="chips modetabs" role="group" aria-label="Seating view">${[["plan", "Floor plan"], ["list", "Table list"]].map(([k, t]) => `<button class="chip" data-mode="${k}" aria-pressed="${SEATMODE === k}">${t}</button>`).join("")}</div>`;
-function wireModes() { M().querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { if (SEATMODE !== b.dataset.mode) { SEATMODE = b.dataset.mode; PICKG = null; render(); } }); }
+function wireModes() { M().querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { if (SEATMODE !== b.dataset.mode) { SEATMODE = b.dataset.mode; PICKG = null; PICKH = null; render(); } }); }
 function seatingV() { return SEATMODE === "list" ? seatCardsV() : planV(); }
 const poolList = () => S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).sort((a, b) => (a.rsvp === "Attending" ? 0 : 1) - (b.rsvp === "Attending" ? 0 : 1) || a.name.localeCompare(b.name));
 
 function seatCardsV() {
   const st = seating();
   const pool = poolList();
-  const chip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}" draggable="true" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}">${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}</button>`;
-  M().innerHTML = `<div class="tablebar"><div><h1>Seating chart</h1><p class="sub" style="margin:0">Drag a name onto a table. Or tap a name, then tap a table.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="addTables">+ Add several tables</button><button class="btn" id="addTable">+ Add a table</button></div></div>
-  ${modeTabs()}
+  const chip = (g, inT) => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}${tabOf(g.table) && !inT ? " seated" : ""}" draggable="true" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}${tabOf(g.table) ? " · " + esc(tableLabel(g.table)) : ""}">${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}${tabOf(g.table) && !inT ? `<small class="tno2">T${tableNo(g.table)}</small>` : ""}</button>`;
+  M().innerHTML = `<div class="tablebar"><div><h1>Seating chart</h1><p class="sub" style="margin:0">Drag a name onto a table. Or tap a name, then tap a table.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="autoBtn">✨ Auto-seat</button><button class="btn ghost" id="addTables">+ Add several tables</button><button class="btn" id="addTable">+ Add a table</button></div></div>
+  ${modeTabs()}${autoBarHTML()}
   <div class="grid g4" style="margin:0 0 16px">
    <div class="card"><div class="lab">Seated</div><div class="mid" id="sSeated">${st.seated}</div><div class="meta">of ${st.seats} seats</div></div>
    <div class="card"><div class="lab">Need a table</div><div class="mid ${st.need ? "t-warn" : "t-ok"}" id="sNeed">${st.need}</div><div class="meta">attending guests</div></div>
@@ -709,26 +915,35 @@ function seatCardsV() {
    <div class="card"><div class="lab">Over capacity</div><div class="mid ${st.over ? "t-short" : ""}" id="sOver">${st.over}</div><div class="meta">${st.over ? "move someone" : "all good"}</div></div>
   </div>
   <div class="seatwrap">
-   <div class="card pool"><h2>Not seated yet <span class="meta">(${pool.reduce((s, g) => s + people(g), 0)})</span></h2>
-    <div class="zone gchips" data-drop="" id="poolZone" aria-label="Not seated">${pool.length ? pool.map(chip).join("") : `<div class="meta" style="padding:8px">Everyone has a seat. 🎉</div>`}</div>
-    <p class="meta" style="margin:12px 0 0">Dashed names are invited but haven't replied yet. Declined guests aren't shown.</p></div>
+   <div class="card pool"><h2>Not seated yet <span class="meta">(${sumPeople(pool)})</span></h2>
+    <div class="zone gchips plist" data-drop="" id="poolZone" aria-label="Guests by group">${poolHTML(chip)}</div>
+    <p class="meta" style="margin:12px 0 0">Drag a group to seat everyone together. Dashed names are invited but haven't replied yet. Declined guests aren't shown.</p></div>
    <div>${S.tables.length ? `<div class="tables">${S.tables.map(t => { const n = tableSeated(t), cap = Number(t.seats) || 0, gs = S.guests.filter(g => g.table === t.id && g.rsvp !== "Declined");
-     return `<div class="tcard zone ${n > cap ? "overcap" : n === cap && cap ? "full" : ""}" data-drop="${t.id}" data-tid="${t.id}"><div class="thead">${tableSVG(t)}<div class="grow"><div class="name">Table ${tableNo(t.id)}</div>${t.name ? `<div class="meta tname">${esc(t.name)}</div>` : ""}<div class="meta" data-occ="${t.id}">${n} of ${cap} seats${n > cap ? ` · <b class="t-short">over by ${n - cap}</b>` : n === cap && cap ? " · full" : ""}</div></div><button class="icon" data-edittable="${t.id}" aria-label="Edit table ${tableNo(t.id)}">✎</button></div>
-      <div class="gchips">${gs.map(chip).join("") || `<span class="meta" style="padding:6px 2px">Drop names here</span>`}</div></div>`; }).join("")}</div>`
+     return `<div class="tcard zone ${n > cap ? "overcap" : n === cap && cap ? "full" : ""}${AUTO && AUTO.tables.has(t.id) ? " autofill" : ""}" data-drop="${t.id}" data-tid="${t.id}"><div class="thead">${tableSVG(t)}<div class="grow"><div class="name">Table ${tableNo(t.id)}</div>${t.name ? `<div class="meta tname">${esc(t.name)}</div>` : ""}<div class="meta" data-occ="${t.id}">${n} of ${cap} seats${n > cap ? ` · <b class="t-short">over by ${n - cap}</b>` : n === cap && cap ? " · full" : ""}</div></div><button class="icon" data-edittable="${t.id}" aria-label="Edit table ${tableNo(t.id)}">✎</button></div>
+      <div class="gchips">${gs.map(g => chip(g, true)).join("") || `<span class="meta" style="padding:6px 2px">Drop names here</span>`}</div></div>`; }).join("")}</div>`
      : `<div class="card"><div class="empty">No tables yet. Add them one at a time or several at once (for example 12 tables of 8).</div></div>`}</div>
   </div>`;
   document.getElementById("addTable").onclick = () => tableDlg();
+  wireAuto();
   document.getElementById("addTables").onclick = () => tablesDlg();
+  let drag = null; // what is being dragged: ["g" or "h", id]
+  M().querySelectorAll(".hchip").forEach(c => c.setAttribute("draggable", "true"));
+  M().querySelectorAll(".hhtog").forEach(b => b.onclick = e => { e.stopPropagation(); const box = b.closest(".hh"), m = box.querySelector(".hhm"), open = m.hidden; m.hidden = !open; b.setAttribute("aria-expanded", open); b.textContent = open ? "▾" : "▸"; HOPEN.set(box.dataset.hh, open); });
   M().querySelectorAll(".gchip").forEach(c => {
-    c.ondragstart = e => { e.dataTransfer.setData("text/plain", c.dataset.gid); e.dataTransfer.effectAllowed = "move"; c.classList.add("dragging"); };
-    c.ondragend = () => c.classList.remove("dragging");
-    c.onclick = e => { e.stopPropagation(); PICKG = PICKG === c.dataset.gid ? null : c.dataset.gid; render(); if (PICKG) toast("Now tap a table for " + S.guests.find(g => g.id === PICKG).name); };
+    const kind = c.dataset.hid ? "h" : "g", id = c.dataset.hid || c.dataset.gid;
+    c.ondragstart = e => { drag = [kind, id]; e.dataTransfer.setData("text/plain", kind + ":" + id); e.dataTransfer.effectAllowed = "move"; c.classList.add("dragging"); };
+    c.ondragend = () => { drag = null; c.classList.remove("dragging"); M().querySelectorAll(".zone.warnhot").forEach(z => z.classList.remove("warnhot")); };
+    c.onclick = e => { e.stopPropagation(); if (kind === "h") { PICKH = PICKH === id ? null : id; PICKG = null; render(); if (PICKH) toast("Now tap a table for " + hhOf(id).name); } else { PICKG = PICKG === id ? null : id; PICKH = null; render(); if (PICKG) toast("Now tap a table for " + gOf(id).name); } };
   });
   M().querySelectorAll(".zone[data-drop]").forEach(z => {
-    z.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; z.classList.add("over"); };
-    z.ondragleave = e => { if (!z.contains(e.relatedTarget)) z.classList.remove("over"); };
-    z.ondrop = e => { e.preventDefault(); e.stopPropagation(); z.classList.remove("over"); const gid = e.dataTransfer.getData("text/plain"); if (gid) seat(gid, z.dataset.drop); };
-    z.onclick = e => { if (PICKG && !e.target.closest("[data-edittable]")) seat(PICKG, z.dataset.drop); };
+    z.ondragover = e => {
+      e.preventDefault(); e.dataTransfer.dropEffect = "move";
+      if (!z.classList.contains("over") && drag && z.dataset.drop) { const gids = drag[0] === "h" ? activeOf(drag[1]).map(g => g.id) : [drag[1]], cl = wouldClash(gids, z.dataset.drop); z.classList.toggle("warnhot", !!cl.length); if (cl.length) toast("⚠ " + andList(cl[0].names) + " are marked keep apart"); }
+      z.classList.add("over");
+    };
+    z.ondragleave = e => { if (!z.contains(e.relatedTarget)) z.classList.remove("over", "warnhot"); };
+    z.ondrop = e => { e.preventDefault(); e.stopPropagation(); z.classList.remove("over", "warnhot"); const v = e.dataTransfer.getData("text/plain"), m = /^([gh]):(.+)$/.exec(v); if (m) placeUI(m[1], m[2], z.dataset.drop || null); else if (v) placeUI("g", v, z.dataset.drop || null); };
+    z.onclick = e => { if (e.target.closest("[data-edittable],.hhtog")) return; if (PICKH) placeUI("h", PICKH, z.dataset.drop || null); else if (PICKG) placeUI("g", PICKG, z.dataset.drop || null); };
   });
   wireModes(); wire();
 }
@@ -763,7 +978,8 @@ function ini(name) {
   const w = String(name).replace(/\s*(&|\band\b)\s*guest\b|\+\s*\d+/gi, "").split(/\s+/).filter(x => /[A-Za-z0-9]/.test(x) && !/^(the|&|and|family)$/i.test(x));
   return w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase() : "?";
 }
-const seatColor = g => S.plan.color === "meal" ? `var(--m${MEALS.indexOf(g.meal) + 1})` : `var(--s-${["p1", "p2"].includes(g.side) ? g.side : "both"})`;
+const hhColor = id => hhOf(id) ? `var(--h${hhIdx(id) % 8})` : "var(--m0)";
+const seatColor = g => S.plan.color === "meal" ? `var(--m${MEALS.indexOf(g.meal) + 1})` : S.plan.color === "group" ? hhColor(g.hh) : `var(--s-${["p1", "p2"].includes(g.side) ? g.side : "both"})`;
 const SPECIAL = ["Vegetarian", "Vegan", "Kids meal"];
 // Dietary needs at a table: special meals (by person) + each note in "Dietary needs" (comma separated)
 function dietOf(list) {
@@ -783,22 +999,23 @@ const elName = id => { const r = elOf(id); return !r ? "" : r.k === "t" ? "Table
 function fitText(t, room, max, min) { t = String(t); const fs = Math.max(min || max, Math.min(max, room / (t.length * .58))), n = Math.max(3, Math.floor(room / (fs * .58) + 1e-6)); return [t.length > n ? t.slice(0, n - 1) + "…" : t, fs]; }
 
 /* --- floor plan: drawing (SVG in feet) --- */
-function planTable(t, list, print) {
-  const map = seatMap(t, list), g = tGeo(t, map.length), r = t.rot || 0, n = capOf(t), occ = tableSeated(t);
-  const cls = occ > n ? "over" : occ === n ? "full" : "";
+function planTable(t, list, print, mk) {
+  const map = seatMap(t, list), g = tGeo(t, map.length), r = t.rot || 0, n = capOf(t), occ = tableSeated(t), clash = mk && mk.t.has(t.id);
+  const cls = (occ > n ? "over" : occ === n ? "full" : "") + (clash ? " clash" : "") + (!print && AUTO && AUTO.tables.has(t.id) ? " autofill" : "");
   const body = g.round ? `<circle class="tb" r="${f1(g.r)}"/>` : `<rect class="tb" x="${f1(-g.L / 2)}" y="${f1(-g.W / 2)}" width="${f1(g.L)}" height="${f1(g.W)}" rx=".35"/>`;
   const seats = g.seats.map(([x, y], i) => {
     const o = map[i], gg = o && o.g;
-    const c = !o ? (i >= n ? "x" : "") : "on" + (gg.rsvp === "Declined" ? " dec" : gg.rsvp !== "Attending" ? " inv" : "") + (i >= n ? " x" : "");
-    const tip = o ? gg.name + (o.k ? " (guest " + (o.k + 1) + ")" : "") + " · " + gg.rsvp + (gg.meal ? " · " + gg.meal : "") + (gg.diet ? " · " + gg.diet : "") : "Seat " + (i + 1) + " · empty";
-    return `<g class="seat ${c}" data-seat="${i}" data-t="${t.id}"${o ? ` data-g="${gg.id}"` : ""} transform="translate(${f1(x)} ${f1(y)})"><circle r=".8"${o ? ` style="fill:${seatColor(gg)}"` : ""}/>${o ? `<text transform="rotate(${-r})">${o.k ? "+" + o.k : esc(ini(gg.name))}</text>` : ""}<title>${esc(tip)}</title></g>`;
+    const c = !o ? (i >= n ? "x" : "") : "on" + (gg.rsvp === "Declined" ? " dec" : gg.rsvp !== "Attending" ? " inv" : "") + (i >= n ? " x" : "") + (mk && mk.g.has(gg.id) ? " cl" : "") + (!print && PICKH && gg.hh === PICKH ? " hl" : "");
+    const tip = o ? gg.name + (o.k ? " (guest " + (o.k + 1) + ")" : "") + (hhOf(gg.hh) ? " · " + hhOf(gg.hh).name : "") + " · " + gg.rsvp + (gg.meal ? " · " + gg.meal : "") + (gg.diet ? " · " + gg.diet : "") : "Seat " + (i + 1) + " · empty";
+    return `<g class="seat ${c}" data-seat="${i}" data-t="${t.id}"${o ? ` data-g="${gg.id}"` : ""} transform="translate(${f1(x)} ${f1(y)})">${o && mk && mk.g.has(gg.id) ? '<circle class="clr" r="1.12"/>' : ""}<circle r=".8"${o ? ` style="fill:${seatColor(gg)}"` : ""}/>${o ? `<text transform="rotate(${-r})">${o.k ? "+" + o.k : esc(ini(gg.name))}</text>` : ""}<title>${esc(tip)}</title></g>`;
   }).join("");
   const room = g.round ? g.r * 1.75 : g.L * .9, fs = Math.min(1.5, g.round ? g.r * .62 : g.W * .5), [nm, nfs] = t.name ? fitText(t.name, room, fs * .5, fs * .36) : ["", 0];
   const label = `<g transform="rotate(${-r})"><text class="tno" y="${nm ? f1(-fs * .32) : 0}" font-size="${f1(fs)}">${tableNo(t.id)}</text>${nm ? `<text class="tnm" y="${f1(fs * .58)}" font-size="${f1(nfs)}">${esc(nm)}</text>` : ""}</g>`;
   const dc = Object.values(dietOf(list)).reduce((a, b) => a + b, 0);
   const badge = dc ? `<g class="dbadge" transform="rotate(${-r}) translate(${f1(g.round ? g.r * .5 : g.L / 2 - .7)} ${f1(g.round ? -g.r * .5 : -g.W / 2 + .7)})"><circle r=".6"/><text>${dc}</text></g>` : "";
-  const aria = `Table ${tableNo(t.id)}${t.name ? ", " + t.name : ""}, ${SHAPES[t.shape]}, ${occ} of ${n} seats${occ > n ? ", over by " + (occ - n) : occ === n ? ", full" : ""}${dc ? ", " + dc + " dietary needs" : ""}`;
-  return `<g class="el tbl ${cls}${!print && SEL === t.id ? " sel" : ""}" data-el="${t.id}" data-k="t"${print ? "" : ` tabindex="0" role="button" aria-label="${esc(aria)}"`} transform="translate(${f1(t.x)} ${f1(t.y)}) rotate(${r})">${body}${seats}${label}${badge}</g>`;
+  const cbadge = clash ? `<g class="cbadge" transform="rotate(${-r}) translate(${f1(g.round ? -g.r * .5 : -g.L / 2 + .7)} ${f1(g.round ? -g.r * .5 : -g.W / 2 + .7)})"><circle r=".62"/><text>!</text><title>Keep apart: two people marked keep apart sit here</title></g>` : "";
+  const aria = `Table ${tableNo(t.id)}${t.name ? ", " + t.name : ""}, ${SHAPES[t.shape]}, ${occ} of ${n} seats${occ > n ? ", over by " + (occ - n) : occ === n ? ", full" : ""}${dc ? ", " + dc + " dietary needs" : ""}${clash ? ", keep-apart conflict" : ""}`;
+  return `<g class="el tbl ${cls}${!print && SEL === t.id ? " sel" : ""}" data-el="${t.id}" data-k="t"${print ? "" : ` tabindex="0" role="button" aria-label="${esc(aria)}"`} transform="translate(${f1(t.x)} ${f1(t.y)}) rotate(${r})">${body}${seats}${label}${badge}${cbadge}</g>`;
 }
 function planItem(it, pfx, print) {
   const d = ITEMS[it.kind] || ITEMS.label, w = it.w, h = it.h, r = it.rot || 0, lab = it.label || d.name;
@@ -814,12 +1031,12 @@ function planItem(it, pfx, print) {
   return `<g class="el item k-${it.kind}${!print && SEL === it.id ? " sel" : ""}" data-el="${it.id}" data-k="i"${print ? "" : ` tabindex="0" role="button" aria-label="${esc(lab + ", " + fmtFt(w) + " by " + fmtFt(h) + " ft")}"`} transform="translate(${f1(it.x)} ${f1(it.y)}) rotate(${r})">${body}${text}</g>`;
 }
 function planSVG(pfx, print) {
-  const P = S.plan, by = byTable();
+  const P = S.plan, by = byTable(), mk = clashMarks(clashes());
   let h = `<defs><pattern id="${pfx}g1" width="1" height="1" patternUnits="userSpaceOnUse"><path d="M1 0H0V1" class="gl1"/></pattern><pattern id="${pfx}g5" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M5 0H0V5" class="gl5"/></pattern>
    <pattern id="${pfx}dn" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" class="dn0"/><rect width="1" height="1" class="dn1"/><rect x="1" y="1" width="1" height="1" class="dn1"/></pattern></defs>`;
   h += `<rect class="room" width="${P.w}" height="${P.l}"/>${print ? "" : `<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g1)" pointer-events="none"/>`}<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g5)" pointer-events="none"/>`;
   h += `<text class="dim" x="${P.w / 2}" y="-1">${fmtFt(P.w)} ft</text><text class="dim" transform="translate(-1 ${P.l / 2}) rotate(-90)">${fmtFt(P.l)} ft</text>`;
-  h += P.items.map(it => planItem(it, pfx, print)).join("") + S.tables.map(t => planTable(t, by.get(t.id) || [], print)).join("");
+  h += P.items.map(it => planItem(it, pfx, print)).join("") + S.tables.map(t => planTable(t, by.get(t.id) || [], print, mk)).join("");
   if (!print) h += `<g id="rotH" class="roth" visibility="hidden"><line x1="0" y1="0" x2="0" y2="0"/><circle data-rot="1" r=".75"><title>Drag to turn</title></circle></g>`;
   return h;
 }
@@ -828,35 +1045,55 @@ function planSVG(pfx, print) {
 function planV() {
   layoutMissing(S);
   if (SEL && !elOf(SEL)) SEL = null;
-  const st = seating(), P = S.plan, pool = poolList();
-  M().innerHTML = `<div class="tablebar"><div><h1>Seating &amp; floor plan</h1><p class="sub" style="margin:0"><b id="sSeated">${st.seated}</b> seated of ${st.seats} seats · <b id="sNeed" class="${st.need ? "t-warn" : "t-ok"}">${st.need}</b> attending without a table · <b id="sOver" class="${st.over ? "t-short" : ""}">${st.over}</b> over capacity</p></div>
-   <div class="actions" style="margin:0"><button class="btn ghost" id="csvT">⬇ CSV by table</button><button class="btn ghost" id="printPlan">🖨 Print / PDF</button><button class="btn" id="addEl">+ Add to plan</button></div></div>
+  const st = seating(), P = S.plan, pool = poolList(), nc = clashes().length;
+  M().innerHTML = `<div class="tablebar"><div><h1>Seating &amp; floor plan</h1><p class="sub" style="margin:0"><b id="sSeated">${st.seated}</b> seated of ${st.seats} seats · <b id="sNeed" class="${st.need ? "t-warn" : "t-ok"}">${st.need}</b> attending without a table · <b id="sOver" class="${st.over ? "t-short" : ""}">${st.over}</b> over capacity${S.rules.length ? ` · <b id="sClash" class="${nc ? "t-short" : "t-ok"}">${nc}</b> seating ${nc === 1 ? "conflict" : "conflicts"}` : ""}</p></div>
+   <div class="actions" style="margin:0"><button class="btn ghost" id="csvT">⬇ CSV by table</button><button class="btn ghost" id="printPlan">🖨 Print / PDF</button><button class="btn ghost" id="autoBtn">✨ Auto-seat</button><button class="btn" id="addEl">+ Add to plan</button></div></div>
   ${modeTabs()}
   <div class="planwrap">
    <div class="card plancard">
     <div class="ptools">
      <button class="btn small ghost" id="roomBtn" aria-label="Room size ${fmtFt(P.w)} by ${fmtFt(P.l)} feet, change">Room ${fmtFt(P.w)} × ${fmtFt(P.l)} ft</button>
-     <span class="meta">Color</span><div class="chips" role="group" aria-label="Seat colors">${[["side", "By side"], ["meal", "By meal"]].map(([k, t]) => `<button class="chip" data-color="${k}" aria-pressed="${P.color === k}">${t}</button>`).join("")}</div>
+     <span class="meta">Color</span><div class="chips" role="group" aria-label="Seat colors">${[["side", "Side"], ["meal", "Meal"], ["group", "Group"]].map(([k, t]) => `<button class="chip" data-color="${k}" aria-pressed="${P.color === k}">${t}</button>`).join("")}</div>
      <button class="chip" id="snapBtn" aria-pressed="${!!P.snap}">Snap to grid</button>
      <span class="grow"></span>
      <button class="icon" id="zOut" aria-label="Zoom out" title="Zoom out">−</button><button class="icon" id="zIn" aria-label="Zoom in" title="Zoom in">+</button><button class="btn small ghost" id="zFit">Fit</button>
     </div>
+    ${autoBarHTML()}
     <div class="planbox" id="planBox" style="aspect-ratio:${f1(P.w + 8)}/${f1(P.l + 8)}"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Floor plan, ${fmtFt(P.w)} by ${fmtFt(P.l)} feet">${planSVG("s")}</svg></div>
     <div class="selbar" id="selBar" aria-live="polite"></div>
     <p class="meta phelp">Drag to move; drag the empty floor to pan; Ctrl + scroll or pinch to zoom. Keyboard: Tab to a table, arrows move it (Shift = 5 ft), R turns it, D duplicates, Delete removes, Enter edits or seats the picked guest.</p>
    </div>
-   <div class="card ppool" id="poolCard"><h2>Not seated yet <span class="meta">(${pool.reduce((a, g) => a + people(g), 0)})</span></h2>
-    <input id="pq" type="search" placeholder="Find a guest" aria-label="Find a guest" value="${esc(PQ)}">
-    <div class="gchips" id="poolZone" aria-label="Not seated">${pool.length ? pool.map(planChip).join("") : `<div class="meta" style="padding:8px">Everyone has a seat. 🎉</div>`}</div>
-    <p class="meta" style="margin:10px 0 0">Drag a name onto a seat or a table. On a phone: tap a name, then tap a seat. Dashed = no reply yet.</p></div>
+   <div class="card ppool" id="poolCard"><h2>Guests <span class="meta">(${sumPeople(pool)} not seated)</span></h2>
+    <input id="pq" type="search" placeholder="Find a guest or a group" aria-label="Find a guest or a group" value="${esc(PQ)}">
+    <div class="gchips plist" id="poolZone" aria-label="Guests by group">${poolHTML(planChip)}</div>
+    <p class="meta" style="margin:10px 0 0">Drag a name onto a seat or a table, or drag a group to seat everyone side by side. On a phone: tap a name or a group, then tap a table. Dashed = no reply yet.</p>
+    <div class="actions" style="justify-content:flex-start;margin-top:10px"><button class="btn small ghost" id="addH2">+ Add a family / group</button><button class="btn small ghost" id="rulesBtn2">↔ Keep apart${S.rules.length ? " (" + S.rules.length + ")" : ""}</button></div></div>
    <div class="card pinfo"><h2>Check</h2><ul class="warns" id="warnPanel">${warnHTML()}</ul><div id="tableInfo"></div><div class="legend" id="legend">${legendHTML()}</div></div>
   </div>`;
   wirePlan(); wireModes(); wire();
 }
-const planChip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}${g.meal ? " · " + esc(g.meal) : ""}${g.diet ? " · " + esc(g.diet) : ""}"${PQ && !g.name.toLowerCase().includes(PQ.toLowerCase()) ? " hidden" : ""}><i class="dot" style="background:${seatColor(g)}"></i>${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}</button>`;
+const planChip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}${tabOf(g.table) ? " seated" : ""}" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}${tabOf(g.table) ? " · " + esc(tableLabel(g.table)) : ""}${g.meal ? " · " + esc(g.meal) : ""}${g.diet ? " · " + esc(g.diet) : ""}"><i class="dot" style="background:${seatColor(g)}"></i>${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}${tabOf(g.table) ? `<small class="tno2">T${tableNo(g.table)}</small>` : ""}</button>`;
+const HICON = '<svg class="hico" viewBox="0 0 20 16" aria-hidden="true"><circle cx="6" cy="4.5" r="3"/><circle cx="14" cy="4.5" r="3"/><path d="M0.5 15c.4-3.6 2.6-5.6 5.5-5.6s5.1 2 5.5 5.6zM8.5 15c.4-3.6 2.6-5.6 5.5-5.6s5.1 2 5.5 5.6z"/></svg>';
+// The side list: every group (open or closed, with seated/total), then the guests without a group who still need a seat
+function poolHTML(chip) {
+  const q = PQ.trim().toLowerCase(), hit = g => !q || g.name.toLowerCase().includes(q);
+  const groups = S.households.map(h => [h, activeOf(h.id)]).filter(([, gs]) => gs.length).sort((a, b) => a[0].name.localeCompare(b[0].name));
+  const singles = poolList().filter(g => !hhOf(g.hh));
+  let out = groups.map(([h, gs]) => {
+    const all = q && h.name.toLowerCase().includes(q), vis = gs.filter(g => all || hit(g)); if (q && !vis.length) return "";
+    const seated = hhSeated(h.id), tot = sumPeople(gs), tabs = hhTables(h.id), open = q ? true : HOPEN.has(h.id) ? HOPEN.get(h.id) : seated < tot;
+    return `<div class="hh${seated === tot ? " hhdone" : ""}" data-hh="${h.id}"><div class="hhrow"><button type="button" class="hhtog" aria-expanded="${open}" aria-label="${open ? "Hide" : "Show"} ${esc(h.name)}">${open ? "▾" : "▸"}</button>
+     <button type="button" class="gchip hchip${PICKH === h.id ? " picked" : ""}" data-hid="${h.id}" title="${esc(h.name)} · ${seated} of ${tot} seated${tabs.length ? " · " + esc(tablesText(tabs)) : ""}">${S.plan.color === "group" ? `<i class="dot" style="background:${hhColor(h.id)}"></i>` : HICON}${esc(h.name)}<small>${seated}/${tot}</small></button></div>
+     <div class="gchips hhm"${open ? "" : " hidden"}>${vis.map(chip).join("")}</div></div>`;
+  }).join("");
+  const sv = singles.filter(hit);
+  if (sv.length) out += `${groups.length ? `<div class="plab">${S.households.length ? "Not in a group" : ""}</div>` : ""}<div class="gchips singles">${sv.map(chip).join("")}</div>`;
+  return out || `<div class="meta" style="padding:8px">${q ? "Nobody matches." : "Everyone has a seat. 🎉"}</div>`;
+}
 function legendHTML() {
-  const L = S.plan.color === "meal" ? MEALS.map((m, i) => [`var(--m${i + 1})`, m]).concat([["var(--m0)", "No meal yet"]]) : [["var(--s-p1)", sideName("p1")], ["var(--s-p2)", sideName("p2")], ["var(--s-both)", "Both"]];
-  return L.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("") + `<span><i style="border:2px dashed var(--muted)"></i>No reply yet</span><span><i style="border:2px solid var(--bad)"></i>Declined / over</span><span><i style="background:var(--m4)"></i>Dietary needs (count)</span>`;
+  const G = S.households.filter(h => activeOf(h.id).length), L = S.plan.color === "meal" ? MEALS.map((m, i) => [`var(--m${i + 1})`, m]).concat([["var(--m0)", "No meal yet"]])
+    : S.plan.color === "group" ? G.slice(0, 12).map(h => [hhColor(h.id), h.name]).concat(G.length > 12 ? [["transparent", "+" + (G.length - 12) + " more"]] : [], [["var(--m0)", "No group"]]) : [["var(--s-p1)", sideName("p1")], ["var(--s-p2)", sideName("p2")], ["var(--s-both)", "Both"]];
+  return L.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("") + `<span><i style="border:2px dashed var(--muted)"></i>No reply yet</span><span><i style="border:2px solid var(--bad)"></i>Declined / over</span><span><i style="background:var(--m4)"></i>Dietary needs (count)</span>${S.rules.length ? `<span><i style="border:2px dashed var(--bad)"></i>Keep apart broken</span>` : ""}`;
 }
 function warnHTML() {
   const by = byTable(), out = [], st = seating();
@@ -867,12 +1104,16 @@ function warnHTML() {
   if (need.length) out.push(`<li class="warn" data-w="need">${plural(st.need, "attending guest")} without a table: ${need.slice(0, 5).map(g => esc(g.name)).join(", ")}${need.length > 5 ? " and " + (need.length - 5) + " more" : ""}</li>`);
   const dec = S.guests.filter(g => g.rsvp === "Declined" && tabOf(g.table));
   if (dec.length) out.push(`<li class="bad" data-w="declined">${plural(dec.length, "declined guest")} still seated: ${dec.slice(0, 5).map(g => esc(g.name) + " (Table " + tableNo(g.table) + ")").join(", ")}${dec.length > 5 ? "…" : ""}<br><button class="btn small danger" id="unseatDec">Unseat them</button></li>`);
+  const cl = clashes();
+  cl.forEach(c => out.push(`<li class="${c.kind === "apart" ? "bad" : "warn"}" data-w="${c.kind}">⚠ ${esc(clashText(c))}</li>`));
   const diets = S.tables.map(t => [t, dietOf(by.get(t.id) || [])]).filter(([, c]) => Object.keys(c).length);
   if (diets.length) out.push(`<li data-w="diet"><b>Dietary needs by table</b>${diets.map(([t, c]) => `<div class="meta" style="color:var(--ink)">Table ${tableNo(t.id)}: ${esc(dietText(c))}</div>`).join("")}</li>`);
-  if (!over.length && !need.length && !dec.length) out.unshift(`<li class="good" data-w="ok">✓ Everyone attending has a seat${S.tables.length ? " and no table is over" : ""}.</li>`);
+  if (!over.length && !need.length && !dec.length && !cl.length) out.unshift(`<li class="good" data-w="ok">✓ Everyone attending has a seat${S.tables.length ? " and no table is over" : ""}.</li>`);
   return out.join("");
 }
 function selBarHTML() {
+  const ph = PICKH && hhOf(PICKH);
+  if (ph) return `<span class="meta">Picked <b style="color:var(--ink)">${esc(ph.name)}</b> (${plural(hhSeats(ph.id), "seat")}): tap a table to seat everyone side by side. <button class="btn small ghost" id="unpick">Cancel</button>${hhSeated(ph.id) ? ` <button class="btn small ghost" id="unseatGrp">Unseat the group</button>` : ""}</span>`;
   const r = SEL && elOf(SEL);
   if (!r || PICKG) return `<span class="meta">${PICKG ? `Picked <b style="color:var(--ink)">${esc(S.guests.find(g => g.id === PICKG)?.name || "")}</b>: tap a seat or a table. <button class="btn small ghost" id="unpick">Cancel</button>${tabOf(S.guests.find(g => g.id === PICKG)?.table) ? ` <button class="btn small ghost" id="unseatPick">Unseat</button>` : ""}` : "Click or tap a table to select it. Use + Add to plan for tables, the dance floor, the bar and more."}</span>`;
   const o = r.o, sub = r.k === "t" ? `${SHAPES[o.shape]} · ${tableSeated(o)} of ${capOf(o)} seats` : `${fmtFt(o.w)} × ${fmtFt(o.h)} ft`;
@@ -885,8 +1126,9 @@ function tableInfoHTML() {
   const list = S.guests.filter(g => g.table === t.id), map = seatMap(t, list), seen = new Set(), rows = [];
   map.forEach((o, i) => { if (o && !seen.has(o.g)) { seen.add(o.g); rows.push([i, o.g]); } });
   const meals = {}; list.filter(g => g.rsvp !== "Declined").forEach(g => { const k = g.meal || "No meal yet"; meals[k] = (meals[k] || 0) + people(g); });
+  const cl = clashes(), mk = clashMarks(cl);
   return `<div class="tinfo" data-tinfo="${t.id}"><b>${esc(elName(t.id))}</b> <span class="meta">${tableSeated(t)} of ${capOf(t)}</span>
-   ${rows.length ? rows.map(([i, g]) => `<div class="row"><span class="meta" style="width:22px">${i + 1}</span><div class="grow"><div class="name" style="font-weight:650">${esc(g.name)}${g.rsvp === "Declined" ? ' <span class="pill short">Declined</span>' : ""}</div><div class="meta">${esc([g.meal, g.diet].filter(Boolean).join(" · ") || "No meal yet")}</div></div><button class="icon" data-unseat="${g.id}" aria-label="Unseat ${esc(g.name)}" title="Unseat">✕</button></div>`).join("") : `<div class="meta" style="padding:6px 0">Nobody here yet.</div>`}
+   ${rows.length ? rows.map(([i, g]) => `<div class="row"><span class="meta" style="width:22px">${i + 1}</span><div class="grow"><div class="name" style="font-weight:650">${esc(g.name)}${g.rsvp === "Declined" ? ' <span class="pill short">Declined</span>' : ""}</div><div class="meta">${esc([hhOf(g.hh) && hhOf(g.hh).name, g.meal, g.diet].filter(Boolean).join(" · ") || "No meal yet")}</div>${mk.g.has(g.id) ? `<div class="meta t-short">⚠ ${esc(ruleNotes(g, cl))}</div>` : ""}</div><button class="icon" data-unseat="${g.id}" aria-label="Unseat ${esc(g.name)}" title="Unseat">✕</button></div>`).join("") : `<div class="meta" style="padding:6px 0">Nobody here yet.</div>`}
    ${Object.keys(meals).length ? `<div class="meta" style="margin-top:6px">Meals: ${esc(dietText(meals))}</div>` : ""}</div>`;
 }
 function updateSel() {
@@ -895,12 +1137,14 @@ function updateSel() {
   const ge = SEL && svg.querySelector(`.el[data-el="${SEL}"]`); if (ge) ge.classList.add("sel");
   document.getElementById("selBar").innerHTML = selBarHTML();
   document.getElementById("tableInfo").innerHTML = tableInfoHTML();
-  M().querySelectorAll("#poolZone .gchip").forEach(c => c.classList.toggle("picked", c.dataset.gid === PICKG));
+  M().querySelectorAll("#poolZone .gchip").forEach(c => c.classList.toggle("picked", c.dataset.gid ? c.dataset.gid === PICKG : c.dataset.hid === PICKH));
+  const hm = PICKH ? new Set(membersOf(PICKH).map(g => g.id)) : null;
+  svg.querySelectorAll(".seat[data-g]").forEach(e => e.classList.toggle("hl", !!hm && hm.has(e.dataset.g)));
   placeRotH();
   const on = (id, fn) => { const b = document.getElementById(id); if (b) b.onclick = fn; };
   on("selEdit", () => editEl(SEL)); on("selRotL", () => turnEl(SEL, -15)); on("selRotR", () => turnEl(SEL, 15));
   on("selDup", () => dupEl(SEL)); on("selDel", () => delEl(SEL));
-  on("unpick", () => { PICKG = null; updateSel(); }); on("unseatPick", () => seatGuest(PICKG, null));
+  on("unpick", () => { PICKG = null; PICKH = null; updateSel(); }); on("unseatPick", () => seatGuest(PICKG, null)); on("unseatGrp", () => placeUI("h", PICKH, null));
   M().querySelectorAll("#tableInfo [data-unseat]").forEach(b => b.onclick = () => seatGuest(b.dataset.unseat, null));
 }
 function placeRotH(o) {
@@ -917,11 +1161,12 @@ function placeRotH(o) {
   h.setAttribute("visibility", "visible");
 }
 function select(id) { SEL = id; updateSel(); }
-function pickGuest(gid) { PICKG = gid; updateSel(); if (gid) toast("Now tap a seat or a table for " + S.guests.find(g => g.id === gid).name); }
+function pickGuest(gid) { PICKG = gid; PICKH = null; updateSel(); if (gid) toast("Now tap a seat or a table for " + S.guests.find(g => g.id === gid).name); }
+function pickGroup(hid) { PICKH = hid; PICKG = null; updateSel(); if (hid) toast("Now tap a table for " + hhOf(hid).name); }
 const focusEl = id => { const g = M().querySelector(`.el[data-el="${id}"]`); if (g) g.focus({ preventScroll: true }); };
 
 /* --- floor plan: changes (each one saves once) --- */
-function commit(focusId) { save(); render(); if (focusId) focusEl(focusId); }
+function commit(focusId) { if (AUTO) AUTO.undo = null; save(); render(); if (focusId) focusEl(focusId); }
 function seatGuest(gid, tid, idx) {
   const g = S.guests.find(x => x.id === gid); if (!g) return;
   const t = tabOf(tid); PICKG = null;
@@ -936,6 +1181,63 @@ function seatGuest(gid, tid, idx) {
   const n = tableSeated(t), cap = capOf(t);
   toast(n > cap ? `Table ${tableNo(t.id)} is full: over by ${n - cap}` : `${g.name} → Table ${tableNo(t.id)}${idx != null && idx < cap ? ", seat " + (idx + 1) : ""}${n === cap ? " · table full" : ""}`);
 }
+// Seating from the screen (drag, tap, keyboard). A guest: asks first if a "keep apart" rule would break.
+// A group: same check, then the free seats; if it doesn't fit, offers to seat the ones who fit or to pick another table.
+function placeUI(kind, id, tid, idx) {
+  const t = tabOf(tid), list = SEATMODE === "list" && VIEW === "seating";
+  if (kind === "g") {
+    const go1 = () => list ? seat(id, t ? t.id : "") : seatGuest(id, t ? t.id : null, idx);
+    const cl = t ? wouldClash([id], t.id) : []; return cl.length ? clashDlg(cl, go1) : go1();
+  }
+  const h = hhOf(id); if (!h) return;
+  if (!t) { const gs = membersOf(id).filter(g => g.table); PICKH = null; if (!gs.length) return list ? render() : updateSel(); gs.forEach(g => { g.table = null; g.seat = null; }); commit(); return toast(h.name + " is not seated"); }
+  const gs = activeOf(id); if (!gs.length) return toast("Nobody in " + h.name + " is coming");
+  const done = (who, msg) => { PICKH = null; commit(); toast(msg || `${h.name} → Table ${tableNo(t.id)} (${plural(sumPeople(who), "seat")}${who.length > 1 ? ", side by side" : ""})`); };
+  const go2 = () => {
+    const need = sumPeople(gs), free = Math.max(0, freeAt(t, gs)), fits = fitList(id, t);
+    if (fits.length === gs.length) { placeTogether(gs, t); return done(gs); }
+    const nf = sumPeople(fits);
+    choiceDlg(`${esc(h.name)} needs ${plural(need, "seat")}`, `Table ${tableNo(t.id)}${t.name ? " · " + esc(t.name) : ""} has ${free ? plural(free, "free seat") : "no free seats"}.${nf ? ` You can seat the ${nf} who fit and place the rest later, or choose another table.` : " Choose another table, or make this one bigger with ✎ Edit."}`,
+      [["all", `Seat all ${need} anyway`, "ghost"], ["other", "Choose another table", nf ? "ghost" : ""], nf ? ["fit", `Seat ${nf} here`] : null], v => {
+        if (v === "fit") { placeTogether(fits, t); done(fits, `${plural(nf, "seat")} at Table ${tableNo(t.id)} · ${need - nf} of ${h.name} still need a seat`); }
+        else if (v === "all") { placeTogether(gs, t); done(gs, `${h.name} → Table ${tableNo(t.id)} · over by ${need - free}`); }
+        else { PICKH = id; list ? render() : updateSel(); toast("Pick another table for " + h.name); }
+      });
+  };
+  const cl = wouldClash(gs.map(g => g.id), t.id);
+  cl.length ? clashDlg(cl, go2) : go2();
+}
+// Auto-seat: the button, the question, the summary bar with Undo (one step)
+const autoBarHTML = () => AUTO ? `<div class="autores" id="autoRes" role="status"><span class="grow">✨ ${esc(AUTO.text)}</span>${AUTO.undo ? `<button type="button" class="btn small ghost" id="autoUndo">↶ Undo</button>` : ""}<button type="button" class="icon" id="autoX" aria-label="Close the summary" title="Close">✕</button></div>` : "";
+function wireAuto() {
+  const on = (id, fn) => { const b = document.getElementById(id); if (b) b.onclick = fn; };
+  on("autoBtn", () => autoDlg());
+  on("autoUndo", () => { const u = AUTO && AUTO.undo; if (!u) return; S.guests.forEach(g => { if (u.has(g.id)) [g.table, g.seat] = u.get(g.id); }); AUTO = null; commit(); toast("Auto-seat undone"); });
+  on("autoX", () => { AUTO = null; const r = document.getElementById("autoRes"); if (r) r.remove(); M().querySelectorAll(".autofill").forEach(e => e.classList.remove("autofill")); });
+}
+function autoDlg() {
+  if (!S.tables.length) return toast("Add your tables first");
+  const att = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table)), inv = S.guests.filter(g => g.rsvp === "Invited" && !tabOf(g.table)), seated = S.guests.filter(g => tabOf(g.table));
+  openDlg(`<h2>Auto-seat guests</h2><p class="sub" style="margin-bottom:12px">Fills your tables in one go: families and groups side by side, keep-apart rules respected, each side together where there's room, no table over. Then move people by hand. You can undo it.</p>
+   <div class="field"><span class="fl">Who</span><div class="seg segw"><label><input type="radio" name="who" value="new" checked>Guests without a seat (${sumPeople(att)})</label><label><input type="radio" name="who" value="all">Re-seat everyone</label></div></div>
+   <div class="field"><span class="fl">Not replied yet</span><label class="checkline"><input type="checkbox" name="pending"> Also seat the ${plural(sumPeople(inv), "guest")} who haven't replied</label></div>
+   <p class="meta" style="margin:0 0 12px">${seated.length ? `Guests already seated stay where they are (unless you choose Re-seat everyone). ` : ""}Head tables only get guests marked “Head table” in their guest details.</p>
+   <div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">✨ Auto-seat</button></div>`, fd => {
+    const o = { all: fd.get("who") === "all", pending: fd.get("pending") === "on" };
+    if (o.all && seated.length) { D().close(); confirmDlg("Re-seat everyone?", `This moves all ${plural(sumPeople(seated), "seated guest")} and seats everyone again from scratch. You can undo it right after.`, "Re-seat everyone", () => runAuto(o)); return false; }
+    D().close(); runAuto(o); return false;
+  });
+}
+function runAuto(o) {
+  const r = autoSeat(o);
+  if (r.none) { const u = r.undo; S.guests.forEach(g => { if (u.has(g.id)) [g.table, g.seat] = u.get(g.id); }); return toast(o.pending ? "Everyone who's coming or invited already has a seat" : "Everyone who's coming already has a seat"); }
+  save(); AUTO = { text: r.text, tables: r.tabs, undo: r.undo, left: r.left, splits: r.splits }; PICKG = null; PICKH = null; render(); toast(r.text.split(" · ")[0]);
+  const bar = document.getElementById("autoRes"); if (bar) bar.scrollIntoView({ block: "nearest" });
+}
+function clashDlg(cl, fn) {
+  choiceDlg("Marked keep apart", cl.map(c => `⚠ ${esc(andList(c.names))} would be at Table ${tableNo(c.t)}.`).join("<br>") + " You marked them keep apart. Seat them there anyway?", [["ok", "Seat anyway", "danger"]], fn);
+}
+
 function clampIn(o) { const P = S.plan; o.x = Math.max(0, Math.min(P.w, o.x)); o.y = Math.max(0, Math.min(P.l, o.y)); }
 const snapV = v => S.plan.snap ? Math.round(v) : Math.round(v * 10) / 10;
 function turnEl(id, d) { const r = elOf(id); if (!r) return; r.o.rot = (((Math.round(r.o.rot || 0) + d) % 360) + 360) % 360; commit(document.activeElement && document.activeElement.closest && document.activeElement.closest(".el") ? id : null); }
@@ -978,6 +1280,7 @@ function wirePlan() {
   const svg = document.getElementById("plan");
   if (!VB) fitVB(); setVB(); updateSel();
   document.getElementById("addEl").onclick = () => addDlg();
+  wireAuto();
   document.getElementById("roomBtn").onclick = () => roomDlg();
   document.getElementById("csvT").onclick = () => S.tables.length ? exportCSV("bytable") : toast("Add a table first");
   document.getElementById("printPlan").onclick = () => printPlan();
@@ -986,12 +1289,11 @@ function wirePlan() {
   document.getElementById("zIn").onclick = () => zoomAt(.8); document.getElementById("zOut").onclick = () => zoomAt(1.25);
   document.getElementById("zFit").onclick = () => { fitVB(); setVB(); };
   const ud = document.getElementById("unseatDec"); if (ud) ud.onclick = () => { const n = S.guests.filter(g => g.rsvp === "Declined" && g.table).length; S.guests.forEach(g => { if (g.rsvp === "Declined" && g.table) { g.table = null; g.seat = null; } }); commit(); toast(plural(n, "declined guest") + " unseated"); };
-  const pq = document.getElementById("pq"); pq.oninput = () => { PQ = pq.value; const q = PQ.toLowerCase(); M().querySelectorAll("#poolZone .gchip").forEach(c => c.hidden = !!q && !S.guests.find(g => g.id === c.dataset.gid).name.toLowerCase().includes(q)); };
-  M().querySelectorAll("#poolZone .gchip").forEach(c => {
-    c.onclick = e => { e.stopPropagation(); if (c.dataset.dragged) { delete c.dataset.dragged; return; } pickGuest(PICKG === c.dataset.gid ? null : c.dataset.gid); };
-    c.onpointerdown = e => { if (e.pointerType === "mouse" && e.button === 0) guestDrag(e, c.dataset.gid, c); };
-  });
-  document.getElementById("poolCard").onclick = e => { if (PICKG && !e.target.closest(".gchip,input") && tabOf(S.guests.find(g => g.id === PICKG)?.table)) seatGuest(PICKG, null); };
+  const pq = document.getElementById("pq"); pq.oninput = () => { PQ = pq.value; document.getElementById("poolZone").innerHTML = poolHTML(planChip); wirePool(); };
+  wirePool();
+  document.getElementById("addH2").onclick = () => groupDlg();
+  document.getElementById("rulesBtn2").onclick = () => rulesDlg();
+  document.getElementById("poolCard").onclick = e => { if (PICKG && !e.target.closest(".gchip,input,button") && tabOf(S.guests.find(g => g.id === PICKG)?.table)) seatGuest(PICKG, null); };
   const toFt = e => { const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse()); return { x: p.x, y: p.y }; };
   const ptrs = new Map(); let act = null, pinch = null;
   svg.addEventListener("pointerdown", e => {
@@ -1011,7 +1313,7 @@ function wirePlan() {
       act.moved = true;
       const occ = act.seatE && act.seatE.dataset.g;
       if (act.rotE && SEL) { act.mode = "rot"; act.o = elOf(SEL).o; act.ge = svg.querySelector(`.el[data-el="${SEL}"]`); }
-      else if (occ && act.type === "mouse") { act.mode = "guest"; act.gid = occ; act.ghost = ghost(S.guests.find(g => g.id === occ).name); }
+      else if (occ && act.type === "mouse") { act.mode = "guest"; act.gid = occ; act.ghost = ghost("g", occ); }
       else if (act.elE) { act.mode = "move"; act.ge = act.elE; act.o = elOf(act.elE.dataset.el).o; act.x0 = act.o.x; act.y0 = act.o.y; act.k = svg.getScreenCTM().a; if (SEL !== act.o.id) select(act.o.id); }
       else { act.mode = "pan"; act.vb = { ...VB }; act.k = svg.getScreenCTM().a; svg.style.cursor = "grabbing"; }
     }
@@ -1032,7 +1334,7 @@ function wirePlan() {
     if (!a.moved) return tapPlan(a);
     if (a.mode === "move") { a.o.x = snapV(a.nx); a.o.y = snapV(a.ny); clampIn(a.o); commit(); }
     else if (a.mode === "rot") { a.o.rot = a.rot; commit(); }
-    else if (a.mode === "guest") dropGuest(a.gid, a.ghost, e);
+    else if (a.mode === "guest") dropOn("g", a.gid, a.ghost, e);
   };
   svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
   svg.addEventListener("wheel", e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); const p = toFt(e); zoomAt(e.deltaY > 0 ? 1.12 : 1 / 1.12, p.x, p.y); }, { passive: false });
@@ -1045,55 +1347,97 @@ function wirePlan() {
     else if (e.key === "r" || e.key === "R") { e.preventDefault(); SEL = id; o.rot = (((Math.round(o.rot || 0) + (e.shiftKey ? -15 : 15)) % 360) + 360) % 360; commit(id); }
     else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); delEl(id); }
     else if (e.key === "d" || e.key === "D") { e.preventDefault(); dupEl(id); }
-    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (PICKG && r.k === "t") { seatGuest(PICKG, id, null); focusEl(id); } else editEl(id); }
-    else if (e.key === "Escape") { PICKG = null; select(null); ge.blur(); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if ((PICKG || PICKH) && r.k === "t") { PICKH ? placeUI("h", PICKH, id) : placeUI("g", PICKG, id, null); focusEl(id); } else editEl(id); }
+    else if (e.key === "Escape") { PICKG = null; PICKH = null; select(null); ge.blur(); }
+  });
+}
+// The side list: open/close a group (only the screen changes), pick or drag a guest or a whole group
+function wirePool() {
+  M().querySelectorAll("#poolZone .hhtog").forEach(b => b.onclick = e => {
+    e.stopPropagation(); const box = b.closest(".hh"), m = box.querySelector(".hhm"), open = m.hidden;
+    m.hidden = !open; b.setAttribute("aria-expanded", open); b.textContent = open ? "▾" : "▸"; HOPEN.set(box.dataset.hh, open);
+    b.setAttribute("aria-label", (open ? "Hide " : "Show ") + hhOf(box.dataset.hh).name);
+  });
+  M().querySelectorAll("#poolZone .gchip").forEach(c => {
+    const kind = c.dataset.hid ? "h" : "g", id = c.dataset.hid || c.dataset.gid;
+    c.onclick = e => { e.stopPropagation(); if (c.dataset.dragged) { delete c.dataset.dragged; return; } if (kind === "h") pickGroup(PICKH === id ? null : id); else pickGuest(PICKG === id ? null : id); };
+    c.onpointerdown = e => { if (e.pointerType === "mouse" && e.button === 0) chipDrag(e, kind, id, c); };
   });
 }
 function tapPlan(a) {
   if (a.rotE) return;
   if (a.seatE) {
     const tid = a.seatE.dataset.t, i = +a.seatE.dataset.seat;
-    if (PICKG) return seatGuest(PICKG, tid, i);
+    if (PICKH) return placeUI("h", PICKH, tid);
+    if (PICKG) return placeUI("g", PICKG, tid, i);
     SEL = tid; if (a.seatE.dataset.g) return pickGuest(a.seatE.dataset.g);
     return updateSel();
   }
-  if (a.elE) { const id = a.elE.dataset.el; if (PICKG && a.elE.dataset.k === "t") return seatGuest(PICKG, id, null); return select(id); }
-  if (PICKG || SEL) { PICKG = null; select(null); } // a tap on the empty floor only clears the selection: nothing is saved
+  if (a.elE) { const id = a.elE.dataset.el; if ((PICKG || PICKH) && a.elE.dataset.k === "t") return PICKH ? placeUI("h", PICKH, id) : placeUI("g", PICKG, id, null); return select(id); }
+  if (PICKG || PICKH || SEL) { PICKG = null; PICKH = null; select(null); } // a tap on the empty floor only clears the selection: nothing is saved
 }
-function ghost(name) { const d = document.createElement("div"); d.className = "gghost"; d.textContent = name; document.body.appendChild(d); return d; }
+// The name "in the hand" while dragging. Over a table it says, before you let go, if a "keep apart" rule would break
+// (and, for a group, if it doesn't fit).
+function ghost(kind, id) {
+  const d = document.createElement("div"); d.className = "gghost"; d.dataset.kind = kind; d.dataset.id = id; d._name = kind === "h" ? hhOf(id).name + " (" + hhSeats(id) + ")" : gOf(id).name;
+  d._gids = kind === "h" ? activeOf(id).map(g => g.id) : [id]; d._memo = {}; d.textContent = d._name; document.body.appendChild(d); return d;
+}
 function moveGhost(d, e) {
   d.style.left = e.clientX + "px"; d.style.top = e.clientY + "px";
-  document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot"));
+  document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot", "warnhot"));
   const el = document.elementFromPoint(e.clientX, e.clientY), h = el && (el.closest("[data-seat][data-t]") || el.closest('.el[data-k="t"]'));
+  const tid = h ? h.dataset.t || h.dataset.el : null;
   if (h) h.classList.add("hot");
+  if (d._tid !== tid) { d._tid = tid; d._warn = ghostWarn(d, tid); d.textContent = d._name + (d._warn ? "  ⚠ " + d._warn : ""); d.classList.toggle("bad", !!d._warn); }
+  const te = d._warn && document.querySelector(`#plan .el[data-el="${tid}"]`); if (te) te.classList.add("hot", "warnhot");
 }
-function dropGuest(gid, d, e) {
-  d.remove(); const el = document.elementFromPoint(e.clientX, e.clientY); if (!el) return;
-  const se = el.closest("[data-seat][data-t]"); if (se) return seatGuest(gid, se.dataset.t, +se.dataset.seat);
-  const te = el.closest('.el[data-k="t"]'); if (te) return seatGuest(gid, te.dataset.el, null);
-  if (el.closest("#poolCard")) return seatGuest(gid, null);
-  document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot"));
+function ghostWarn(d, tid) {
+  let warn = "";
+  if (tid) {
+    if (!(tid in d._memo)) {
+      const cl = wouldClash(d._gids, tid), t = tabOf(tid), w = [];
+      const self = new Set([d.dataset.id, ...d._gids, ...d._gids.map(x => gOf(x).hh).filter(Boolean)]);
+      if (cl.length) w.push("keep apart: " + andList([...new Set(cl.flatMap(c => c.ids.filter(x => !self.has(x)).map(ruleName)))]));
+      if (d.dataset.kind === "h") { const gs = activeOf(d.dataset.id), free = Math.max(0, freeAt(t, gs)); if (sumPeople(gs) > free) w.push(free + " free"); }
+      d._memo[tid] = w.join(" · ");
+    }
+    warn = d._memo[tid];
+  }
+  return warn;
 }
-function guestDrag(e, gid, chip) {
+function dropOn(kind, id, d, e) {
+  d.remove(); document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot", "warnhot"));
+  const el = document.elementFromPoint(e.clientX, e.clientY); if (!el) return;
+  const se = el.closest("[data-seat][data-t]"); if (se) return placeUI(kind, id, se.dataset.t, kind === "g" ? +se.dataset.seat : null);
+  const te = el.closest('.el[data-k="t"]'); if (te) return placeUI(kind, id, te.dataset.el, null);
+  if (el.closest("#poolCard")) return placeUI(kind, id, null);
+}
+function chipDrag(e, kind, id, chip) {
   const sx = e.clientX, sy = e.clientY; let d = null;
-  const mv = ev => { if (!d && Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return; if (!d) { d = ghost(S.guests.find(g => g.id === gid).name); chip.classList.add("dragging"); } moveGhost(d, ev); };
-  const up = ev => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); if (!d) return; chip.dataset.dragged = "1"; setTimeout(() => { delete chip.dataset.dragged; }, 0); chip.classList.remove("dragging"); dropGuest(gid, d, ev); };
+  const mv = ev => { if (!d && Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return; if (!d) { d = ghost(kind, id); chip.classList.add("dragging"); } moveGhost(d, ev); };
+  const up = ev => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); if (!d) return; chip.dataset.dragged = "1"; setTimeout(() => { delete chip.dataset.dragged; }, 0); chip.classList.remove("dragging"); dropOn(kind, id, d, ev); };
   addEventListener("pointermove", mv); addEventListener("pointerup", up);
 }
 
 /* --- floor plan: print / PDF --- */
 function buildPrint() {
-  const P = S.plan, by = byTable(), st = seating(), pa = document.getElementById("printArea");
+  const P = S.plan, by = byTable(), st = seating(), pa = document.getElementById("printArea"), cl = clashes(), mk = clashMarks(cl);
+  // groups get a short code (A, B, … AA) in the table lists, explained in the "Groups" box
+  const code = new Map(), cd = i => (i >= 26 ? String.fromCharCode(64 + Math.floor(i / 26)) : "") + String.fromCharCode(65 + i % 26);
+  S.households.filter(h => activeOf(h.id).length).sort((a, b) => (tableNo(hhTables(a.id)[0]) || 999) - (tableNo(hhTables(b.id)[0]) || 999) || a.name.localeCompare(b.name)).forEach((h, i) => code.set(h.id, cd(i)));
+  const tag = g => code.has(g.hh) ? ` <span class="pg">${code.get(g.hh)}</span>` : "";
   const tabs = S.tables.map(t => {
     const list = by.get(t.id) || [], map = seatMap(t, list), seen = new Set(), rows = [];
-    map.forEach((o, i) => { if (o && !seen.has(o.g)) { seen.add(o.g); rows.push(`<li value="${i + 1}">${esc(o.g.name)}${people(o.g) > 1 ? " (" + people(o.g) + ")" : ""}${o.g.meal ? " · " + esc(o.g.meal) : ""}${o.g.rsvp === "Declined" ? " · declined" : o.g.rsvp !== "Attending" ? " · no reply yet" : ""}</li>`); } });
+    map.forEach((o, i) => { if (o && !seen.has(o.g)) { seen.add(o.g); rows.push(`<li value="${i + 1}"${mk.g.has(o.g.id) ? ' class="pcl"' : ""}>${esc(o.g.name)}${tag(o.g)}${people(o.g) > 1 ? " (" + people(o.g) + ")" : ""}${o.g.meal ? " · " + esc(o.g.meal) : ""}${o.g.rsvp === "Declined" ? " · declined" : o.g.rsvp !== "Attending" ? " · no reply yet" : ""}</li>`); } });
     const dc = dietOf(list);
     return `<div class="ptab"><h3>Table ${tableNo(t.id)}${t.name ? " · " + esc(t.name) : ""} <small>${tableSeated(t)}/${capOf(t)}</small></h3>${rows.length ? `<ol>${rows.join("")}</ol>` : "<div>Empty</div>"}${Object.keys(dc).length ? `<div class="pd">${esc(dietText(dc))}</div>` : ""}</div>`;
   }).join("");
   const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table));
+  const legend = code.size ? `<div class="ptab plegend"><h3>Groups</h3><ul>${[...code].map(([id, c]) => { const tb = hhTables(id); return `<li><span class="pg">${c}</span> ${esc(hhOf(id).name)} <small>${tb.length ? esc(tablesText(tb)) : "not seated"} · ${hhSeated(id)}/${hhSeats(id)}</small></li>`; }).join("")}</ul></div>` : "";
+  const notes = S.rules.length ? `<div class="ptab pnotes"><h3>Seating rules</h3><ul>${S.rules.map(r => { const c = cl.filter(x => x.r === r); return `<li${c.length ? ' class="pcl"' : ""}>${r.kind === "apart" ? "Keep apart" : "Keep together"}: ${r.m.map(x => esc(ruleName(x))).join(r.kind === "apart" ? " ↔ " : " + ")}${c.length ? " — ⚠ " + c.map(x => esc(x.kind === "apart" ? "both at Table " + tableNo(x.t) : "at " + tablesText(x.tabs))).join(", ") : ""}</li>`; }).join("")}</ul></div>` : "";
   pa.innerHTML = `<div class="phead"><b>${couple()} · Floor plan</b><span>${S.date ? fmtLong(parse(S.date)) + " · " : ""}${st.seated} seated · ${plural(S.tables.length, "table")} · room ${fmtFt(P.w)} × ${fmtFt(P.l)} ft</span></div>
    <svg class="pplan" xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 ${P.w + 6} ${P.l + 6}">${planSVG("p", true)}</svg>
-   <div class="ptables">${tabs}${need.length ? `<div class="ptab unseated"><h3>Attending, no table yet <small>${st.need}</small></h3><ul>${need.map(g => `<li>${esc(g.name)}</li>`).join("")}</ul></div>` : ""}</div>`;
+   <div class="ptables">${legend}${notes}${tabs}${need.length ? `<div class="ptab unseated"><h3>Attending, no table yet <small>${st.need}</small></h3><ul>${need.map(g => `<li>${esc(g.name)}${tag(g)}</li>`).join("")}</ul></div>` : ""}</div>`;
   return pa;
 }
 function printPlan() { if (!S.tables.length && !S.plan.items.length) return toast("Add a table first"); buildPrint(); window.print(); }
@@ -1123,11 +1467,11 @@ function checklistV() {
 
 /* --- settings --- */
 function settings() {
-  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then (it includes your floor plan).</p>
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then (it includes your floor plan, groups and keep-apart rules).</p>
   <div class="grid g2e">
    <div class="card"><h2>Your wedding</h2>${detailsForm("detF")}</div>
    <div class="card"><h2>Look</h2>
-    <div class="field"><span class="fl">Theme</span><div class="chips">${["auto", "light", "dark"].map(t => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join("")}</div></div>
+    <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
     <div class="field"><span class="fl">Color</span><div class="chips">${[["blush", "Blush"], ["sage", "Sage"], ["champagne", "Champagne"], ["navy", "Navy"]].map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
     <form id="curF" style="display:flex;gap:10px;align-items:end"><div class="field" style="margin:0;width:140px"><label for="cur">Currency symbol</label><input id="cur" name="currency" maxlength="3" value="${esc(S.currency)}"></div><button class="btn ghost">Save</button></form>
    </div>
@@ -1139,7 +1483,7 @@ function settings() {
    <div class="card"><h2>Start over</h2><p class="meta" style="margin:0 0 10px">The sample shows a full plan for Emma &amp; James. Erasing keeps nothing.</p>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
   </div>
-  <p class="foot">Wedding Planner App v2.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
+  <p class="foot">Wedding Planner App v2.1 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
   const df = document.getElementById("detF"); df.onsubmit = e => { e.preventDefault(); readDetails(df); save(); render(); toast("Saved"); };
   M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
   M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
@@ -1171,15 +1515,16 @@ function csvText(kind) {
     S.pays.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(p => { const v = venOf(p.vendor), c = v && catOf(v.cat); L.push([p.date, v ? v.name : "", c ? c.name : "", f2(cents(p.amount)), p.method || "", p.note || ""]); });
   } else if (kind === "bytable") {
     // Guest list by table: one line per guest (a party lists all its seats), then everyone not seated yet
-    L = [["Table", "Table name", "Seats", "Guest", "Party size", "Side", "Group", "RSVP", "Meal", "Dietary needs"]];
-    const by = byTable();
+    L = [["Table", "Table name", "Seats", "Guest", "Party size", "Group", "Side", "Category", "RSVP", "Meal", "Dietary needs", "Notes"]];
+    const by = byTable(), cl = clashes(), hn = g => hhOf(g.hh) ? hhOf(g.hh).name : "";
     S.tables.forEach(t => { const map = seatMap(t, by.get(t.id) || []), seen = new Map(); map.forEach((o, i) => { if (o) { if (!seen.has(o.g)) seen.set(o.g, []); seen.get(o.g).push(i < capOf(t) ? i + 1 : "over"); } });
-      if (!seen.size) L.push([tableNo(t.id), t.name || "", "", "(empty)", "", "", "", "", "", ""]);
-      seen.forEach((idx, g) => L.push([tableNo(t.id), t.name || "", idx.join(" "), g.name, people(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || ""])); });
-    S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).forEach(g => L.push(["Not seated", "", "", g.name, people(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || ""]));
+      if (!seen.size) L.push([tableNo(t.id), t.name || "", "", "(empty)", "", "", "", "", "", "", "", ""]);
+      seen.forEach((idx, g) => L.push([tableNo(t.id), t.name || "", idx.join(" "), g.name, people(g), hn(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || "", ruleNotes(g, cl)])); });
+    S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).forEach(g => L.push(["Not seated", "", "", g.name, people(g), hn(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || "", ruleNotes(g, cl)]));
   } else {
-    L = [["Guest", "Side", "Group", "Party size", "RSVP", "Meal", "Table", "Dietary needs", "Gift", "Thank-you sent", "Notes"]];
-    S.guests.forEach(g => L.push([g.name, sideName(g.side), g.group || "", people(g), g.rsvp, g.meal || "", tableLabel(g.table) + (g.rsvp === "Declined" && tabOf(g.table) ? " (declined)" : ""), g.diet || "", g.gift || "", g.thanks ? "Yes" : "", g.notes || ""]));
+    L = [["Guest", "Side", "Group", "Category", "Party size", "RSVP", "Meal", "Table", "Dietary needs", "Gift", "Thank-you sent", "Notes", "Seating rules"]];
+    const cl = clashes();
+    S.guests.forEach(g => L.push([g.name, sideName(g.side), hhOf(g.hh) ? hhOf(g.hh).name : "", g.group || "", people(g), g.rsvp, g.meal || "", tableLabel(g.table) + (g.rsvp === "Declined" && tabOf(g.table) ? " (declined)" : ""), g.diet || "", g.gift || "", g.thanks ? "Yes" : "", g.notes || "", ruleNotes(g, cl)]));
   }
   return L.map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
 }
@@ -1189,7 +1534,7 @@ function exportCSV(kind) { download("wedding-" + (kind === "bytable" ? "guests-b
 /* ---------- dialogs ---------- */
 const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
 function openDlg(html, onSubmit, after) {
-  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { if (AUTO) AUTO.undo = null; D().close(); save(); render(); } };
   D().showModal(); after && after(); const first = F().querySelector("input:not([type=hidden]):not([type=radio]):not([type=checkbox]),select,textarea"); first && first.focus();
 }
 const btns = del => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`;
@@ -1240,35 +1585,157 @@ function payDlg(id, vendor) {
   }, () => delBtn(() => { S.pays = S.pays.filter(x => x.id !== id); save(); D().close(); render(); toast("Payment deleted"); }));
 }
 function guestDlg(id) {
-  const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "" };
+  const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "", hh: null };
   const groups = [...new Set(["Family", "Friends", "Work", ...S.guests.map(x => x.group).filter(Boolean)])];
   openDlg(`<h2>${id ? "Edit guest" : "Add a guest"}</h2>
    <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"></div>
    <div class="field"><span class="fl">Side</span><div class="seg">${["p1", "p2", "both"].map(s => `<label><input type="radio" name="side" value="${s}" ${g.side === s ? "checked" : ""}>${esc(sideName(s))}</label>`).join("")}</div></div>
-   <div class="three"><div class="field"><label>Group</label><input name="group" list="grpList" value="${esc(g.group)}" placeholder="Family"><datalist id="grpList">${groups.map(x => `<option value="${esc(x)}">`).join("")}</datalist></div><div class="field"><label>Party size</label><input name="size" type="number" min="1" max="20" step="1" value="${people(g)}"></div>
+   <div class="two"><div class="field"><label for="gHh">Group (family / party)</label><select id="gHh" name="hh"><option value="">No group</option>${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}" ${g.hh === h.id ? "selected" : ""}>${esc(h.name)}</option>`).join("")}<option value="__new">+ New group…</option></select></div><div class="field"><label for="gHhNew">New group name</label><input id="gHhNew" name="hhnew" placeholder="The Carter family" disabled></div></div>
+   <div class="three"><div class="field"><label>Category</label><input name="group" list="grpList" value="${esc(g.group)}" placeholder="Family"><datalist id="grpList">${groups.map(x => `<option value="${esc(x)}">`).join("")}</datalist></div><div class="field"><label>Party size</label><input name="size" type="number" min="1" max="20" step="1" value="${people(g)}"></div>
     <div class="field"><label>RSVP</label><select name="rsvp">${opts(RSVP, g.rsvp)}</select></div></div>
    <div class="two"><div class="field"><label>Meal</label><select name="meal"><option value="">—</option>${opts(MEALS, g.meal)}</select></div><div class="field"><label>Table</label><select name="table"><option value="">Not seated</option>${S.tables.map(t => `<option value="${t.id}" ${g.table === t.id ? "selected" : ""}>${esc(tableLabel(t.id))} (${tableSeated(t)}/${t.seats})</option>`).join("")}</select></div></div>
    <div class="two"><div class="field"><label>Gift received</label><input name="gift" value="${esc(g.gift)}" placeholder="Registry item, card…"></div><div class="field"><span class="fl">Thank-you note</span><label class="checkline"><input type="checkbox" name="thanks" ${g.thanks ? "checked" : ""}> Sent</label></div></div>
+   <div class="two"><div class="field"><label for="gApart">Keep apart from</label><select id="gApart" name="apart"><option value="">Nobody</option>${S.households.length ? `<optgroup label="Groups">${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}">${esc(h.name)}</option>`).join("")}</optgroup>` : ""}<optgroup label="Guests">${S.guests.filter(x => x.id !== g.id).sort((a, b) => a.name.localeCompare(b.name)).map(x => `<option value="${x.id}">${esc(x.name)}</option>`).join("")}</optgroup></select>${id && ruleNotes(g, clashes()) ? `<small>${esc(ruleNotes(g, clashes()))}</small>` : ""}</div><div class="field"><span class="fl">Auto-seat</span><label class="checkline"><input type="checkbox" name="head" ${g.head ? "checked" : ""}> Head table</label></div></div>
    <div class="two"><div class="field"><label>Dietary needs</label><input name="diet" value="${esc(g.diet)}" placeholder="Gluten-free, nut allergy…"></div><div class="field"><label>Address / notes</label><input name="notes" value="${esc(g.notes)}" placeholder="Plus-one, address…"></div></div>
    ${btns(!!id)}`, fd => {
     const o = Object.assign({}, g, { id: g.id || uid(), name: fd.get("name").trim() || "Guest", side: fd.get("side") || "both", group: fd.get("group").trim(), size: Math.max(1, Math.min(20, Math.round(+fd.get("size") || 1))), rsvp: fd.get("rsvp"),
       meal: fd.get("meal") || "", table: fd.get("table") || null, gift: fd.get("gift").trim(), thanks: fd.get("thanks") === "on", notes: fd.get("notes").trim(), diet: fd.get("diet").trim() });
+    if (fd.get("head") === "on") o.head = true; else delete o.head;
+    const ap = fd.get("apart") || "";
+    if (ap && ap !== o.id && ap !== o.hh && (gOf(ap) || hhOf(ap)) && !S.rules.some(r => r.kind === "apart" && r.m.length === 2 && r.m.includes(o.id) && r.m.includes(ap))) S.rules.push({ id: uid(), kind: "apart", m: [o.id, ap] });
+    const hv = fd.get("hh") || "";
+    if (hv === "__new") { const nm = String(fd.get("hhnew") || "").trim(); if (!nm) { toast("Type a name for the new group"); return false; } o.hh = hhByName(nm, true).id; } else o.hh = hhOf(hv) ? hv : null;
     if (o.table !== g.table) o.seat = null;
     if (o.rsvp === "Declined" && tabOf(o.table)) setTimeout(() => toast(o.name + " declined but is still at Table " + tableNo(o.table) + ". The floor plan lists it."), 0);
     if (id) S.guests[S.guests.findIndex(x => x.id === id)] = o; else S.guests.push(o);
-    toast(id ? "Guest updated" : "Guest added");
-  }, () => delBtn(() => { S.guests = S.guests.filter(x => x.id !== id); save(); D().close(); render(); toast("Guest deleted"); }));
+    toast((id ? "Guest updated" : "Guest added") + (ap ? " · keep apart from " + ruleName(ap) : ""));
+  }, () => {
+    const sel = document.getElementById("gHh"), nw = document.getElementById("gHhNew");
+    sel.onchange = () => { nw.disabled = sel.value !== "__new"; if (!nw.disabled) nw.focus(); };
+    delBtn(() => { S.guests = S.guests.filter(x => x.id !== id); tidyRules(S); save(); D().close(); render(); toast("Guest deleted"); });
+  });
 }
+// "Add several": one guest per line; a group after a comma or a tab ("Olivia Carter, The Carter family"), as pasted from a spreadsheet
+function parseList(text) {
+  const rows = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => { const p = (l.includes("\t") ? l.split("\t") : l.split(/[,;]/)).map(x => x.trim().replace(/^"|"$/g, "")); return [p[0] || "", p[1] || ""]; });
+  if (rows.length && /^(name|guest|guests|full name)$/i.test(rows[0][0])) rows.shift();
+  return rows.filter(r => r[0]);
+}
+// Reads a .csv or .txt list into "Name, Group" lines (finds the Name and Group columns when there is a header)
+function listFromFile(text) {
+  text = String(text).replace(/^﻿/, ""); const L = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === "," || c === "\t" || c === ";") { row.push(f.trim()); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && text[i + 1] === "\n") i++; row.push(f.trim()); L.push(row); row = []; f = ""; }
+    else f += c;
+  }
+  if (f || row.length) { row.push(f.trim()); L.push(row); }
+  const rows = L.filter(r => r.some(Boolean)); if (!rows.length) return "";
+  const head = rows[0].map(x => x.toLowerCase()), ni = head.findIndex(x => /^(name|guest|full name|guest name)$/.test(x)), gi = head.findIndex(x => /^(group|household|party|family)$/.test(x));
+  const body = ni >= 0 ? rows.slice(1) : rows, a = ni >= 0 ? ni : 0, b = ni >= 0 ? gi : 1;
+  const cl = x => (x || "").replace(/\s*[,\t]\s*/g, " ").trim();
+  return body.map(r => cl(r[a]) + (b >= 0 && cl(r[b]) ? ", " + cl(r[b]) : "")).filter(x => x.trim()).join("\n");
+}
+// Finds a group by name (any case) or makes it
+function hhByName(name, make) {
+  const n = String(name).trim(), h = S.households.find(x => x.name.toLowerCase() === n.toLowerCase());
+  if (h || !make) return h; const o = { id: uid(), name: n }; S.households.push(o); return o;
+}
+const sizeOf = n => /(&|\band\b)\s*guest|\+\s*1\b/i.test(n) ? 2 : 1;
+const newGuest = (name, o) => ({ id: uid(), name, side: o.side || "both", group: o.group || "", size: sizeOf(name), rsvp: o.rsvp || "Not invited yet", meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "", hh: o.hh || null });
 function bulkDlg() {
-  openDlg(`<h2>Add several guests</h2><p class="sub" style="margin-bottom:12px">Paste or type one guest per line. Add “& guest” or “+1” to count two people.</p>
-   <div class="field"><label>Names</label><textarea name="names" required placeholder="Olivia Carter&#10;Liam Bennett & guest&#10;The Hayes family"></textarea></div>
-   <div class="two"><div class="field"><span class="fl">Side</span><select name="side">${["p1", "p2", "both"].map(s => `<option value="${s}" ${s === "both" ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div><div class="field"><label>Group</label><input name="group" placeholder="Family, Friends, Work…"></div></div>
-   <div class="field"><label>RSVP</label><select name="rsvp">${opts(RSVP, "Not invited yet")}</select></div>
+  openDlg(`<h2>Add several guests</h2><p class="sub" style="margin-bottom:12px">Paste or type one guest per line. Add “& guest” or “+1” to count two people. To put people in a group, add it after a comma (or paste two columns from a spreadsheet).</p>
+   <div class="field"><label for="bNames">Names</label><textarea id="bNames" name="names" required placeholder="Olivia Carter, The Carter family&#10;Henry Carter, The Carter family&#10;Liam Bennett & guest"></textarea></div>
+   <div class="actions" style="justify-content:flex-start;margin:-6px 0 14px"><label class="btn small ghost" style="cursor:pointer">📄 Open a list file<input type="file" id="bulkFile" accept=".csv,.txt,text/csv,text/plain" hidden></label><span class="meta" id="bulkInfo"></span></div>
+   <div class="two"><div class="field"><label for="bSide">Side</label><select id="bSide" name="side">${["p1", "p2", "both"].map(s => `<option value="${s}" ${s === "both" ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div><div class="field"><label for="bCat">Category</label><input id="bCat" name="group" placeholder="Family, Friends, Work…"></div></div>
+   <div class="two"><div class="field"><label for="bRsvp">RSVP</label><select id="bRsvp" name="rsvp">${opts(RSVP, "Not invited yet")}</select></div><div class="field"><label for="bHh">Group for everyone (optional)</label><input id="bHh" name="hh" placeholder="College friends"></div></div>
    ${btns(false)}`, fd => {
-    const names = fd.get("names").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    if (!names.length) { toast("Type at least one name"); return false; }
-    names.forEach(n => S.guests.push({ id: uid(), name: n, side: fd.get("side"), group: fd.get("group").trim(), size: /(&|\band\b)\s*guest|\+\s*1\b/i.test(n) ? 2 : 1, rsvp: fd.get("rsvp"), meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "" }));
-    toast(plural(names.length, "guest") + " added");
+    const rows = parseList(fd.get("names")), all = String(fd.get("hh") || "").trim();
+    if (!rows.length) { toast("Type at least one name"); return false; }
+    const made = new Set(S.households.map(h => h.id));
+    rows.forEach(([n, grp]) => { const gname = grp || all; S.guests.push(newGuest(n, { side: fd.get("side"), group: fd.get("group").trim(), rsvp: fd.get("rsvp"), hh: gname ? hhByName(gname, true).id : null })); });
+    const ng = S.households.filter(h => !made.has(h.id)).length;
+    toast(plural(rows.length, "guest") + " added" + (ng ? " · " + plural(ng, "new group") : ""));
+  }, () => {
+    const f = document.getElementById("bulkFile"), ta = document.getElementById("bNames");
+    f.onchange = () => { const file = f.files[0]; if (!file) return; file.text().then(t => { const v = listFromFile(t); ta.value = (ta.value.trim() ? ta.value.trim() + "\n" : "") + v; document.getElementById("bulkInfo").textContent = v ? plural(v.split("\n").length, "line") + " read from " + file.name : "No names found in that file"; }).finally(() => { f.value = ""; }); };
+  });
+}
+// Add a family or group at once (one name per row, "+ Add member", or paste several lines), or edit one: rename,
+// add or take out members (they stay on the guest list), or ungroup it (everyone stays, the group goes)
+function groupDlg(id) {
+  const h = hhOf(id), mem = h ? membersOf(id) : [], loose = S.guests.filter(g => !g.hh).sort((a, b) => a.name.localeCompare(b.name)), first = mem[0];
+  const row = (name, gid) => `<div class="mrow"${gid ? ` data-gid="${gid}"` : ""}><input name="m" value="${esc(name)}" placeholder="Name" aria-label="Member name" autocomplete="off"><button type="button" class="icon" data-rm aria-label="${gid ? "Take out of the group" : "Remove this row"}" title="${gid ? "Take out of the group (stays on your guest list)" : "Remove"}">✕</button></div>`;
+  openDlg(`<h2>${h ? "Edit group" : "Add a family or group"}</h2><p class="sub" style="margin-bottom:12px">${h ? "Rename it, add people or take them out. Taking someone out keeps them on your guest list." : "Everyone in a group can be seated together with one drag. Paste several names at once, one per line."}</p>
+   <div class="field"><label for="hName">Group name</label><input id="hName" name="hname" required value="${esc(h ? h.name : "")}" placeholder="The Smith family"></div>
+   <div class="field"><span class="fl">Members</span><div class="mrows" id="hRows">${mem.map(g => row(g.name, g.id)).join("") || row("") + row("") + row("")}</div></div>
+   <div class="actions" style="justify-content:flex-start;margin:-6px 0 14px"><button type="button" class="btn small ghost" id="addM">+ Add member</button></div>
+   ${loose.length ? `<div class="field"><label for="hAdd">Add someone already on your list</label><select id="hAdd"><option value="">Choose a guest…</option>${loose.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join("")}</select></div>` : ""}
+   <div class="three"><div class="field"><label for="hSide">Side</label><select id="hSide" name="side">${["p1", "p2", "both"].map(s => `<option value="${s}" ${(first ? first.side : "both") === s ? "selected" : ""}>${esc(sideName(s))}</option>`).join("")}</select></div><div class="field"><label for="hCat">Category</label><input id="hCat" name="group" value="${esc(first ? first.group : "")}" placeholder="Family"></div><div class="field"><label for="hRsvp">RSVP</label><select id="hRsvp" name="rsvp">${opts(RSVP, first ? first.rsvp : "Invited")}</select></div></div>
+   <p class="meta" style="margin:-4px 0 12px">Side, category and RSVP go to the new names. Add “& guest” for a plus-one.</p>
+   <div class="actions">${h ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Ungroup</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">Save</button></div>`, fd => {
+    const name = String(fd.get("hname") || "").trim(); if (!name) { toast("Give the group a name"); return false; }
+    const other = hhByName(name); if (other && other !== h) { toast("There's already a group called " + other.name); return false; }
+    const rows = [...F().querySelectorAll(".mrow")].map(r => [r.querySelector("input").value.trim(), r.dataset.gid || ""]).filter(([n, gid]) => n || gid);
+    if (!rows.some(([n]) => n)) { toast("Add at least one name"); return false; }
+    const grp = h || { id: uid(), name }; grp.name = name; if (!h) S.households.push(grp);
+    const keep = new Set();
+    rows.forEach(([n, gid]) => { const g = gid && gOf(gid); if (g) { if (n) g.name = n; g.hh = grp.id; keep.add(g.id); } else if (n) { const ng = newGuest(n, { side: fd.get("side"), group: String(fd.get("group") || "").trim(), rsvp: fd.get("rsvp"), hh: grp.id }); S.guests.push(ng); keep.add(ng.id); } });
+    mem.forEach(g => { if (!keep.has(g.id)) g.hh = null; });
+    const n = membersOf(grp.id).length;
+    toast(h ? "Group updated · " + plural(n, "member") : `${name} added · ${plural(n, "member")}`);
+  }, () => {
+    const box = document.getElementById("hRows");
+    const wireRow = r => {
+      r.querySelector("[data-rm]").onclick = () => { if (box.children.length > 1 || r.dataset.gid) r.remove(); else r.querySelector("input").value = ""; };
+      r.querySelector("input").onpaste = e => {
+        const t = (e.clipboardData || window.clipboardData).getData("text"); if (!/\n/.test(t)) return;
+        e.preventDefault(); const lines = t.split(/\r?\n/).map(x => x.trim()).filter(Boolean); if (!lines.length) return;
+        const inp = r.querySelector("input"); inp.value = lines.shift(); let at = r;
+        lines.forEach(l => { const n = addRow(l, null, at); at = n; });
+      };
+    };
+    const addRow = (name, gid, after) => { const tmp = document.createElement("div"); tmp.innerHTML = row(name || "", gid); const r = tmp.firstChild; after ? after.after(r) : box.appendChild(r); wireRow(r); return r; };
+    box.querySelectorAll(".mrow").forEach(wireRow);
+    document.getElementById("addM").onclick = () => { const empty = [...box.querySelectorAll(".mrow input")].find(i => !i.value.trim()); (empty || addRow("").querySelector("input")).focus(); };
+    const add = document.getElementById("hAdd"); if (add) add.onchange = () => { const g = gOf(add.value); if (!g) return; const empty = [...box.querySelectorAll(".mrow:not([data-gid]) input")].find(i => !i.value.trim()); if (empty) empty.closest(".mrow").remove(); addRow(g.name, g.id); add.selectedOptions[0].remove(); add.value = ""; };
+    if (h) { document.getElementById("hName").focus(); delBtn(() => { const n = mem.length; mem.forEach(g => g.hh = null); S.households = S.households.filter(x => x.id !== h.id); tidyRules(S); HOPEN.delete(h.id); save(); D().close(); render(); toast(`${h.name} ungrouped · ${plural(n, "guest")} kept`); }); }
+  });
+}
+function groupsDlg() {
+  const L = S.households.slice().sort((a, b) => a.name.localeCompare(b.name));
+  openDlg(`<h2>Groups</h2><p class="sub" style="margin-bottom:12px">Families and parties that sit together. Drag a group onto a table in the floor plan to seat everyone side by side.</p>
+   <div class="hlist">${L.length ? L.map(h => { const tot = hhSeats(h.id), st = hhSeated(h.id), tabs = hhTables(h.id); return `<div class="row"><div class="grow"><div class="name" style="font-weight:700">${esc(h.name)}</div><div class="meta">${plural(membersOf(h.id).length, "member")} · ${st} of ${tot} seated${tabs.length ? " · " + esc(tablesText(tabs)) : ""}</div></div><button type="button" class="icon" data-eh="${h.id}" aria-label="Edit ${esc(h.name)}">✎</button></div>`; }).join("") : `<div class="empty">No groups yet. Add a family to seat them together with one drag.</div>`}</div>
+   <div class="actions"><button type="button" class="btn ghost" id="newH" style="margin-right:auto">+ Add a family / group</button><button class="btn" value="cancel" formnovalidate>Close</button></div>`, () => false, () => {
+    F().querySelectorAll("[data-eh]").forEach(b => b.onclick = () => { D().close(); groupDlg(b.dataset.eh); });
+    document.getElementById("newH").onclick = () => { D().close(); groupDlg(); };
+  });
+}
+// Keep apart (people or whole groups who shouldn't share a table) and keep together (people outside a group who should)
+function rulesDlg() {
+  const cl = clashes(), gl = S.guests.slice().sort((a, b) => a.name.localeCompare(b.name)), hl = S.households.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const sel = (n, lab) => `<div class="field"><label for="rw${n}">${lab}</label><select id="rw${n}" name="w"><option value="">Choose…</option>${hl.length ? `<optgroup label="Groups">${hl.map(h => `<option value="${h.id}">${esc(h.name)}</option>`).join("")}</optgroup>` : ""}<optgroup label="Guests">${gl.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join("")}</optgroup></select></div>`;
+  openDlg(`<h2>Keep apart / keep together</h2><p class="sub" style="margin-bottom:12px">Mark people (or whole groups) who shouldn't share a table. The floor plan warns you and asks before seating them together.</p>
+   <div class="rlist">${S.rules.length ? S.rules.map(r => { const c = cl.filter(x => x.r === r); return `<div class="row"><span class="pill ${r.kind === "apart" ? "short" : "ok"}">${r.kind === "apart" ? "Keep apart" : "Keep together"}</span><div class="grow"><b>${r.m.map(x => esc(ruleName(x))).join(r.kind === "apart" ? " ↔ " : " + ")}</b>${c.length ? c.map(x => `<div class="meta t-short">⚠ ${esc(x.kind === "apart" ? "Both at Table " + tableNo(x.t) : "At " + tablesText(x.tabs))}</div>`).join("") : `<div class="meta t-ok">✓ OK right now</div>`}</div><button type="button" class="icon" data-delrule="${r.id}" aria-label="Remove this rule">✕</button></div>`; }).join("") : `<div class="meta" style="padding:4px 0 10px">No rules yet.</div>`}</div>
+   <h3 style="margin:14px 0 8px;font-size:16px">Add a rule</h3>
+   <div class="field"><span class="fl">Rule</span><div class="seg"><label><input type="radio" name="kind" value="apart" checked>Keep apart</label><label><input type="radio" name="kind" value="together">Keep together</label></div></div>
+   <div class="two">${sel(1, "Who")}${sel(2, "and")}</div><div id="rMore"></div>
+   <div class="actions" style="justify-content:flex-start;margin:-6px 0 14px"><button type="button" class="btn small ghost" id="rAdd">+ Add another person</button></div>
+   <div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Close</button><button class="btn" value="ok">Add rule</button></div>`, fd => {
+    const m = [...new Set(fd.getAll("w").filter(Boolean))];
+    if (m.length < 2) { toast("Choose at least two people or groups"); return false; }
+    const kind = fd.get("kind") === "together" ? "together" : "apart", key = m.slice().sort().join();
+    if (S.rules.some(r => r.kind === kind && r.m.slice().sort().join() === key)) { toast("That rule is already there"); return false; }
+    S.rules.push({ id: uid(), kind, m }); save(); D().close(); render(); rulesDlg();
+    const c = clashes().filter(x => x.r.m.join() === m.join());
+    toast(c.length ? "⚠ " + clashText(c[0]) : (kind === "apart" ? "Keep apart: " : "Keep together: ") + andList(m.map(ruleName)));
+    return false;
+  }, () => {
+    let n = 2; document.getElementById("rAdd").onclick = () => { n++; const d = document.createElement("div"); d.innerHTML = sel(n, "and"); document.getElementById("rMore").appendChild(d.firstChild); document.getElementById("rw" + n).focus(); };
+    F().querySelectorAll("[data-delrule]").forEach(b => b.onclick = () => { S.rules = S.rules.filter(r => r.id !== b.dataset.delrule); save(); D().close(); render(); rulesDlg(); toast("Rule removed"); });
   });
 }
 function tableDlg(id) {
@@ -1352,6 +1819,12 @@ function taskDlg(id) {
     delBtn(() => { S.tasks = S.tasks.filter(x => x.id !== id); save(); D().close(); render(); toast("Task deleted"); });
   });
 }
+// A question with a few answers (buttons); Cancel does nothing
+function choiceDlg(title, text, list, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions wrapbtns"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button>${list.filter(Boolean).map(([v, t, c]) => `<button class="btn ${c || ""}" value="${v}">${t}</button>`).join("")}</div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); const v = e.submitter && e.submitter.value; if (v && v !== "cancel") fn(v); };
+  const b = F().querySelector(".actions .btn:last-child"); if (b) b.focus();
+}
 function confirmDlg(title, text, ok, fn) {
   openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
   F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
@@ -1383,7 +1856,7 @@ if (DEMO) {
     }
   }, true);
 }
-window.__lp = { catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
+window.__lp = { autoSeat, runAuto, get AUTO() { return AUTO; }, placeUI, clashes, wouldClash, ruleNotes, parseList, listFromFile, catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
 go("home");
 </script>
 </body>
