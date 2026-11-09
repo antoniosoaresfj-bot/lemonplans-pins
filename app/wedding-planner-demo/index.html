@@ -111,6 +111,79 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .gchip.inv{border-style:dashed;color:var(--muted)}
 .gchip.picked{outline:3px solid var(--gold);outline-offset:1px;background:var(--soft)}
 .gchip.dragging{opacity:.4}
+/* floor plan */
+:root{--s-p1:#C2577A;--s-p2:#3F6FB5;--s-both:#9A7520;--seatink:#fff;--m0:#A79A9F;--m1:#C07A1E;--m2:#A4473C;--m3:#2F7FA8;--m4:#4C9A5B;--m5:#6E8A1F;--m6:#8A5BB0}
+:root[data-theme="dark"]{--s-p1:#E796B0;--s-p2:#8FB0EC;--s-both:#E3C274;--seatink:#1B1316;--m0:#8A7D82;--m1:#E8AE5E;--m2:#E0857A;--m3:#79B9DE;--m4:#86CB93;--m5:#B9D46A;--m6:#BE98E0}
+.modetabs{margin:12px 0 14px}
+.planwrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;grid-template-areas:"plan pool" "plan info";grid-template-rows:auto 1fr;gap:16px;align-items:start}
+.plancard{grid-area:plan;padding:12px}.ppool{grid-area:pool}.pinfo{grid-area:info}
+.ptools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.ptools .grow{flex:1}
+.ptools .chip{padding:5px 11px;font-size:13.5px}
+.selbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px;padding:8px 2px 0;font-size:14px}
+.selbar .grow{flex:1;min-width:120px}
+.planbox{position:relative;width:100%;max-height:min(70vh,640px);min-height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+#plan{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.phelp{margin:8px 2px 0;font-size:12.5px}
+.room{fill:var(--card);stroke:var(--ink);stroke-width:2.5;vector-effect:non-scaling-stroke}
+.gl1{fill:none;stroke:var(--line);stroke-width:.05}.gl5{fill:none;stroke:var(--line);stroke-width:.12}
+.dim{fill:var(--muted);font-size:1.4px;font-weight:750;text-anchor:middle}
+.dn0{fill:var(--card)}.dn1{fill:var(--glass)}
+.el{cursor:move;outline:none}
+.tb{fill:var(--glass);stroke:var(--fill);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.el.full .tb{stroke:var(--good);stroke-width:2.5}.el.over .tb{stroke:var(--bad);stroke-width:3}
+.ib{fill:var(--soft);stroke:var(--muted);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.k-stage .ib,.k-dj .ib{fill:var(--glass)}.k-entrance .ib{fill:var(--accent);stroke:none}.k-label .ib{fill:transparent;stroke:none}
+.k-dance .ib{stroke:var(--fill)}
+.el.sel .tb,.el.sel .ib,.el:focus-visible .tb,.el:focus-visible .ib{stroke:var(--accent);stroke-width:3}
+.el:focus-visible .tb,.el:focus-visible .ib{stroke-dasharray:6 3}
+.el.hot .tb{fill:var(--soft);stroke:var(--accent);stroke-width:3}
+.tno{fill:var(--ink);font-weight:850;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.tnm,.ilab{fill:var(--muted);font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.ilab{fill:var(--ink)}
+.seat{cursor:pointer}
+.seat circle{fill:var(--card);stroke:var(--fill);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.seat.on circle{stroke:var(--card);stroke-width:1}
+.seat.inv circle{opacity:.6;stroke:var(--ink);stroke-dasharray:3 2}
+.seat.dec circle{stroke:var(--bad);stroke-width:3}
+.seat.x circle{stroke:var(--bad);stroke-width:2.5;stroke-dasharray:3 2}
+.seat:hover circle,.seat.hot circle{stroke:var(--accent);stroke-width:3;stroke-dasharray:none}
+.seat text{fill:var(--seatink);font-size:.66px;font-weight:850;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.dbadge circle{fill:var(--m4)}.dbadge text{fill:#fff;font-size:.62px;font-weight:850;text-anchor:middle;dominant-baseline:central}
+.roth line{pointer-events:none;stroke:var(--accent);stroke-width:1.5;vector-effect:non-scaling-stroke}.roth circle{fill:var(--card);stroke:var(--accent);stroke-width:2.5;vector-effect:non-scaling-stroke;cursor:grab}
+.gchip{user-select:none;-webkit-user-select:none}
+.gchip .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.gghost{position:fixed;z-index:70;pointer-events:none;padding:5px 12px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:750;font-size:13.5px;transform:translate(-50%,-140%);box-shadow:0 8px 20px rgba(0,0,0,.25);white-space:nowrap}
+.ppool .gchips{max-height:min(48vh,460px);overflow:auto;align-content:flex-start}
+.ppool input{width:100%;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);margin-bottom:10px}
+.warns{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;font-size:14px}
+.warns li{padding:9px 11px;border-radius:12px;background:var(--soft)}
+.warns li.bad{background:var(--badbg);color:var(--bad)}.warns li.warn{background:var(--warnbg);color:var(--warn)}.warns li.good{background:var(--goodbg);color:var(--good)}
+.warns li .btn{margin-top:6px}
+.tinfo{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:14px}
+.tinfo .row{padding:6px 0;gap:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 14px}
+.tile{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 6px;cursor:pointer;display:grid;justify-items:center;gap:4px;font-weight:700;font-size:13px;text-align:center}
+.tile:hover,.tile:focus-visible{border-color:var(--accent);outline:none}
+.tile svg{width:46px;height:30px}.tile svg *{fill:var(--glass);stroke:var(--fill);stroke-width:1.5}
+#printArea{display:none}
+@media (max-width:980px){.planwrap{grid-template-columns:1fr;grid-template-areas:"pool" "plan" "info"}.ppool .gchips{max-height:150px}}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(2,1fr)}.plancard{padding:10px}}
+@media print{
+ @page{size:landscape;margin:10mm}
+ html,body{background:#fff!important}
+ .app,.fab,.toast,#demoBar,dialog,.themetog,.gghost{display:none!important}
+ #printArea{display:block!important;color:#222;--bg:#fff;--card:#fff;--ink:#222;--muted:#666;--line:#ddd;--soft:#f3f3f3;--glass:#efefef;--fill:#999;--accent:#555;--accent-ink:#fff;--good:#2E7D5B;--bad:#C0392B;--warn:#B7791F;--seatink:#fff;--s-p1:#C2577A;--s-p2:#3F6FB5;--s-both:#9A7520;--m0:#A79A9F;--m1:#C07A1E;--m2:#A4473C;--m3:#2F7FA8;--m4:#4C9A5B;--m5:#6E8A1F;--m6:#8A5BB0}
+ .phead{display:flex;justify-content:space-between;font-size:13pt;margin-bottom:4mm}.phead span{color:#666;font-size:10pt}
+ .pplan{width:100%;height:170mm;display:block}
+ .ptables{columns:4;column-gap:6mm;font-size:9pt;break-before:page}
+ .ptab{break-inside:avoid;margin:0 0 4mm;border:1px solid #ddd;border-radius:3mm;padding:2.5mm 3mm}
+ .ptab h3{font-size:10.5pt;margin:0 0 1mm}.ptab h3 small{color:#666;font-weight:600}
+ .ptab ol{margin:0;padding-left:5mm}.ptab .pd{color:#B7791F;margin-top:1mm}
+ .ptab.unseated{border-color:#B7791F}
+}
 /* checklist */
 .task{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .task:last-child{border-bottom:0}
@@ -188,6 +261,7 @@ dialog::backdrop{background:rgba(20,10,14,.45)}
 <button class="fab" id="fab" aria-label="Add" title="Add">+</button>
 <dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
 <div class="toast" id="toast" role="status"></div>
+<div id="printArea"></div>
 <script>
 "use strict";
 const DEMO = true;
@@ -231,10 +305,75 @@ const defaultCats = () => CATS.map(([name, pct]) => ({ id: uid(), name, pct }));
 const defaultTasks = () => WHEN.flatMap(([when, days, list]) => list.map(text => ({ id: uid(), when, days, text, done: false })));
 function blank() {
   return { v: 1, app: "wedding-planner", currency: "$", theme: "auto", accent: "blush", p1: "", p2: "", date: "", budget: 0, guestGoal: 0,
-    cats: defaultCats(), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks() };
+    cats: defaultCats(), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks(), plan: blankPlan() };
 }
+// Floor plan: the room (feet), the non-table items, seat colors. Tables keep their place in tables[] (x, y = center in feet; rot in degrees).
+const blankPlan = () => ({ w: 80, l: 60, snap: true, color: "side", items: [] });
 function valid(s) { return s && s.v === 1 && s.app === "wedding-planner" && ["cats", "vendors", "pays", "guests", "tables", "tasks"].every(k => Array.isArray(s[k])); }
-function normalize(s) { return Object.assign(blank(), s); }
+const clampN = (v, a, b, d) => { v = Number(v); return isFinite(v) && v > 0 ? Math.max(a, Math.min(b, v)) : d; };
+// Old backups (v1.0, no floor plan) come in as they are: every table gets a shape and a free spot in the room, nothing is dropped.
+function normalize(s) {
+  const o = Object.assign(blank(), s);
+  o.plan = Object.assign(blankPlan(), s.plan && typeof s.plan === "object" ? s.plan : {});
+  if (!Array.isArray(o.plan.items)) o.plan.items = [];
+  o.plan.w = clampN(o.plan.w, 20, 400, 80); o.plan.l = clampN(o.plan.l, 20, 400, 60);
+  if (!["side", "meal"].includes(o.plan.color)) o.plan.color = "side";
+  o.plan.items = o.plan.items.filter(it => it && typeof it === "object" && ITEMS[it.kind]);
+  o.plan.items.forEach(it => { if (!it.id) it.id = uid(); if (it.label == null) it.label = ""; it.w = clampN(it.w, 1, 200, ITEMS[it.kind].w); it.h = clampN(it.h, .5, 200, ITEMS[it.kind].h); it.rot = Number(it.rot) || 0; it.x = isFinite(it.x) && it.x !== null ? +it.x : o.plan.w / 2; it.y = isFinite(it.y) && it.y !== null ? +it.y : o.plan.l / 2; });
+  o.tables.forEach(t => { if (!SHAPES[t.shape]) t.shape = "round"; t.rot = Number(t.rot) || 0; if (!isFinite(t.x) || !isFinite(t.y) || t.x === null || t.y === null) { delete t.x; delete t.y; } });
+  o.guests.forEach(g => { if (g.diet == null) g.diet = ""; if (!Number.isInteger(g.seat)) g.seat = null; });
+  layoutMissing(o);
+  return o;
+}
+/* ---------- floor plan geometry (feet; x across the room, y down the room) ---------- */
+function capOf(t) { return Math.max(1, Math.min(24, Math.round(Number(t.seats) || 1))); }
+// Table size and seat spots around it (local coordinates, before rotation). Seat order goes clockwise from the top left.
+// count > seats draws the extra (over capacity) seats too.
+function tGeo(t, count) {
+  const n = capOf(t), m = Math.max(n, count || 0), out = .95, seats = [];
+  if (t.shape === "round" || !t.shape) {
+    const D = n <= 4 ? 3.5 : n <= 6 ? 4.5 : n <= 8 ? 5 : n <= 10 ? 6 : n <= 12 ? 6.5 : n * .55, R = D / 2 + out;
+    for (let i = 0; i < m; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / m; seats.push([R * Math.cos(a), R * Math.sin(a)]); }
+    return { round: true, r: D / 2, bw: 2 * (R + .8), bh: 2 * (R + .8), seats };
+  }
+  const head = t.shape === "head", ends = t.shape === "rect" && n >= 5 ? 2 : 0, W = t.shape === "rect" ? 3 : 2.5;
+  const L = Math.max(head ? 6 : 4, (head ? n : Math.ceil((n - ends) / 2)) * 2.1);
+  const top = head ? m : Math.ceil((m - ends) / 2), bot = head ? 0 : m - ends - top;
+  const row = (k, y, rev) => { for (let i = 0; i < k; i++) { const j = rev ? k - 1 - i : i; seats.push([-L / 2 + L * (j + .5) / k, y]); } };
+  row(top, -W / 2 - out);
+  if (ends) seats.push([L / 2 + out, 0]);
+  row(bot, W / 2 + out, true);
+  if (ends) seats.push([-L / 2 - out, 0]);
+  return { round: false, L, W, bw: L + (ends ? 2 * (out + .8) : .4), bh: W + 2 * (out + .8), seats };
+}
+// Axis-aligned box of a table or an item after rotation (for "is this spot free?")
+function bboxOf(o) {
+  const g = o.kind ? { bw: o.w, bh: o.h } : tGeo(o), a = (Number(o.rot) || 0) * Math.PI / 180, c = Math.abs(Math.cos(a)), sn = Math.abs(Math.sin(a));
+  return { w: g.bw * c + g.bh * sn, h: g.bw * sn + g.bh * c };
+}
+// A free spot for a w × h box: the closest one to (nx, ny), or the first one reading the room left to right, top to bottom.
+function findFree(st, w, h, nx, ny, skip) {
+  const P = st.plan, others = st.tables.filter(t => t !== skip && t.x != null).concat(P.items.filter(i => i !== skip)).map(o => [o, bboxOf(o)]);
+  const fits = (x, y) => others.every(([o, b]) => Math.abs(o.x - x) * 2 >= b.w + w + 1 || Math.abs(o.y - y) * 2 >= b.h + h + 1);
+  const x0 = Math.min(P.w / 2, w / 2 + 1), y0 = Math.min(P.l / 2, h / 2 + 1), x1 = Math.max(x0, P.w - w / 2 - 1), y1 = Math.max(y0, P.l - h / 2 - 1);
+  let best = null, bd = Infinity;
+  for (let y = y0; y <= y1; y += 1) for (let x = x0; x <= x1; x += 1) {
+    if (!fits(x, y)) continue;
+    if (nx == null) return [Math.round(x * 2) / 2, Math.round(y * 2) / 2];
+    const d = (x - nx) ** 2 + (y - ny) ** 2; if (d < bd) { bd = d; best = [x, y]; }
+  }
+  return best ? best.map(v => Math.round(v * 2) / 2) : [nx == null ? P.w / 2 : nx, ny == null ? P.l / 2 : ny];
+}
+function layoutMissing(st) {
+  st.tables.forEach(t => { if (t.x == null) { const b = bboxOf(t); [t.x, t.y] = findFree(st, b.w, b.h); } });
+}
+
+const ITEMS = {
+  sweetheart: { name: "Sweetheart table", w: 5, h: 2.5 }, dance: { name: "Dance floor", w: 18, h: 16 }, stage: { name: "Stage / band", w: 16, h: 8 }, dj: { name: "DJ booth", w: 6, h: 3 },
+  buffet: { name: "Buffet", w: 10, h: 3 }, bar: { name: "Bar", w: 10, h: 3 }, cake: { name: "Cake table", w: 4, h: 4, round: true }, gifts: { name: "Gift table", w: 6, h: 2.5 },
+  entrance: { name: "Entrance", w: 8, h: 1.2 }, restrooms: { name: "Restrooms", w: 8, h: 6 }, label: { name: "Label", w: 10, h: 2 }
+};
+const SHAPES = { round: "Round", rect: "Rectangle", banquet: "Banquet", head: "Head table" };
 function load() {
   try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
   return DEMO ? sample() : blank();
@@ -277,11 +416,19 @@ function sample() {
   s.guests = FIRST.map((f, i) => {
     const rsvp = i < 22 ? "Attending" : i < 33 ? "Invited" : "Declined";
     return { id: uid(), name: f + " " + LAST[i % LAST.length] + (i % 4 === 0 ? " & guest" : ""), side: ["p1", "p2", "both"][i % 3], group: ["Family", "Friends", "Work", "Friends", "Family"][i % 5],
-      size: i % 4 === 0 ? 2 : 1, rsvp, meal: rsvp === "Attending" ? MEALS[i % 4] : "", table: rsvp === "Attending" && i < 18 ? s.tables[Math.floor(i / 6)].id : (i >= 22 && i < 26 ? s.tables[4].id : null),
+      size: i % 4 === 0 ? 2 : 1, rsvp, meal: rsvp === "Attending" ? MEALS[i % 4] : "", table: rsvp === "Attending" && i < 18 ? s.tables[Math.floor(i / 6)].id : i >= 22 && i < 26 ? s.tables[4].id : i >= 26 && i < 30 ? s.tables[3].id : i >= 30 && i < 33 ? s.tables[5].id : null,
       gift: ["", "", "Kitchen mixer (registry)", "", "", "$150 card", "", "", "", "Crystal vase"][i] || "", thanks: i === 2, notes: "" };
   });
+  const DIET = { 4: "Gluten-free", 9: "Nut allergy", 13: "Dairy-free", 19: "Shellfish allergy" };
+  s.guests.forEach((g, i) => { g.diet = DIET[i] || ""; g.seat = null; });
+  // The sample floor plan: a 72 × 54 ft garden ballroom, dance floor in the middle, the couple facing it
+  Object.assign(s.plan, { w: 60, l: 46 });
+  [[10, 10], [10, 22], [10, 34], [46, 10], [46, 22], [46, 34]].forEach(([x, y], i) => Object.assign(s.tables[i], { shape: "round", x, y, rot: 0 }));
+  s.plan.items = [["sweetheart", 28, 5, 0, "Emma & James", 6, 2.5], ["dance", 28, 17, 0, "", 16, 12], ["dj", 28, 26, 180, "", 6, 3], ["cake", 21, 31, 0, "", 4, 4], ["gifts", 35, 31, 0, "", 6, 2.5], ["buffet", 10, 43, 0, "", 12, 3], ["bar", 46, 43, 0, "", 10, 3],
+    ["entrance", 28, 45.4, 0, "", 8, 1.2], ["restrooms", 56, 26, 90, "", 8, 5], ["label", 28, 37, 0, "Photo booth", 10, 2]]
+    .map(([kind, x, y, rot, label, w, h]) => ({ id: uid(), kind, x, y, rot, label, w, h }));
   s.tasks.forEach((k, i) => k.done = i < 14);
-  return s;
+  return normalize(s);
 }
 
 /* ---------- the math (whole cents) ---------- */
@@ -440,7 +587,7 @@ function home() {
     <div class="meta" style="margin-top:6px">${Object.entries(m).filter(([, n]) => n).map(([k, n]) => esc(k) + " " + n).join(" · ") || "No meals chosen yet"}</div></div>
    <div class="card"><div class="lab">Seating</div><div class="mid" style="margin-top:6px">${st.seated} <span class="meta">seated at ${plural(st.used, "table")}</span></div>
     <div class="kv"><span>Seats set up</span><b>${st.seats}</b></div><div class="kv"><span>Attending, no table yet</span><b class="${st.need ? "t-warn" : ""}">${st.need}</b></div><div class="kv"><span>Tables over capacity</span><b class="${st.over ? "t-short" : ""}">${st.over}</b></div>
-    <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="seating">Open the seating map</button></div></div>
+    <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="seating">Open the floor plan</button></div></div>
   </div>
   <div class="card" style="margin-top:16px"><div class="tablebar"><h2 style="margin:0">Payments coming up</h2><button class="btn small ghost" data-go="vendors">All vendors</button></div>${up.length ? up.map(([v, n]) => dueRow(v, n)).join("") : `<div class="empty">No payments due. Add your vendors to track deposits and balances.</div>`}</div>`;
   wire();
@@ -529,12 +676,12 @@ function guestsV() {
    ${list.length ? list.map(g => `<tr data-g="${g.id}"><td><b>${esc(g.name)}</b><div class="meta">${esc(g.group || "")}${g.gift ? " · 🎁 " + esc(g.gift) + (g.thanks ? " ✓ thanked" : "") : ""}</div></td><td class="l">${esc(sideName(g.side))}</td><td>${people(g)}</td>
      <td class="l"><select class="rs" data-rsvp="${g.id}" aria-label="RSVP for ${esc(g.name)}">${RSVP.map(r => `<option ${g.rsvp === r ? "selected" : ""}>${r}</option>`).join("")}</select></td>
      <td class="l"><select class="rs" data-meal="${g.id}" aria-label="Meal for ${esc(g.name)}"><option value="">—</option>${MEALS.map(x => `<option ${g.meal === x ? "selected" : ""}>${x}</option>`).join("")}</select></td>
-     <td class="l">${g.rsvp === "Declined" ? `<span class="meta">—</span>` : tabOf(g.table) ? esc(tableLabel(g.table)) : `<span class="meta">Not seated</span>`}</td><td><button class="icon" data-editg="${g.id}" aria-label="Edit ${esc(g.name)}">✎</button></td></tr>`).join("") : `<tr><td colspan="7"><div class="empty">${S.guests.length ? "No guests match." : "No guests yet. Add them one by one or paste a list with + Add several."}</div></td></tr>`}
+     <td class="l">${g.rsvp === "Declined" ? (tabOf(g.table) ? `<span class="t-short">${esc(tableLabel(g.table))} · declined</span>` : `<span class="meta">—</span>`) : tabOf(g.table) ? esc(tableLabel(g.table)) : `<span class="meta">Not seated</span>`}</td><td><button class="icon" data-editg="${g.id}" aria-label="Edit ${esc(g.name)}">✎</button></td></tr>`).join("") : `<tr><td colspan="7"><div class="empty">${S.guests.length ? "No guests match." : "No guests yet. Add them one by one or paste a list with + Add several."}</div></td></tr>`}
    </tbody></table></div></div>`;
   const q = document.getElementById("gq"); q.oninput = () => { GF.q = q.value; const pos = q.selectionStart; render(); const n = document.getElementById("gq"); n.focus(); n.setSelectionRange(pos, pos); };
   document.getElementById("gr").onchange = e => { GF.rsvp = e.target.value; render(); };
   document.getElementById("gs").onchange = e => { GF.side = e.target.value; render(); };
-  M().querySelectorAll("[data-rsvp]").forEach(s => s.onchange = () => { const g = S.guests.find(x => x.id === s.dataset.rsvp); g.rsvp = s.value; if (g.rsvp === "Declined") g.table = null; save(); render(); });
+  M().querySelectorAll("[data-rsvp]").forEach(s => s.onchange = () => { const g = S.guests.find(x => x.id === s.dataset.rsvp); g.rsvp = s.value; save(); render(); if (g.rsvp === "Declined" && tabOf(g.table)) toast(g.name + " is still at Table " + tableNo(g.table) + ". Unseat them in the floor plan"); });
   M().querySelectorAll("[data-meal]").forEach(s => s.onchange = () => { S.guests.find(x => x.id === s.dataset.meal).meal = s.value; save(); render(); });
   document.getElementById("addG").onclick = () => guestDlg();
   document.getElementById("bulkG").onclick = () => bulkDlg();
@@ -542,14 +689,20 @@ function guestsV() {
   wire();
 }
 
-/* --- seating (drag the names onto the tables) --- */
-let PICKG = null;
-function seatingV() {
+/* --- seating: floor plan (default) and the table list --- */
+let PICKG = null, SEATMODE = "plan", SEL = null, VB = null, PQ = "";
+const modeTabs = () => `<div class="chips modetabs" role="group" aria-label="Seating view">${[["plan", "Floor plan"], ["list", "Table list"]].map(([k, t]) => `<button class="chip" data-mode="${k}" aria-pressed="${SEATMODE === k}">${t}</button>`).join("")}</div>`;
+function wireModes() { M().querySelectorAll("[data-mode]").forEach(b => b.onclick = () => { if (SEATMODE !== b.dataset.mode) { SEATMODE = b.dataset.mode; PICKG = null; render(); } }); }
+function seatingV() { return SEATMODE === "list" ? seatCardsV() : planV(); }
+const poolList = () => S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).sort((a, b) => (a.rsvp === "Attending" ? 0 : 1) - (b.rsvp === "Attending" ? 0 : 1) || a.name.localeCompare(b.name));
+
+function seatCardsV() {
   const st = seating();
-  const pool = S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).sort((a, b) => (a.rsvp === "Attending" ? 0 : 1) - (b.rsvp === "Attending" ? 0 : 1) || a.name.localeCompare(b.name));
+  const pool = poolList();
   const chip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}" draggable="true" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}">${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}</button>`;
   M().innerHTML = `<div class="tablebar"><div><h1>Seating chart</h1><p class="sub" style="margin:0">Drag a name onto a table. Or tap a name, then tap a table.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="addTables">+ Add several tables</button><button class="btn" id="addTable">+ Add a table</button></div></div>
-  <div class="grid g4" style="margin:12px 0 16px">
+  ${modeTabs()}
+  <div class="grid g4" style="margin:0 0 16px">
    <div class="card"><div class="lab">Seated</div><div class="mid" id="sSeated">${st.seated}</div><div class="meta">of ${st.seats} seats</div></div>
    <div class="card"><div class="lab">Need a table</div><div class="mid ${st.need ? "t-warn" : "t-ok"}" id="sNeed">${st.need}</div><div class="meta">attending guests</div></div>
    <div class="card"><div class="lab">Tables</div><div class="mid">${S.tables.length}</div><div class="meta">${st.used} in use</div></div>
@@ -577,15 +730,373 @@ function seatingV() {
     z.ondrop = e => { e.preventDefault(); e.stopPropagation(); z.classList.remove("over"); const gid = e.dataTransfer.getData("text/plain"); if (gid) seat(gid, z.dataset.drop); };
     z.onclick = e => { if (PICKG && !e.target.closest("[data-edittable]")) seat(PICKG, z.dataset.drop); };
   });
-  wire();
+  wireModes(); wire();
 }
 function seat(gid, tid) {
   const g = S.guests.find(x => x.id === gid); if (!g) return;
   PICKG = null; const t = tabOf(tid);
   if ((g.table || null) === (t ? t.id : null)) { render(); return; }
-  g.table = t ? t.id : null; save(); render();
+  g.table = t ? t.id : null; g.seat = null; save(); render();
   if (t) { const n = tableSeated(t), cap = Number(t.seats) || 0; toast(n > cap ? `Table ${tableNo(t.id)} is over by ${n - cap}` : `${g.name} → Table ${tableNo(t.id)}`); } else toast(g.name + " is not seated");
 }
+
+/* --- floor plan: seats --- */
+function byTable() { const m = new Map(); S.guests.forEach(g => { if (g.table) { if (!m.has(g.table)) m.set(g.table, []); m.get(g.table).push(g); } }); return m; }
+// Who sits where: guests with a chosen seat keep it (a party takes the seats next to it), the rest fill the free seats in order.
+// Spots past the table's seats are "over capacity". Declined guests still at the table come last (they hold a seat until you unseat them).
+function seatMap(t, list) {
+  const cap = capOf(t), arr = [], rest = [];
+  const act = list.filter(g => g.rsvp !== "Declined"), dec = list.filter(g => g.rsvp === "Declined");
+  act.forEach(g => {
+    const n = people(g), st = g.seat;
+    if (Number.isInteger(st) && st >= 0 && st < cap) {
+      const idx = []; for (let k = 0; k < n; k++) idx.push((st + k) % cap);
+      if (n <= cap && idx.every(i => !arr[i])) { idx.forEach((i, k) => arr[i] = { g, k }); return; }
+    }
+    rest.push(g);
+  });
+  const free = () => { for (let i = 0; i < cap; i++) if (!arr[i]) return i; return Math.max(arr.length, cap); };
+  rest.concat(dec).forEach(g => { for (let k = 0; k < people(g); k++) arr[free()] = { g, k }; });
+  return arr;
+}
+function ini(name) {
+  const w = String(name).replace(/\s*(&|\band\b)\s*guest\b|\+\s*\d+/gi, "").split(/\s+/).filter(x => /[A-Za-z0-9]/.test(x) && !/^(the|&|and|family)$/i.test(x));
+  return w.length ? (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase() : "?";
+}
+const seatColor = g => S.plan.color === "meal" ? `var(--m${MEALS.indexOf(g.meal) + 1})` : `var(--s-${["p1", "p2"].includes(g.side) ? g.side : "both"})`;
+const SPECIAL = ["Vegetarian", "Vegan", "Kids meal"];
+// Dietary needs at a table: special meals (by person) + each note in "Dietary needs" (comma separated)
+function dietOf(list) {
+  const c = {};
+  list.filter(g => g.rsvp !== "Declined").forEach(g => {
+    if (SPECIAL.includes(g.meal)) c[g.meal] = (c[g.meal] || 0) + people(g);
+    String(g.diet || "").split(/[,;]/).map(x => x.trim()).filter(Boolean).forEach(x => { const k = x[0].toUpperCase() + x.slice(1); c[k] = (c[k] || 0) + 1; });
+  });
+  return c;
+}
+const dietText = c => Object.entries(c).map(([k, n]) => n + " " + k).join(" · ");
+const f1 = v => String(Math.round(v * 100) / 100);
+const fmtFt = v => String(Math.round(v * 10) / 10);
+const elOf = id => { const t = tabOf(id); if (t) return { k: "t", o: t }; const it = S.plan.items.find(x => x.id === id); return it ? { k: "i", o: it } : null; };
+const elName = id => { const r = elOf(id); return !r ? "" : r.k === "t" ? "Table " + tableNo(id) + (r.o.name ? " · " + r.o.name : "") : (r.o.label || ITEMS[r.o.kind].name); };
+// Shrinks the font (down to min) so the text fits the room, then cuts it with … if it still doesn't
+function fitText(t, room, max, min) { t = String(t); const fs = Math.max(min || max, Math.min(max, room / (t.length * .58))), n = Math.max(3, Math.floor(room / (fs * .58) + 1e-6)); return [t.length > n ? t.slice(0, n - 1) + "…" : t, fs]; }
+
+/* --- floor plan: drawing (SVG in feet) --- */
+function planTable(t, list, print) {
+  const map = seatMap(t, list), g = tGeo(t, map.length), r = t.rot || 0, n = capOf(t), occ = tableSeated(t);
+  const cls = occ > n ? "over" : occ === n ? "full" : "";
+  const body = g.round ? `<circle class="tb" r="${f1(g.r)}"/>` : `<rect class="tb" x="${f1(-g.L / 2)}" y="${f1(-g.W / 2)}" width="${f1(g.L)}" height="${f1(g.W)}" rx=".35"/>`;
+  const seats = g.seats.map(([x, y], i) => {
+    const o = map[i], gg = o && o.g;
+    const c = !o ? (i >= n ? "x" : "") : "on" + (gg.rsvp === "Declined" ? " dec" : gg.rsvp !== "Attending" ? " inv" : "") + (i >= n ? " x" : "");
+    const tip = o ? gg.name + (o.k ? " (guest " + (o.k + 1) + ")" : "") + " · " + gg.rsvp + (gg.meal ? " · " + gg.meal : "") + (gg.diet ? " · " + gg.diet : "") : "Seat " + (i + 1) + " · empty";
+    return `<g class="seat ${c}" data-seat="${i}" data-t="${t.id}"${o ? ` data-g="${gg.id}"` : ""} transform="translate(${f1(x)} ${f1(y)})"><circle r=".8"${o ? ` style="fill:${seatColor(gg)}"` : ""}/>${o ? `<text transform="rotate(${-r})">${o.k ? "+" + o.k : esc(ini(gg.name))}</text>` : ""}<title>${esc(tip)}</title></g>`;
+  }).join("");
+  const room = g.round ? g.r * 1.75 : g.L * .9, fs = Math.min(1.5, g.round ? g.r * .62 : g.W * .5), [nm, nfs] = t.name ? fitText(t.name, room, fs * .5, fs * .36) : ["", 0];
+  const label = `<g transform="rotate(${-r})"><text class="tno" y="${nm ? f1(-fs * .32) : 0}" font-size="${f1(fs)}">${tableNo(t.id)}</text>${nm ? `<text class="tnm" y="${f1(fs * .58)}" font-size="${f1(nfs)}">${esc(nm)}</text>` : ""}</g>`;
+  const dc = Object.values(dietOf(list)).reduce((a, b) => a + b, 0);
+  const badge = dc ? `<g class="dbadge" transform="rotate(${-r}) translate(${f1(g.round ? g.r * .5 : g.L / 2 - .7)} ${f1(g.round ? -g.r * .5 : -g.W / 2 + .7)})"><circle r=".6"/><text>${dc}</text></g>` : "";
+  const aria = `Table ${tableNo(t.id)}${t.name ? ", " + t.name : ""}, ${SHAPES[t.shape]}, ${occ} of ${n} seats${occ > n ? ", over by " + (occ - n) : occ === n ? ", full" : ""}${dc ? ", " + dc + " dietary needs" : ""}`;
+  return `<g class="el tbl ${cls}${!print && SEL === t.id ? " sel" : ""}" data-el="${t.id}" data-k="t"${print ? "" : ` tabindex="0" role="button" aria-label="${esc(aria)}"`} transform="translate(${f1(t.x)} ${f1(t.y)}) rotate(${r})">${body}${seats}${label}${badge}</g>`;
+}
+function planItem(it, pfx, print) {
+  const d = ITEMS[it.kind] || ITEMS.label, w = it.w, h = it.h, r = it.rot || 0, lab = it.label || d.name;
+  const up = ((r % 360) + 360) % 360 > 90 && ((r % 360) + 360) % 360 <= 270 ? 180 : 0;
+  let body = d.round ? `<circle class="ib" r="${f1(w / 2)}"/>` : `<rect class="ib" x="${f1(-w / 2)}" y="${f1(-h / 2)}" width="${f1(w)}" height="${f1(h)}" rx=".4"${it.kind === "dance" ? ` style="fill:url(#${pfx}dn)"` : ""}/>`;
+  if (it.kind === "sweetheart") {
+    const names = [S.p1, S.p2].map(x => x ? ini(x).slice(0, 1) : "♡");
+    body += [-1.2, 1.2].map((x, i) => `<g class="seat on"><circle cx="${x}" cy="${f1(-h / 2 - .95)}" r=".8" style="fill:var(--s-p${i + 1})"/><text x="${x}" y="${f1(-h / 2 - .95)}">${esc(names[i])}</text></g>`).join("");
+  }
+  const base = it.kind === "label" ? Math.min(1.4, h * .7) : it.kind === "entrance" ? 1 : Math.min(1.25, Math.max(.6, h * .38)), ty = it.kind === "entrance" ? -h / 2 - 1 : 0;
+  const [tx, fs] = fitText(lab, it.kind === "label" || it.kind === "entrance" ? Math.max(w, 10) : w * .92, base, .55);
+  const text = `<text class="ilab" y="${f1(ty)}" font-size="${f1(fs)}" transform="rotate(${up})">${esc(tx)}</text>`;
+  return `<g class="el item k-${it.kind}${!print && SEL === it.id ? " sel" : ""}" data-el="${it.id}" data-k="i"${print ? "" : ` tabindex="0" role="button" aria-label="${esc(lab + ", " + fmtFt(w) + " by " + fmtFt(h) + " ft")}"`} transform="translate(${f1(it.x)} ${f1(it.y)}) rotate(${r})">${body}${text}</g>`;
+}
+function planSVG(pfx, print) {
+  const P = S.plan, by = byTable();
+  let h = `<defs><pattern id="${pfx}g1" width="1" height="1" patternUnits="userSpaceOnUse"><path d="M1 0H0V1" class="gl1"/></pattern><pattern id="${pfx}g5" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M5 0H0V5" class="gl5"/></pattern>
+   <pattern id="${pfx}dn" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" class="dn0"/><rect width="1" height="1" class="dn1"/><rect x="1" y="1" width="1" height="1" class="dn1"/></pattern></defs>`;
+  h += `<rect class="room" width="${P.w}" height="${P.l}"/>${print ? "" : `<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g1)" pointer-events="none"/>`}<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g5)" pointer-events="none"/>`;
+  h += `<text class="dim" x="${P.w / 2}" y="-1">${fmtFt(P.w)} ft</text><text class="dim" transform="translate(-1 ${P.l / 2}) rotate(-90)">${fmtFt(P.l)} ft</text>`;
+  h += P.items.map(it => planItem(it, pfx, print)).join("") + S.tables.map(t => planTable(t, by.get(t.id) || [], print)).join("");
+  if (!print) h += `<g id="rotH" class="roth" visibility="hidden"><line x1="0" y1="0" x2="0" y2="0"/><circle data-rot="1" r=".75"><title>Drag to turn</title></circle></g>`;
+  return h;
+}
+
+/* --- floor plan: the screen --- */
+function planV() {
+  layoutMissing(S);
+  if (SEL && !elOf(SEL)) SEL = null;
+  const st = seating(), P = S.plan, pool = poolList();
+  M().innerHTML = `<div class="tablebar"><div><h1>Seating &amp; floor plan</h1><p class="sub" style="margin:0"><b id="sSeated">${st.seated}</b> seated of ${st.seats} seats · <b id="sNeed" class="${st.need ? "t-warn" : "t-ok"}">${st.need}</b> attending without a table · <b id="sOver" class="${st.over ? "t-short" : ""}">${st.over}</b> over capacity</p></div>
+   <div class="actions" style="margin:0"><button class="btn ghost" id="csvT">⬇ CSV by table</button><button class="btn ghost" id="printPlan">🖨 Print / PDF</button><button class="btn" id="addEl">+ Add to plan</button></div></div>
+  ${modeTabs()}
+  <div class="planwrap">
+   <div class="card plancard">
+    <div class="ptools">
+     <button class="btn small ghost" id="roomBtn" aria-label="Room size ${fmtFt(P.w)} by ${fmtFt(P.l)} feet, change">Room ${fmtFt(P.w)} × ${fmtFt(P.l)} ft</button>
+     <span class="meta">Color</span><div class="chips" role="group" aria-label="Seat colors">${[["side", "By side"], ["meal", "By meal"]].map(([k, t]) => `<button class="chip" data-color="${k}" aria-pressed="${P.color === k}">${t}</button>`).join("")}</div>
+     <button class="chip" id="snapBtn" aria-pressed="${!!P.snap}">Snap to grid</button>
+     <span class="grow"></span>
+     <button class="icon" id="zOut" aria-label="Zoom out" title="Zoom out">−</button><button class="icon" id="zIn" aria-label="Zoom in" title="Zoom in">+</button><button class="btn small ghost" id="zFit">Fit</button>
+    </div>
+    <div class="planbox" id="planBox" style="aspect-ratio:${f1(P.w + 8)}/${f1(P.l + 8)}"><svg id="plan" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Floor plan, ${fmtFt(P.w)} by ${fmtFt(P.l)} feet">${planSVG("s")}</svg></div>
+    <div class="selbar" id="selBar" aria-live="polite"></div>
+    <p class="meta phelp">Drag to move; drag the empty floor to pan; Ctrl + scroll or pinch to zoom. Keyboard: Tab to a table, arrows move it (Shift = 5 ft), R turns it, D duplicates, Delete removes, Enter edits or seats the picked guest.</p>
+   </div>
+   <div class="card ppool" id="poolCard"><h2>Not seated yet <span class="meta">(${pool.reduce((a, g) => a + people(g), 0)})</span></h2>
+    <input id="pq" type="search" placeholder="Find a guest" aria-label="Find a guest" value="${esc(PQ)}">
+    <div class="gchips" id="poolZone" aria-label="Not seated">${pool.length ? pool.map(planChip).join("") : `<div class="meta" style="padding:8px">Everyone has a seat. 🎉</div>`}</div>
+    <p class="meta" style="margin:10px 0 0">Drag a name onto a seat or a table. On a phone: tap a name, then tap a seat. Dashed = no reply yet.</p></div>
+   <div class="card pinfo"><h2>Check</h2><ul class="warns" id="warnPanel">${warnHTML()}</ul><div id="tableInfo"></div><div class="legend" id="legend">${legendHTML()}</div></div>
+  </div>`;
+  wirePlan(); wireModes(); wire();
+}
+const planChip = g => `<button type="button" class="gchip ${g.rsvp === "Attending" ? "" : "inv"} ${PICKG === g.id ? "picked" : ""}" data-gid="${g.id}" title="${esc(g.name)} · ${esc(g.rsvp)}${g.meal ? " · " + esc(g.meal) : ""}${g.diet ? " · " + esc(g.diet) : ""}"${PQ && !g.name.toLowerCase().includes(PQ.toLowerCase()) ? " hidden" : ""}><i class="dot" style="background:${seatColor(g)}"></i>${esc(g.name)}${people(g) > 1 ? `<small>${people(g)}</small>` : ""}</button>`;
+function legendHTML() {
+  const L = S.plan.color === "meal" ? MEALS.map((m, i) => [`var(--m${i + 1})`, m]).concat([["var(--m0)", "No meal yet"]]) : [["var(--s-p1)", sideName("p1")], ["var(--s-p2)", sideName("p2")], ["var(--s-both)", "Both"]];
+  return L.map(([c, t]) => `<span><i style="background:${c}"></i>${esc(t)}</span>`).join("") + `<span><i style="border:2px dashed var(--muted)"></i>No reply yet</span><span><i style="border:2px solid var(--bad)"></i>Declined / over</span><span><i style="background:var(--m4)"></i>Dietary needs (count)</span>`;
+}
+function warnHTML() {
+  const by = byTable(), out = [], st = seating();
+  const over = S.tables.filter(t => tableSeated(t) > capOf(t)), full = S.tables.filter(t => tableSeated(t) === capOf(t));
+  over.forEach(t => out.push(`<li class="bad" data-w="over">⚠ ${esc(elName(t.id))} is over by ${tableSeated(t) - capOf(t)}</li>`));
+  if (full.length) out.push(`<li class="good" data-w="full">✓ Full: ${full.map(t => "Table " + tableNo(t.id)).join(", ")}</li>`);
+  const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table));
+  if (need.length) out.push(`<li class="warn" data-w="need">${plural(st.need, "attending guest")} without a table: ${need.slice(0, 5).map(g => esc(g.name)).join(", ")}${need.length > 5 ? " and " + (need.length - 5) + " more" : ""}</li>`);
+  const dec = S.guests.filter(g => g.rsvp === "Declined" && tabOf(g.table));
+  if (dec.length) out.push(`<li class="bad" data-w="declined">${plural(dec.length, "declined guest")} still seated: ${dec.slice(0, 5).map(g => esc(g.name) + " (Table " + tableNo(g.table) + ")").join(", ")}${dec.length > 5 ? "…" : ""}<br><button class="btn small danger" id="unseatDec">Unseat them</button></li>`);
+  const diets = S.tables.map(t => [t, dietOf(by.get(t.id) || [])]).filter(([, c]) => Object.keys(c).length);
+  if (diets.length) out.push(`<li data-w="diet"><b>Dietary needs by table</b>${diets.map(([t, c]) => `<div class="meta" style="color:var(--ink)">Table ${tableNo(t.id)}: ${esc(dietText(c))}</div>`).join("")}</li>`);
+  if (!over.length && !need.length && !dec.length) out.unshift(`<li class="good" data-w="ok">✓ Everyone attending has a seat${S.tables.length ? " and no table is over" : ""}.</li>`);
+  return out.join("");
+}
+function selBarHTML() {
+  const r = SEL && elOf(SEL);
+  if (!r || PICKG) return `<span class="meta">${PICKG ? `Picked <b style="color:var(--ink)">${esc(S.guests.find(g => g.id === PICKG)?.name || "")}</b>: tap a seat or a table. <button class="btn small ghost" id="unpick">Cancel</button>${tabOf(S.guests.find(g => g.id === PICKG)?.table) ? ` <button class="btn small ghost" id="unseatPick">Unseat</button>` : ""}` : "Click or tap a table to select it. Use + Add to plan for tables, the dance floor, the bar and more."}</span>`;
+  const o = r.o, sub = r.k === "t" ? `${SHAPES[o.shape]} · ${tableSeated(o)} of ${capOf(o)} seats` : `${fmtFt(o.w)} × ${fmtFt(o.h)} ft`;
+  return `<span class="grow"><b>${esc(elName(SEL))}</b> <span class="meta">${sub} · ${Math.round(o.rot || 0)}°</span></span>
+   <button class="btn small ghost" id="selEdit">✎ Edit</button><button class="icon" id="selRotL" aria-label="Turn left 15°" title="Turn left 15°">⟲</button><button class="icon" id="selRotR" aria-label="Turn right 15°" title="Turn right 15°">⟳</button>
+   <button class="btn small ghost" id="selDup">Duplicate</button><button class="btn small danger" id="selDel">Delete</button>`;
+}
+function tableInfoHTML() {
+  const t = SEL && tabOf(SEL); if (!t) return "";
+  const list = S.guests.filter(g => g.table === t.id), map = seatMap(t, list), seen = new Set(), rows = [];
+  map.forEach((o, i) => { if (o && !seen.has(o.g)) { seen.add(o.g); rows.push([i, o.g]); } });
+  const meals = {}; list.filter(g => g.rsvp !== "Declined").forEach(g => { const k = g.meal || "No meal yet"; meals[k] = (meals[k] || 0) + people(g); });
+  return `<div class="tinfo" data-tinfo="${t.id}"><b>${esc(elName(t.id))}</b> <span class="meta">${tableSeated(t)} of ${capOf(t)}</span>
+   ${rows.length ? rows.map(([i, g]) => `<div class="row"><span class="meta" style="width:22px">${i + 1}</span><div class="grow"><div class="name" style="font-weight:650">${esc(g.name)}${g.rsvp === "Declined" ? ' <span class="pill short">Declined</span>' : ""}</div><div class="meta">${esc([g.meal, g.diet].filter(Boolean).join(" · ") || "No meal yet")}</div></div><button class="icon" data-unseat="${g.id}" aria-label="Unseat ${esc(g.name)}" title="Unseat">✕</button></div>`).join("") : `<div class="meta" style="padding:6px 0">Nobody here yet.</div>`}
+   ${Object.keys(meals).length ? `<div class="meta" style="margin-top:6px">Meals: ${esc(dietText(meals))}</div>` : ""}</div>`;
+}
+function updateSel() {
+  const svg = document.getElementById("plan"); if (!svg) return;
+  svg.querySelectorAll(".el.sel").forEach(e => e.classList.remove("sel"));
+  const ge = SEL && svg.querySelector(`.el[data-el="${SEL}"]`); if (ge) ge.classList.add("sel");
+  document.getElementById("selBar").innerHTML = selBarHTML();
+  document.getElementById("tableInfo").innerHTML = tableInfoHTML();
+  M().querySelectorAll("#poolZone .gchip").forEach(c => c.classList.toggle("picked", c.dataset.gid === PICKG));
+  placeRotH();
+  const on = (id, fn) => { const b = document.getElementById(id); if (b) b.onclick = fn; };
+  on("selEdit", () => editEl(SEL)); on("selRotL", () => turnEl(SEL, -15)); on("selRotR", () => turnEl(SEL, 15));
+  on("selDup", () => dupEl(SEL)); on("selDel", () => delEl(SEL));
+  on("unpick", () => { PICKG = null; updateSel(); }); on("unseatPick", () => seatGuest(PICKG, null));
+  M().querySelectorAll("#tableInfo [data-unseat]").forEach(b => b.onclick = () => seatGuest(b.dataset.unseat, null));
+}
+function placeRotH(o) {
+  const h = document.getElementById("rotH"); if (!h) return;
+  const r = SEL && elOf(SEL); if (!r) { h.setAttribute("visibility", "hidden"); return; }
+  // the handle stays about 30 px wide on screen (easy to grab with a finger) at any zoom
+  const ctm = document.getElementById("plan").getScreenCTM(), rr = Math.max(.75, 15 / ((ctm && ctm.a) || 10));
+  o = o || r.o; const b = r.k === "t" ? tGeo(o) : { bh: o.h }, d = b.bh / 2 + .8 + rr * 1.6, a = (o.rot || 0) * Math.PI / 180;
+  h.querySelector("circle").setAttribute("r", f1(rr));
+  const hx = o.x + d * Math.sin(a), hy = o.y - d * Math.cos(a);
+  h.querySelector("line").setAttribute("x1", o.x); h.querySelector("line").setAttribute("y1", o.y);
+  h.querySelector("line").setAttribute("x2", hx); h.querySelector("line").setAttribute("y2", hy);
+  h.querySelector("circle").setAttribute("cx", hx); h.querySelector("circle").setAttribute("cy", hy);
+  h.setAttribute("visibility", "visible");
+}
+function select(id) { SEL = id; updateSel(); }
+function pickGuest(gid) { PICKG = gid; updateSel(); if (gid) toast("Now tap a seat or a table for " + S.guests.find(g => g.id === gid).name); }
+const focusEl = id => { const g = M().querySelector(`.el[data-el="${id}"]`); if (g) g.focus({ preventScroll: true }); };
+
+/* --- floor plan: changes (each one saves once) --- */
+function commit(focusId) { save(); render(); if (focusId) focusEl(focusId); }
+function seatGuest(gid, tid, idx) {
+  const g = S.guests.find(x => x.id === gid); if (!g) return;
+  const t = tabOf(tid); PICKG = null;
+  if (!t) { if (!g.table) { updateSel(); return; } g.table = null; g.seat = null; commit(); toast(g.name + " is not seated"); return; }
+  if (idx != null) {
+    const list = S.guests.filter(x => x.table === t.id), occ = seatMap(t, list)[idx];
+    if (occ && occ.g !== g) occ.g.seat = g.table === t.id && Number.isInteger(g.seat) ? g.seat : null; // swap at the same table
+    g.seat = idx < capOf(t) ? idx : null;
+  } else if (g.table !== t.id) g.seat = null;
+  g.table = t.id;
+  commit();
+  const n = tableSeated(t), cap = capOf(t);
+  toast(n > cap ? `Table ${tableNo(t.id)} is full: over by ${n - cap}` : `${g.name} → Table ${tableNo(t.id)}${idx != null && idx < cap ? ", seat " + (idx + 1) : ""}${n === cap ? " · table full" : ""}`);
+}
+function clampIn(o) { const P = S.plan; o.x = Math.max(0, Math.min(P.w, o.x)); o.y = Math.max(0, Math.min(P.l, o.y)); }
+const snapV = v => S.plan.snap ? Math.round(v) : Math.round(v * 10) / 10;
+function turnEl(id, d) { const r = elOf(id); if (!r) return; r.o.rot = (((Math.round(r.o.rot || 0) + d) % 360) + 360) % 360; commit(document.activeElement && document.activeElement.closest && document.activeElement.closest(".el") ? id : null); }
+function dupEl(id) {
+  const r = elOf(id); if (!r) return;
+  const o = JSON.parse(JSON.stringify(r.o)); o.id = uid();
+  const b = bboxOf(o); [o.x, o.y] = findFree(S, b.w, b.h, r.o.x + 3, r.o.y + 3);
+  if (r.k === "t") { o.name = ""; S.tables.push(o); } else S.plan.items.push(o);
+  SEL = o.id; commit(o.id); toast(r.k === "t" ? "Table " + tableNo(o.id) + " added" : elName(o.id) + " added");
+}
+function delEl(id) {
+  const r = elOf(id); if (!r) return;
+  if (r.k === "t") { const n = S.guests.filter(g => g.table === id).length; confirmDlg("Delete table " + tableNo(id) + "?", n ? `Its ${plural(n, "guest")} go back to “Not seated yet”.` : "The table is empty.", "Delete", () => { S.guests.forEach(g => { if (g.table === id) { g.table = null; g.seat = null; } }); S.tables = S.tables.filter(x => x.id !== id); SEL = null; commit(); toast("Table deleted"); }); }
+  else confirmDlg("Delete " + esc(elName(id)) + "?", "It comes off the floor plan.", "Delete", () => { S.plan.items = S.plan.items.filter(x => x.id !== id); SEL = null; commit(); toast("Deleted"); });
+}
+function editEl(id) { const r = elOf(id); if (r) r.k === "t" ? tableDlg(id) : itemDlg(id); }
+const viewCenter = () => VB ? [VB.x + VB.w / 2, VB.y + VB.h / 2] : [S.plan.w / 2, S.plan.l / 2];
+function addEl(code) {
+  const [k, a, b] = code.split(":"), [cx, cy] = viewCenter();
+  let o;
+  if (k === "t") { o = { id: uid(), name: a === "head" ? "Head table" : "", seats: +b, shape: a, rot: 0 }; const bb = bboxOf(o); [o.x, o.y] = findFree(S, bb.w, bb.h, cx, cy); S.tables.push(o); }
+  else { const d = ITEMS[a]; o = { id: uid(), kind: a, label: a === "sweetheart" && (S.p1 || S.p2) ? [S.p1, S.p2].filter(Boolean).join(" & ") : "", w: d.w, h: d.h, rot: 0 }; [o.x, o.y] = findFree(S, d.w, d.h, cx, cy); S.plan.items.push(o); }
+  SEL = o.id; commit(); toast(elName(o.id) + " added");
+}
+function renumber() {
+  if (S.tables.length < 2) return toast("Add a few tables first");
+  S.tables.sort((a, b) => Math.round(a.y / 8) - Math.round(b.y / 8) || a.x - b.x);
+  commit(); toast("Tables numbered by where they are: left to right, top to bottom");
+}
+
+/* --- floor plan: zoom, pan, drag, keyboard --- */
+function fitVB() { const P = S.plan; VB = { x: -4, y: -4, w: P.w + 8, h: P.l + 8 }; }
+function setVB() { const svg = document.getElementById("plan"); if (svg && VB) { svg.setAttribute("viewBox", [VB.x, VB.y, VB.w, VB.h].map(f1).join(" ")); placeRotH(); } }
+function zoomAt(f, px, py) {
+  const P = S.plan, mx = Math.max(P.w, P.l) * 3, nw = Math.max(8, Math.min(mx, VB.w * f)), k = nw / VB.w;
+  if (px == null) [px, py] = [VB.x + VB.w / 2, VB.y + VB.h / 2];
+  VB = { x: px - (px - VB.x) * k, y: py - (py - VB.y) * k, w: VB.w * k, h: VB.h * k }; setVB();
+}
+function wirePlan() {
+  const svg = document.getElementById("plan");
+  if (!VB) fitVB(); setVB(); updateSel();
+  document.getElementById("addEl").onclick = () => addDlg();
+  document.getElementById("roomBtn").onclick = () => roomDlg();
+  document.getElementById("csvT").onclick = () => S.tables.length ? exportCSV("bytable") : toast("Add a table first");
+  document.getElementById("printPlan").onclick = () => printPlan();
+  document.getElementById("snapBtn").onclick = () => { S.plan.snap = !S.plan.snap; commit(); };
+  M().querySelectorAll("[data-color]").forEach(b => b.onclick = () => { if (S.plan.color !== b.dataset.color) { S.plan.color = b.dataset.color; commit(); } });
+  document.getElementById("zIn").onclick = () => zoomAt(.8); document.getElementById("zOut").onclick = () => zoomAt(1.25);
+  document.getElementById("zFit").onclick = () => { fitVB(); setVB(); };
+  const ud = document.getElementById("unseatDec"); if (ud) ud.onclick = () => { const n = S.guests.filter(g => g.rsvp === "Declined" && g.table).length; S.guests.forEach(g => { if (g.rsvp === "Declined" && g.table) { g.table = null; g.seat = null; } }); commit(); toast(plural(n, "declined guest") + " unseated"); };
+  const pq = document.getElementById("pq"); pq.oninput = () => { PQ = pq.value; const q = PQ.toLowerCase(); M().querySelectorAll("#poolZone .gchip").forEach(c => c.hidden = !!q && !S.guests.find(g => g.id === c.dataset.gid).name.toLowerCase().includes(q)); };
+  M().querySelectorAll("#poolZone .gchip").forEach(c => {
+    c.onclick = e => { e.stopPropagation(); if (c.dataset.dragged) { delete c.dataset.dragged; return; } pickGuest(PICKG === c.dataset.gid ? null : c.dataset.gid); };
+    c.onpointerdown = e => { if (e.pointerType === "mouse" && e.button === 0) guestDrag(e, c.dataset.gid, c); };
+  });
+  document.getElementById("poolCard").onclick = e => { if (PICKG && !e.target.closest(".gchip,input") && tabOf(S.guests.find(g => g.id === PICKG)?.table)) seatGuest(PICKG, null); };
+  const toFt = e => { const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM().inverse()); return { x: p.x, y: p.y }; };
+  const ptrs = new Map(); let act = null, pinch = null;
+  svg.addEventListener("pointerdown", e => {
+    if (e.button > 0) return;
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), vb: { ...VB }, m: toFt({ clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2 }) }; act = null; return; }
+    act = { id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, type: e.pointerType, seatE: e.target.closest("[data-seat][data-t]"), rotE: e.target.closest("[data-rot]"), elE: e.target.closest(".el"), p0: toFt(e) };
+    try { svg.setPointerCapture(e.pointerId); } catch (x) {}
+    e.preventDefault();
+  });
+  svg.addEventListener("pointermove", e => {
+    if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && ptrs.size === 2) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d > 10) { VB = { ...pinch.vb }; zoomAt(pinch.d / d, pinch.m.x, pinch.m.y); } return; }
+    if (!act || act.id !== e.pointerId) return;
+    if (!act.moved) {
+      if (Math.hypot(e.clientX - act.sx, e.clientY - act.sy) < 5) return;
+      act.moved = true;
+      const occ = act.seatE && act.seatE.dataset.g;
+      if (act.rotE && SEL) { act.mode = "rot"; act.o = elOf(SEL).o; act.ge = svg.querySelector(`.el[data-el="${SEL}"]`); }
+      else if (occ && act.type === "mouse") { act.mode = "guest"; act.gid = occ; act.ghost = ghost(S.guests.find(g => g.id === occ).name); }
+      else if (act.elE) { act.mode = "move"; act.ge = act.elE; act.o = elOf(act.elE.dataset.el).o; act.x0 = act.o.x; act.y0 = act.o.y; act.k = svg.getScreenCTM().a; if (SEL !== act.o.id) select(act.o.id); }
+      else { act.mode = "pan"; act.vb = { ...VB }; act.k = svg.getScreenCTM().a; svg.style.cursor = "grabbing"; }
+    }
+    if (act.mode === "move") {
+      const o = { ...act.o, x: act.x0 + (e.clientX - act.sx) / act.k, y: act.y0 + (e.clientY - act.sy) / act.k }; clampIn(o);
+      act.nx = o.x; act.ny = o.y; act.ge.setAttribute("transform", `translate(${f1(o.x)} ${f1(o.y)}) rotate(${o.rot || 0})`); placeRotH(o);
+    } else if (act.mode === "rot") {
+      const p = toFt(e); let a = Math.atan2(p.y - act.o.y, p.x - act.o.x) * 180 / Math.PI + 90; a = ((Math.round(a / (S.plan.snap ? 15 : 1)) * (S.plan.snap ? 15 : 1)) % 360 + 360) % 360;
+      act.rot = a; act.ge.setAttribute("transform", `translate(${f1(act.o.x)} ${f1(act.o.y)}) rotate(${a})`); placeRotH({ ...act.o, rot: a });
+    } else if (act.mode === "pan") { VB = { ...act.vb, x: act.vb.x - (e.clientX - act.sx) / act.k, y: act.vb.y - (e.clientY - act.sy) / act.k }; setVB(); }
+    else if (act.mode === "guest") moveGhost(act.ghost, e);
+  });
+  const end = e => {
+    ptrs.delete(e.pointerId); if (pinch) { if (ptrs.size < 2) pinch = null; act = null; return; }
+    if (!act || act.id !== e.pointerId) return;
+    const a = act; act = null; svg.style.cursor = "";
+    if (e.type === "pointercancel") { if (a.mode === "guest") a.ghost.remove(); if (a.mode === "move" || a.mode === "rot") render(); return; }
+    if (!a.moved) return tapPlan(a);
+    if (a.mode === "move") { a.o.x = snapV(a.nx); a.o.y = snapV(a.ny); clampIn(a.o); commit(); }
+    else if (a.mode === "rot") { a.o.rot = a.rot; commit(); }
+    else if (a.mode === "guest") dropGuest(a.gid, a.ghost, e);
+  };
+  svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
+  svg.addEventListener("wheel", e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); const p = toFt(e); zoomAt(e.deltaY > 0 ? 1.12 : 1 / 1.12, p.x, p.y); }, { passive: false });
+  svg.addEventListener("focusin", e => { const ge = e.target.closest && e.target.closest(".el"); if (ge && SEL !== ge.dataset.el) select(ge.dataset.el); });
+  svg.addEventListener("keydown", e => {
+    const ge = e.target.closest && e.target.closest(".el"); if (!ge) return;
+    const id = ge.dataset.el, r = elOf(id); if (!r) return;
+    const o = r.o, step = e.shiftKey ? 5 : 1, mv = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (mv) { e.preventDefault(); o.x = Math.round((o.x + mv[0] * step) * 10) / 10; o.y = Math.round((o.y + mv[1] * step) * 10) / 10; clampIn(o); SEL = id; commit(id); }
+    else if (e.key === "r" || e.key === "R") { e.preventDefault(); SEL = id; o.rot = (((Math.round(o.rot || 0) + (e.shiftKey ? -15 : 15)) % 360) + 360) % 360; commit(id); }
+    else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); delEl(id); }
+    else if (e.key === "d" || e.key === "D") { e.preventDefault(); dupEl(id); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (PICKG && r.k === "t") { seatGuest(PICKG, id, null); focusEl(id); } else editEl(id); }
+    else if (e.key === "Escape") { PICKG = null; select(null); ge.blur(); }
+  });
+}
+function tapPlan(a) {
+  if (a.rotE) return;
+  if (a.seatE) {
+    const tid = a.seatE.dataset.t, i = +a.seatE.dataset.seat;
+    if (PICKG) return seatGuest(PICKG, tid, i);
+    SEL = tid; if (a.seatE.dataset.g) return pickGuest(a.seatE.dataset.g);
+    return updateSel();
+  }
+  if (a.elE) { const id = a.elE.dataset.el; if (PICKG && a.elE.dataset.k === "t") return seatGuest(PICKG, id, null); return select(id); }
+  if (PICKG || SEL) { PICKG = null; select(null); } // a tap on the empty floor only clears the selection: nothing is saved
+}
+function ghost(name) { const d = document.createElement("div"); d.className = "gghost"; d.textContent = name; document.body.appendChild(d); return d; }
+function moveGhost(d, e) {
+  d.style.left = e.clientX + "px"; d.style.top = e.clientY + "px";
+  document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot"));
+  const el = document.elementFromPoint(e.clientX, e.clientY), h = el && (el.closest("[data-seat][data-t]") || el.closest('.el[data-k="t"]'));
+  if (h) h.classList.add("hot");
+}
+function dropGuest(gid, d, e) {
+  d.remove(); const el = document.elementFromPoint(e.clientX, e.clientY); if (!el) return;
+  const se = el.closest("[data-seat][data-t]"); if (se) return seatGuest(gid, se.dataset.t, +se.dataset.seat);
+  const te = el.closest('.el[data-k="t"]'); if (te) return seatGuest(gid, te.dataset.el, null);
+  if (el.closest("#poolCard")) return seatGuest(gid, null);
+  document.querySelectorAll("#plan .hot").forEach(x => x.classList.remove("hot"));
+}
+function guestDrag(e, gid, chip) {
+  const sx = e.clientX, sy = e.clientY; let d = null;
+  const mv = ev => { if (!d && Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return; if (!d) { d = ghost(S.guests.find(g => g.id === gid).name); chip.classList.add("dragging"); } moveGhost(d, ev); };
+  const up = ev => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); if (!d) return; chip.dataset.dragged = "1"; setTimeout(() => { delete chip.dataset.dragged; }, 0); chip.classList.remove("dragging"); dropGuest(gid, d, ev); };
+  addEventListener("pointermove", mv); addEventListener("pointerup", up);
+}
+
+/* --- floor plan: print / PDF --- */
+function buildPrint() {
+  const P = S.plan, by = byTable(), st = seating(), pa = document.getElementById("printArea");
+  const tabs = S.tables.map(t => {
+    const list = by.get(t.id) || [], map = seatMap(t, list), seen = new Set(), rows = [];
+    map.forEach((o, i) => { if (o && !seen.has(o.g)) { seen.add(o.g); rows.push(`<li value="${i + 1}">${esc(o.g.name)}${people(o.g) > 1 ? " (" + people(o.g) + ")" : ""}${o.g.meal ? " · " + esc(o.g.meal) : ""}${o.g.rsvp === "Declined" ? " · declined" : o.g.rsvp !== "Attending" ? " · no reply yet" : ""}</li>`); } });
+    const dc = dietOf(list);
+    return `<div class="ptab"><h3>Table ${tableNo(t.id)}${t.name ? " · " + esc(t.name) : ""} <small>${tableSeated(t)}/${capOf(t)}</small></h3>${rows.length ? `<ol>${rows.join("")}</ol>` : "<div>Empty</div>"}${Object.keys(dc).length ? `<div class="pd">${esc(dietText(dc))}</div>` : ""}</div>`;
+  }).join("");
+  const need = S.guests.filter(g => g.rsvp === "Attending" && !tabOf(g.table));
+  pa.innerHTML = `<div class="phead"><b>${couple()} · Floor plan</b><span>${S.date ? fmtLong(parse(S.date)) + " · " : ""}${st.seated} seated · ${plural(S.tables.length, "table")} · room ${fmtFt(P.w)} × ${fmtFt(P.l)} ft</span></div>
+   <svg class="pplan" xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 ${P.w + 6} ${P.l + 6}">${planSVG("p", true)}</svg>
+   <div class="ptables">${tabs}${need.length ? `<div class="ptab unseated"><h3>Attending, no table yet <small>${st.need}</small></h3><ul>${need.map(g => `<li>${esc(g.name)}</li>`).join("")}</ul></div>` : ""}</div>`;
+  return pa;
+}
+function printPlan() { if (!S.tables.length && !S.plan.items.length) return toast("Add a table first"); buildPrint(); window.print(); }
 
 /* --- checklist --- */
 let CF = "all";
@@ -612,7 +1123,7 @@ function checklistV() {
 
 /* --- settings --- */
 function settings() {
-  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then.</p>
+  M().innerHTML = `<h1>Settings</h1><p class="sub">Everything is saved in this browser on this computer. Download a backup now and then (it includes your floor plan).</p>
   <div class="grid g2e">
    <div class="card"><h2>Your wedding</h2>${detailsForm("detF")}</div>
    <div class="card"><h2>Look</h2>
@@ -623,24 +1134,25 @@ function settings() {
    <div class="card"><h2>Backup</h2>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
     <h2 style="margin-top:22px">Export to CSV</h2>
-    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvB2">⬇ Budget CSV</button><button class="btn ghost" id="csvV2">⬇ Vendors CSV</button><button class="btn ghost" id="csvP2">⬇ Payments CSV</button><button class="btn ghost" id="csvG2">⬇ Guests CSV</button></div>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvB2">⬇ Budget CSV</button><button class="btn ghost" id="csvV2">⬇ Vendors CSV</button><button class="btn ghost" id="csvP2">⬇ Payments CSV</button><button class="btn ghost" id="csvG2">⬇ Guests CSV</button><button class="btn ghost" id="csvT2">⬇ Guests by table CSV</button></div>
    </div>
    <div class="card"><h2>Start over</h2><p class="meta" style="margin:0 0 10px">The sample shows a full plan for Emma &amp; James. Erasing keeps nothing.</p>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
   </div>
-  <p class="foot">Wedding Planner App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
+  <p class="foot">Wedding Planner App v2.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
   const df = document.getElementById("detF"); df.onsubmit = e => { e.preventDefault(); readDetails(df); save(); render(); toast("Saved"); };
   M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
   M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
   const cf = document.getElementById("curF"); cf.onsubmit = e => { e.preventDefault(); S.currency = cf.currency.value.trim() || "$"; save(); render(); toast("Saved"); };
   document.getElementById("exp").onclick = () => { download("wedding-planner-backup-" + iso(today()) + ".json", JSON.stringify(S, null, 1), "application/json"); toast("Backup downloaded"); };
-  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Wedding Planner backup")).finally(() => { e.target.value = ""; }); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); SEL = null; VB = null; save(); toast("Backup restored"); go("home"); }).catch(() => toast("That file isn't a Wedding Planner backup")).finally(() => { e.target.value = ""; }); };
   document.getElementById("csvB2").onclick = () => exportCSV("budget");
   document.getElementById("csvV2").onclick = () => S.vendors.length ? exportCSV("vendors") : toast("Add a vendor first");
   document.getElementById("csvP2").onclick = () => S.pays.length ? exportCSV("payments") : toast("No payments yet");
   document.getElementById("csvG2").onclick = () => S.guests.length ? exportCSV("guests") : toast("Add a guest first");
+  document.getElementById("csvT2").onclick = () => S.tables.length ? exportCSV("bytable") : toast("Add a table first");
   document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", "This replaces what you have now with the sample wedding. Download a backup first if you want to keep your data.", "Load sample", () => { S = sample(); save(); go("home"); });
-  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, vendors, payments, guests, tables and checklist from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, vendors, payments, guests, tables, floor plan and checklist from this browser. It can't be undone.", "Erase", () => { S = blank(); save(); go("home"); });
 }
 
 /* ---------- CSV ---------- */
@@ -657,14 +1169,22 @@ function csvText(kind) {
   } else if (kind === "payments") {
     L = [["Date", "Vendor", "Category", "Amount", "Paid with", "Note"]];
     S.pays.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach(p => { const v = venOf(p.vendor), c = v && catOf(v.cat); L.push([p.date, v ? v.name : "", c ? c.name : "", f2(cents(p.amount)), p.method || "", p.note || ""]); });
+  } else if (kind === "bytable") {
+    // Guest list by table: one line per guest (a party lists all its seats), then everyone not seated yet
+    L = [["Table", "Table name", "Seats", "Guest", "Party size", "Side", "Group", "RSVP", "Meal", "Dietary needs"]];
+    const by = byTable();
+    S.tables.forEach(t => { const map = seatMap(t, by.get(t.id) || []), seen = new Map(); map.forEach((o, i) => { if (o) { if (!seen.has(o.g)) seen.set(o.g, []); seen.get(o.g).push(i < capOf(t) ? i + 1 : "over"); } });
+      if (!seen.size) L.push([tableNo(t.id), t.name || "", "", "(empty)", "", "", "", "", "", ""]);
+      seen.forEach((idx, g) => L.push([tableNo(t.id), t.name || "", idx.join(" "), g.name, people(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || ""])); });
+    S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).forEach(g => L.push(["Not seated", "", "", g.name, people(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || ""]));
   } else {
-    L = [["Guest", "Side", "Group", "Party size", "RSVP", "Meal", "Table", "Gift", "Thank-you sent", "Notes"]];
-    S.guests.forEach(g => L.push([g.name, sideName(g.side), g.group || "", people(g), g.rsvp, g.meal || "", g.rsvp === "Declined" ? "" : tableLabel(g.table), g.gift || "", g.thanks ? "Yes" : "", g.notes || ""]));
+    L = [["Guest", "Side", "Group", "Party size", "RSVP", "Meal", "Table", "Dietary needs", "Gift", "Thank-you sent", "Notes"]];
+    S.guests.forEach(g => L.push([g.name, sideName(g.side), g.group || "", people(g), g.rsvp, g.meal || "", tableLabel(g.table) + (g.rsvp === "Declined" && tabOf(g.table) ? " (declined)" : ""), g.diet || "", g.gift || "", g.thanks ? "Yes" : "", g.notes || ""]));
   }
   return L.map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
 }
 function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
-function exportCSV(kind) { download("wedding-" + kind + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+function exportCSV(kind) { download("wedding-" + (kind === "bytable" ? "guests-by-table" : kind) + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
 
 /* ---------- dialogs ---------- */
 const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
@@ -720,7 +1240,7 @@ function payDlg(id, vendor) {
   }, () => delBtn(() => { S.pays = S.pays.filter(x => x.id !== id); save(); D().close(); render(); toast("Payment deleted"); }));
 }
 function guestDlg(id) {
-  const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, gift: "", thanks: false, notes: "" };
+  const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "" };
   const groups = [...new Set(["Family", "Friends", "Work", ...S.guests.map(x => x.group).filter(Boolean)])];
   openDlg(`<h2>${id ? "Edit guest" : "Add a guest"}</h2>
    <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"></div>
@@ -729,11 +1249,12 @@ function guestDlg(id) {
     <div class="field"><label>RSVP</label><select name="rsvp">${opts(RSVP, g.rsvp)}</select></div></div>
    <div class="two"><div class="field"><label>Meal</label><select name="meal"><option value="">—</option>${opts(MEALS, g.meal)}</select></div><div class="field"><label>Table</label><select name="table"><option value="">Not seated</option>${S.tables.map(t => `<option value="${t.id}" ${g.table === t.id ? "selected" : ""}>${esc(tableLabel(t.id))} (${tableSeated(t)}/${t.seats})</option>`).join("")}</select></div></div>
    <div class="two"><div class="field"><label>Gift received</label><input name="gift" value="${esc(g.gift)}" placeholder="Registry item, card…"></div><div class="field"><span class="fl">Thank-you note</span><label class="checkline"><input type="checkbox" name="thanks" ${g.thanks ? "checked" : ""}> Sent</label></div></div>
-   <div class="field"><label>Address / notes</label><input name="notes" value="${esc(g.notes)}" placeholder="Allergies, plus-one, address…"></div>
+   <div class="two"><div class="field"><label>Dietary needs</label><input name="diet" value="${esc(g.diet)}" placeholder="Gluten-free, nut allergy…"></div><div class="field"><label>Address / notes</label><input name="notes" value="${esc(g.notes)}" placeholder="Plus-one, address…"></div></div>
    ${btns(!!id)}`, fd => {
     const o = Object.assign({}, g, { id: g.id || uid(), name: fd.get("name").trim() || "Guest", side: fd.get("side") || "both", group: fd.get("group").trim(), size: Math.max(1, Math.min(20, Math.round(+fd.get("size") || 1))), rsvp: fd.get("rsvp"),
-      meal: fd.get("meal") || "", table: fd.get("table") || null, gift: fd.get("gift").trim(), thanks: fd.get("thanks") === "on", notes: fd.get("notes").trim() });
-    if (o.rsvp === "Declined") o.table = null;
+      meal: fd.get("meal") || "", table: fd.get("table") || null, gift: fd.get("gift").trim(), thanks: fd.get("thanks") === "on", notes: fd.get("notes").trim(), diet: fd.get("diet").trim() });
+    if (o.table !== g.table) o.seat = null;
+    if (o.rsvp === "Declined" && tabOf(o.table)) setTimeout(() => toast(o.name + " declined but is still at Table " + tableNo(o.table) + ". The floor plan lists it."), 0);
     if (id) S.guests[S.guests.findIndex(x => x.id === id)] = o; else S.guests.push(o);
     toast(id ? "Guest updated" : "Guest added");
   }, () => delBtn(() => { S.guests = S.guests.filter(x => x.id !== id); save(); D().close(); render(); toast("Guest deleted"); }));
@@ -746,26 +1267,68 @@ function bulkDlg() {
    ${btns(false)}`, fd => {
     const names = fd.get("names").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
     if (!names.length) { toast("Type at least one name"); return false; }
-    names.forEach(n => S.guests.push({ id: uid(), name: n, side: fd.get("side"), group: fd.get("group").trim(), size: /(&|\band\b)\s*guest|\+\s*1\b/i.test(n) ? 2 : 1, rsvp: fd.get("rsvp"), meal: "", table: null, gift: "", thanks: false, notes: "" }));
+    names.forEach(n => S.guests.push({ id: uid(), name: n, side: fd.get("side"), group: fd.get("group").trim(), size: /(&|\band\b)\s*guest|\+\s*1\b/i.test(n) ? 2 : 1, rsvp: fd.get("rsvp"), meal: "", table: null, seat: null, gift: "", thanks: false, notes: "", diet: "" }));
     toast(plural(names.length, "guest") + " added");
   });
 }
 function tableDlg(id) {
-  const t = tabOf(id) || { name: "", seats: 8 };
+  const t = tabOf(id) || { name: "", seats: 8, shape: "round", rot: 0 };
   openDlg(`<h2>${id ? "Edit table " + tableNo(id) : "Add a table"}</h2>
-   <div class="two"><div class="field"><label>Name (optional)</label><input name="name" value="${esc(t.name)}" placeholder="Close family, Head table…"></div><div class="field"><label>Seats</label><input name="seats" type="number" min="1" max="24" step="1" required value="${t.seats}"></div></div>
+   <div class="two"><div class="field"><label for="tdName">Name (optional)</label><input id="tdName" name="name" value="${esc(t.name)}" placeholder="Close family, Head table…"></div><div class="field"><label for="tdSeats">Seats</label><input id="tdSeats" name="seats" type="number" min="1" max="24" step="1" required value="${t.seats}"></div></div>
+   <div class="two"><div class="field"><label for="tdShape">Shape</label><select id="tdShape" name="shape">${Object.entries(SHAPES).map(([k, v]) => `<option value="${k}" ${t.shape === k ? "selected" : ""}>${v}</option>`).join("")}</select></div><div class="field"><label for="tdRot">Turn (degrees)</label><input id="tdRot" name="rot" type="number" min="-360" max="360" step="15" value="${Math.round(t.rot || 0)}"></div></div>
+   <p class="meta" style="margin:-4px 0 10px">Round: 6 seats fit a 48" table, 8 a 60", 10 a 72". Banquet tables seat both long sides; a head table seats one side.</p>
    ${btns(!!id)}`, fd => {
-    const o = { id: t.id || uid(), name: fd.get("name").trim(), seats: Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8))) };
-    if (id) Object.assign(t, o); else S.tables.push(o);
+    const o = { name: fd.get("name").trim(), seats: Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8))), shape: SHAPES[fd.get("shape")] ? fd.get("shape") : "round", rot: (((Math.round(+fd.get("rot") || 0)) % 360) + 360) % 360 };
+    if (id) Object.assign(t, o);
+    else { const n = Object.assign({ id: uid() }, o), b = bboxOf(n), [cx, cy] = viewCenter(); [n.x, n.y] = findFree(S, b.w, b.h, VIEW === "seating" && SEATMODE === "plan" ? cx : null, cy); S.tables.push(n); }
     toast(id ? "Table updated" : "Table " + S.tables.length + " added");
-  }, () => delBtn(() => { D().close(); const n = S.guests.filter(g => g.table === id).length; confirmDlg("Delete table " + tableNo(id) + "?", n ? `Its ${plural(n, "guest")} go back to “Not seated yet”.` : "The table is empty.", "Delete", () => { S.guests.forEach(g => { if (g.table === id) g.table = null; }); S.tables = S.tables.filter(x => x.id !== id); save(); render(); toast("Table deleted"); }); }));
+  }, () => delBtn(() => { D().close(); const n = S.guests.filter(g => g.table === id).length; confirmDlg("Delete table " + tableNo(id) + "?", n ? `Its ${plural(n, "guest")} go back to “Not seated yet”.` : "The table is empty.", "Delete", () => { S.guests.forEach(g => { if (g.table === id) { g.table = null; g.seat = null; } }); S.tables = S.tables.filter(x => x.id !== id); if (SEL === id) SEL = null; save(); render(); toast("Table deleted"); }); }));
+}
+function itemDlg(id) {
+  const it = S.plan.items.find(x => x.id === id); if (!it) return;
+  const d = ITEMS[it.kind];
+  openDlg(`<h2>Edit ${esc(d.name.toLowerCase())}</h2>
+   <div class="field"><label for="idLab">Label</label><input id="idLab" name="label" value="${esc(it.label)}" placeholder="${esc(d.name)}"></div>
+   <div class="two"><div class="field"><label for="idW">${d.round ? "Size" : "Width"} (ft)</label><input id="idW" name="w" type="number" min="1" max="200" step="0.5" value="${it.w}"></div><div class="field"><label for="idH">Depth (ft)</label><input id="idH" name="h" type="number" min="0.5" max="200" step="0.5" value="${it.h}" ${d.round ? "disabled" : ""}></div></div>
+   <div class="field"><label for="idRot">Turn (degrees)</label><input id="idRot" name="rot" type="number" min="-360" max="360" step="15" value="${Math.round(it.rot || 0)}"></div>
+   ${btns(true)}`, fd => {
+    it.label = fd.get("label").trim(); it.w = clampN(fd.get("w"), 1, 200, it.w); it.h = d.round ? it.w : clampN(fd.get("h"), .5, 200, it.h); it.rot = (((Math.round(+fd.get("rot") || 0)) % 360) + 360) % 360;
+    toast("Updated");
+  }, () => delBtn(() => { D().close(); delEl(id); }));
+}
+function roomDlg() {
+  const P = S.plan;
+  openDlg(`<h2>Room size</h2><p class="sub" style="margin-bottom:12px">Ask the venue for the room's width and length. The grid shows 1 ft squares (bold lines every 5 ft).</p>
+   <div class="two"><div class="field"><label for="rmW">Width (ft)</label><input id="rmW" name="w" type="number" min="20" max="400" step="1" required value="${P.w}"></div><div class="field"><label for="rmL">Length (ft)</label><input id="rmL" name="l" type="number" min="20" max="400" step="1" required value="${P.l}"></div></div>
+   ${btns(false)}`, fd => {
+    P.w = clampN(fd.get("w"), 20, 400, P.w); P.l = clampN(fd.get("l"), 20, 400, P.l);
+    S.tables.concat(P.items).forEach(clampIn); VB = null;
+    toast(`Room: ${fmtFt(P.w)} × ${fmtFt(P.l)} ft (${Math.round(P.w * P.l).toLocaleString("en-US")} sq ft)`);
+  });
+}
+function addDlg() {
+  const ic = { round: '<circle cx="23" cy="15" r="11"/>', rect: '<rect x="8" y="8" width="30" height="14" rx="2"/>', banquet: '<rect x="2" y="10" width="42" height="10" rx="2"/>', head: '<rect x="4" y="11" width="38" height="8" rx="2"/>',
+    sweetheart: '<rect x="13" y="12" width="20" height="9" rx="2"/>', dance: '<rect x="9" y="3" width="28" height="24" rx="1"/>', stage: '<rect x="4" y="6" width="38" height="18" rx="1"/>', dj: '<rect x="13" y="10" width="20" height="10" rx="1"/>',
+    buffet: '<rect x="3" y="11" width="40" height="8" rx="1"/>', bar: '<rect x="3" y="10" width="40" height="10" rx="4"/>', cake: '<circle cx="23" cy="15" r="8"/>', gifts: '<rect x="11" y="10" width="24" height="10" rx="1"/>',
+    entrance: '<rect x="8" y="20" width="30" height="4"/>', restrooms: '<rect x="11" y="5" width="24" height="20" rx="1"/>', label: '<rect x="6" y="12" width="34" height="6" rx="3" style="fill:none;stroke-dasharray:3 2"/>' };
+  const tile = (code, icon, name) => `<button type="button" class="tile" data-add="${code}"><svg viewBox="0 0 46 30" aria-hidden="true">${ic[icon]}</svg>${name}</button>`;
+  openDlg(`<h2>Add to the floor plan</h2><div class="lab">Guest tables</div>
+   <div class="tiles">${[6, 8, 10, 12].map(n => tile("t:round:" + n, "round", `Round · ${n}`)).join("")}${tile("t:rect:8", "rect", "Rectangle · 8")}${tile("t:banquet:10", "banquet", "Banquet · 10")}${tile("t:head:10", "head", "Head table · 10")}</div>
+   <div class="lab">The room</div>
+   <div class="tiles">${Object.entries(ITEMS).map(([k, d]) => tile("i:" + k, k, d.name)).join("")}</div>
+   <p class="meta" style="margin:0 0 6px">It lands in the middle of what you see. Change the seats, size or label with ✎ Edit.</p>
+   <div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Close</button></div>`, () => false, () => {
+    F().querySelectorAll("[data-add]").forEach(b => b.onclick = () => { D().close(); addEl(b.dataset.add); });
+    const t0 = F().querySelector(".tile"); if (t0) t0.focus();
+  });
 }
 function tablesDlg() {
   openDlg(`<h2>Add several tables</h2>
    <div class="two"><div class="field"><label>How many tables</label><input name="n" type="number" min="1" max="60" step="1" required value="${Math.max(1, Math.ceil((S.guestGoal || 80) / 8) - S.tables.length)}"></div><div class="field"><label>Seats at each</label><input name="seats" type="number" min="1" max="24" step="1" required value="8"></div></div>
    ${btns(false)}`, fd => {
     const n = Math.max(1, Math.min(60, Math.round(+fd.get("n") || 1))), seats = Math.max(1, Math.min(24, Math.round(+fd.get("seats") || 8)));
-    for (let i = 0; i < n; i++) S.tables.push({ id: uid(), name: "", seats });
+    for (let i = 0; i < n; i++) S.tables.push({ id: uid(), name: "", seats, shape: "round", rot: 0 });
+    layoutMissing(S);
     toast(plural(n, "table") + " added");
   });
 }
@@ -810,17 +1373,17 @@ document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset
 document.getElementById("fab").onclick = () => VIEW === "guests" || VIEW === "seating" ? guestDlg() : VIEW === "checklist" ? taskDlg() : payDlg();
 if (DEMO) {
   document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
-  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV/print are only in the full app.
   try { localStorage.removeItem(KEY); } catch (e) {}
   save = function () {};
   document.addEventListener("click", ev => {
     const el = ev.target.closest("button, label, a, input[type=file]");
-    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
-      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    if (el && el.id !== "buyLink" && /csv|backup|restore|print/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore, CSV export and printing are in the full app");
     }
   }, true);
 }
-window.__lp = { catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, get S() { return S; } };
+window.__lp = { catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
 go("home");
 </script>
 </body>
