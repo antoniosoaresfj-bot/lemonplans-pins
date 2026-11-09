@@ -196,6 +196,8 @@ table.t select.rs{padding:5px 6px;border-radius:9px;border:1px solid var(--line)
 .tile:hover,.tile:focus-visible{border-color:var(--accent);outline:none}
 .tile svg{width:46px;height:30px}.tile svg *{fill:var(--glass);stroke:var(--fill);stroke-width:1.5}
 #printArea{display:none}
+.wm{fill:var(--accent);opacity:.13;font-weight:900;letter-spacing:.06em;pointer-events:none;user-select:none}
+.wmbox{position:relative}.wmbox::after{content:"DEMO · thelemonplans.com";position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:clamp(22px,4vw,48px);letter-spacing:.06em;color:var(--accent);opacity:.12;transform:rotate(-20deg);pointer-events:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 @media (max-width:980px){.planwrap{grid-template-columns:1fr;grid-template-areas:"pool" "plan" "info"}.ppool .plist{max-height:240px}}
 @media (max-width:860px){.tiles{grid-template-columns:repeat(2,1fr)}.plancard{padding:10px}}
 @media print{
@@ -1329,7 +1331,7 @@ function guestsV() {
   const h = headcount(), m = meals();
   const list = S.guests.filter(g => (!GF.rsvp || g.rsvp === GF.rsvp) && (!GF.side || g.side === GF.side) && (!GF.hh || (GF.hh === "-" ? !g.hh : g.hh === GF.hh)) && (!GF.q || (g.name + " " + g.group + " " + (hhOf(g.hh) ? hhOf(g.hh).name : "")).toLowerCase().includes(GF.q.toLowerCase())));
   const cl = clashes(), mk = clashMarks(cl), inRule = new Set(S.rules.flatMap(r => r.m));
-  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button><button class="btn ghost" id="bulkG">+ Add several</button><button class="btn ghost" id="addH">+ Add a family</button><button class="btn" id="addG">+ Add a guest</button></div></div>
+  M().innerHTML = `<div class="tablebar"><div><h1>Guest list</h1><p class="sub" style="margin:0">${plural(h.total, "guest")} in ${h.parties} ${h.parties === 1 ? "party" : "parties"}${S.guestGoal ? " · goal " + S.guestGoal : ""}</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="csvG">⬇ Export CSV</button>${DEMO && S.guests.some(g => SAMPLE_IDS.has(g.id)) ? `<button class="btn ghost" id="clearSample">Clear sample guests</button>` : ""}<button class="btn ghost" id="bulkG">+ Add several</button><button class="btn ghost" id="addH">+ Add a family</button><button class="btn" id="addG">+ Add a guest</button></div></div>
   <div class="grid g4" style="margin-top:12px">
    <div class="card"><div class="lab">Attending</div><div class="mid t-ok" id="gAtt">${h.attending}</div><div class="meta">${S.guestGoal ? Math.round(h.attending / S.guestGoal * 100) + "% of your goal" : "people"}</div></div>
    <div class="card"><div class="lab">Waiting to hear</div><div class="mid" id="gWait">${h.awaiting}</div><div class="meta">invited, no reply yet</div></div>
@@ -1360,6 +1362,7 @@ function guestsV() {
   M().querySelectorAll("[data-meal]").forEach(s => s.onchange = () => { S.guests.find(x => x.id === s.dataset.meal).meal = s.value; save(); render(); });
   document.getElementById("addG").onclick = () => guestDlg();
   document.getElementById("bulkG").onclick = () => bulkDlg();
+  const cs = document.getElementById("clearSample"); if (cs) cs.onclick = () => confirmDlg("Clear the sample guests?", "This removes every sample guest (and their seats) so you can try it with your own. You can add up to 10 guests in the demo.", "Clear sample guests", () => { S.guests = S.guests.filter(g => !SAMPLE_IDS.has(g.id)); S.households = S.households.filter(h => S.guests.some(g => g.hh === h.id)); tidyRules(S); save(); render(); toast("Sample guests cleared"); });
   document.getElementById("csvG").onclick = () => S.guests.length ? exportCSV("guests") : toast("Add a guest first");
   wire();
 }
@@ -1388,7 +1391,7 @@ function seatCardsV() {
    <div class="card pool"><h2>Not seated yet <span class="meta">(${sumPeople(pool)})</span></h2>
     <div class="zone gchips plist" data-drop="" id="poolZone" aria-label="Guests by group">${poolHTML(chip)}</div>
     <p class="meta" style="margin:12px 0 0">Drag a group to seat everyone together. Dashed names are invited but haven't replied yet. Declined guests aren't shown.</p></div>
-   <div>${S.tables.length ? `<div class="tables">${S.tables.map(t => { const n = tableSeated(t), cap = Number(t.seats) || 0, gs = S.guests.filter(g => g.table === t.id && g.rsvp !== "Declined");
+   <div${DEMO ? ' class="wmbox"' : ""}>${S.tables.length ? `<div class="tables">${S.tables.map(t => { const n = tableSeated(t), cap = Number(t.seats) || 0, gs = S.guests.filter(g => g.table === t.id && g.rsvp !== "Declined");
      return `<div class="tcard zone ${n > cap ? "overcap" : n === cap && cap ? "full" : ""}${AUTO && AUTO.tables.has(t.id) ? " autofill" : ""}" data-drop="${t.id}" data-tid="${t.id}"><div class="thead">${tableSVG(t)}<div class="grow"><div class="name">Table ${tableNo(t.id)}</div>${t.name ? `<div class="meta tname">${esc(t.name)}</div>` : ""}<div class="meta" data-occ="${t.id}">${n} of ${cap} seats${n > cap ? ` · <b class="t-short">over by ${n - cap}</b>` : n === cap && cap ? " · full" : ""}</div></div><button class="icon" data-edittable="${t.id}" aria-label="Edit table ${tableNo(t.id)}">✎</button></div>
       <div class="gchips">${gs.map(g => chip(g, true)).join("") || `<span class="meta" style="padding:6px 2px">Drop names here</span>`}</div></div>`; }).join("")}</div>`
      : `<div class="card"><div class="empty">No tables yet. Add them one at a time or several at once (for example 12 tables of 8).</div></div>`}</div>
@@ -1507,6 +1510,7 @@ function planSVG(pfx, print) {
   h += `<rect class="room" width="${P.w}" height="${P.l}"/>${print ? "" : `<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g1)" pointer-events="none"/>`}<rect width="${P.w}" height="${P.l}" fill="url(#${pfx}g5)" pointer-events="none"/>`;
   h += `<text class="dim" x="${P.w / 2}" y="-1">${fmtFt(P.w)} ft</text><text class="dim" transform="translate(-1 ${P.l / 2}) rotate(-90)">${fmtFt(P.l)} ft</text>`;
   h += P.items.map(it => planItem(it, pfx, print)).join("") + S.tables.map(t => planTable(t, by.get(t.id) || [], print, mk)).join("");
+  if (DEMO) h += `<svg x="0" y="0" width="${P.w}" height="${P.l}" overflow="visible" pointer-events="none" aria-hidden="true">${WM.replace('class="wm"', `class="wm" font-size="${f1(Math.max(2.4, Math.min(P.w, P.l) / 11))}"`)}</svg>`;
   if (!print) h += `<g id="rotH" class="roth" visibility="hidden"><line x1="0" y1="0" x2="0" y2="0"/><circle data-rot="1" r=".75"><title>Drag to turn</title></circle></g>`;
   return h;
 }
@@ -1935,6 +1939,20 @@ function checklistV() {
   wire();
 }
 
+/* --- demo limits (the full app has none): sample guests can't be renamed (only removed), up to 10 new guests --- */
+const DEMO_MAX = 10;
+let SAMPLE_IDS = new Set();
+const isSampleG = id => DEMO && SAMPLE_IDS.has(id);
+const demoNew = () => S.guests.filter(g => !SAMPLE_IDS.has(g.id)).length;
+// true = there's room for n more new guests; otherwise says so with the buy link
+function demoRoom(n) {
+  if (!DEMO || demoNew() + n <= DEMO_MAX) return true;
+  const left = Math.max(0, DEMO_MAX - demoNew());
+  setTimeout(() => openDlg(`<h2>The demo stops at ${DEMO_MAX} new guests</h2><p class="sub">${left ? `You can add ${plural(left, "more guest")} here.` : "You've added the 10 guests the demo allows."} The full app has no limit: your whole guest list, families, seating and backups.</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Close</button><a class="btn" id="demoBuy" href="${BUY_URL}" target="_blank" rel="noopener">Get the full app</a></div>`, () => false), 0);
+  return false;
+}
+const WM = '<text class="wm" x="50%" y="50%" text-anchor="middle" dominant-baseline="central" transform="rotate(-24)" style="transform-box:fill-box;transform-origin:center">DEMO · thelemonplans.com</text>';
+
 /* --- menu & potluck sign-up: who brings which dish, by course; the shopping list --- */
 const menuOn = () => S.menu === true || (S.menu !== false && !!TP().menu);
 const tplCourses = () => TP().courses || COURSES;
@@ -2163,7 +2181,7 @@ function settings() {
   document.getElementById("csvT2").onclick = () => S.tables.length ? exportCSV("bytable") : toast("Add a table first");
   document.getElementById("csvGf2").onclick = () => S.gifts.length ? exportCSV("gifts") : toast("Add a gift first");
   document.getElementById("csvM2").onclick = () => S.dishes.length || S.shop.length ? exportCSV("menu") : toast("Add a dish first");
-  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", `This replaces what you have now with the sample ${esc(t.name.toLowerCase())}. Download a backup first if you want to keep your data.`, "Load sample", () => { const th = S.theme; S = sample(S.tpl || "quinceanera"); S.theme = th; save(); go("home"); });
+  document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", `This replaces what you have now with the sample ${esc(t.name.toLowerCase())}. Download a backup first if you want to keep your data.`, "Load sample", () => { const th = S.theme; S = sample(S.tpl || "quinceanera"); S.theme = th; if (DEMO) SAMPLE_IDS = new Set(S.guests.map(g => g.id)); save(); go("home"); });
   document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, vendors, payments, guests, tables, floor plan, gifts and checklist from this browser. It can't be undone.", "Erase", () => { const th = S.theme; S = blank(); S.theme = th; save(); go("home"); });
 }
 // Change the event type: the budget categories and (if wanted) the checklist follow the new template.
@@ -2293,7 +2311,7 @@ function guestDlg(id) {
   const g = S.guests.find(x => x.id === id) || { name: "", side: "both", group: "", size: 1, rsvp: "Invited", meal: "", table: null, seat: null, notes: "", diet: "", hh: null };
   const groups = [...new Set(["Family", "Friends", "Work", ...S.guests.map(x => x.group).filter(Boolean)])];
   openDlg(`<h2>${id ? "Edit guest" : "Add a guest"}</h2>
-   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"><small>Add “& guest” for a plus-one, or set the party size.</small></div>
+   <div class="field"><label>Name</label><input name="name" required value="${esc(g.name)}" placeholder="Olivia Carter & guest"${isSampleG(g.id) ? " readonly" : ""}><small>${isSampleG(g.id) ? "Sample guests can't be renamed in the demo (you can delete them)." : "Add “& guest” for a plus-one, or set the party size."}</small></div>
    <div class="field"><span class="fl">Side</span><div class="seg">${["p1", "p2", "both"].map(s => `<label><input type="radio" name="side" value="${s}" ${g.side === s ? "checked" : ""}>${esc(sideName(s))}</label>`).join("")}</div></div>
    <div class="two"><div class="field"><label for="gHh">Group (family / party)</label><select id="gHh" name="hh"><option value="">No group</option>${S.households.slice().sort((a, b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}" ${g.hh === h.id ? "selected" : ""}>${esc(h.name)}</option>`).join("")}<option value="__new">+ New group…</option></select></div><div class="field"><label for="gHhNew">New group name</label><input id="gHhNew" name="hhnew" placeholder="The Carter family" disabled></div></div>
    <div class="three"><div class="field"><label>Category</label><input name="group" list="grpList" value="${esc(g.group)}" placeholder="Family"><datalist id="grpList">${groups.map(x => `<option value="${esc(x)}">`).join("")}</datalist></div><div class="field"><label>Party size</label><input name="size" type="number" min="1" max="20" step="1" value="${people(g)}"></div>
@@ -2311,6 +2329,8 @@ function guestDlg(id) {
     if (hv === "__new") { const nm = String(fd.get("hhnew") || "").trim(); if (!nm) { toast("Type a name for the new group"); return false; } o.hh = hhByName(nm, true).id; } else o.hh = hhOf(hv) ? hv : null;
     if (o.table !== g.table) o.seat = null;
     if (o.rsvp === "Declined" && tabOf(o.table)) setTimeout(() => toast(o.name + " declined but is still at Table " + tableNo(o.table) + ". The floor plan lists it."), 0);
+    if (isSampleG(o.id)) o.name = g.name;
+    if (!id && !demoRoom(1)) return false;
     if (id) S.guests[S.guests.findIndex(x => x.id === id)] = o; else S.guests.push(o);
     toast((id ? "Guest updated" : "Guest added") + (ap ? " · keep apart from " + ruleName(ap) : ""));
   }, () => {
@@ -2359,6 +2379,7 @@ function bulkDlg() {
    ${btns(false)}`, fd => {
     const rows = parseList(fd.get("names")), all = String(fd.get("hh") || "").trim();
     if (!rows.length) { toast("Type at least one name"); return false; }
+    if (!demoRoom(rows.length)) return false;
     const made = new Set(S.households.map(h => h.id));
     rows.forEach(([n, grp]) => { const gname = grp || all; S.guests.push(newGuest(n, { side: fd.get("side"), group: fd.get("group").trim(), rsvp: fd.get("rsvp"), hh: gname ? hhByName(gname, true).id : null })); });
     const ng = S.households.filter(h => !made.has(h.id)).length;
@@ -2372,7 +2393,7 @@ function bulkDlg() {
 // add or take out members (they stay on the guest list), or ungroup it (everyone stays, the group goes)
 function groupDlg(id) {
   const h = hhOf(id), mem = h ? membersOf(id) : [], loose = S.guests.filter(g => !g.hh).sort((a, b) => a.name.localeCompare(b.name)), first = mem[0];
-  const row = (name, gid) => `<div class="mrow"${gid ? ` data-gid="${gid}"` : ""}><input name="m" value="${esc(name)}" placeholder="Name" aria-label="Member name" autocomplete="off"><button type="button" class="icon" data-rm aria-label="${gid ? "Take out of the group" : "Remove this row"}" title="${gid ? "Take out of the group (stays on your guest list)" : "Remove"}">✕</button></div>`;
+  const row = (name, gid) => `<div class="mrow"${gid ? ` data-gid="${gid}"` : ""}><input name="m" value="${esc(name)}" placeholder="Name" aria-label="Member name" autocomplete="off"${isSampleG(gid) ? " readonly" : ""}><button type="button" class="icon" data-rm aria-label="${gid ? "Take out of the group" : "Remove this row"}" title="${gid ? "Take out of the group (stays on your guest list)" : "Remove"}">✕</button></div>`;
   openDlg(`<h2>${h ? "Edit group" : "Add a family or group"}</h2><p class="sub" style="margin-bottom:12px">${h ? "Rename it, add people or take them out. Taking someone out keeps them on your guest list." : "Everyone in a group can be seated together with one drag. Paste several names at once, one per line."}</p>
    <div class="field"><label for="hName">Group name</label><input id="hName" name="hname" required value="${esc(h ? h.name : "")}" placeholder="The Smith family"></div>
    <div class="field"><span class="fl">Members</span><div class="mrows" id="hRows">${mem.map(g => row(g.name, g.id)).join("") || row("") + row("") + row("")}</div></div>
@@ -2385,9 +2406,10 @@ function groupDlg(id) {
     const other = hhByName(name); if (other && other !== h) { toast("There's already a group called " + other.name); return false; }
     const rows = [...F().querySelectorAll(".mrow")].map(r => [r.querySelector("input").value.trim(), r.dataset.gid || ""]).filter(([n, gid]) => n || gid);
     if (!rows.some(([n]) => n)) { toast("Add at least one name"); return false; }
+    if (!demoRoom(rows.filter(([n, gid]) => n && !(gid && gOf(gid))).length)) return false;
     const grp = h || { id: uid(), name }; grp.name = name; if (!h) S.households.push(grp);
     const keep = new Set();
-    rows.forEach(([n, gid]) => { const g = gid && gOf(gid); if (g) { if (n) g.name = n; g.hh = grp.id; keep.add(g.id); } else if (n) { const ng = newGuest(n, { side: fd.get("side"), group: String(fd.get("group") || "").trim(), rsvp: fd.get("rsvp"), hh: grp.id }); S.guests.push(ng); keep.add(ng.id); } });
+    rows.forEach(([n, gid]) => { const g = gid && gOf(gid); if (g) { if (n && !isSampleG(g.id)) g.name = n; g.hh = grp.id; keep.add(g.id); } else if (n) { const ng = newGuest(n, { side: fd.get("side"), group: String(fd.get("group") || "").trim(), rsvp: fd.get("rsvp"), hh: grp.id }); S.guests.push(ng); keep.add(ng.id); } });
     mem.forEach(g => { if (!keep.has(g.id)) g.hh = null; });
     const n = membersOf(grp.id).length;
     toast(h ? "Group updated · " + plural(n, "member") : `${name} added · ${plural(n, "member")}`);
@@ -2559,12 +2581,13 @@ const hashTpl = () => { const m = /(?:^|[#&])template=([\w-]+)/.exec(location.ha
 if (DEMO) {
   document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
   const ds = document.getElementById("demoTpl"); ds.innerHTML = TPL_ORDER.map(k => `<option value="${k}">${esc(TPL[k].name)}</option>`).join("");
-  S = sample(hashTpl() || "christmas-party"); ds.value = S.tpl;
+  S = sample(hashTpl() || "christmas-party"); ds.value = S.tpl; SAMPLE_IDS = new Set(S.guests.map(g => g.id));
   ds.onchange = () => { location.hash = "template=" + ds.value; };
-  addEventListener("hashchange", () => { const k = hashTpl(); if (k && k !== S.tpl) { S = sample(k); ds.value = k; SEL = null; VB = null; AUTO = null; go(VIEW === "settings" ? "settings" : VIEW); } });
+  addEventListener("hashchange", () => { const k = hashTpl(); if (k && k !== S.tpl) { S = sample(k); SAMPLE_IDS = new Set(S.guests.map(g => g.id)); ds.value = k; SEL = null; VB = null; AUTO = null; go(VIEW === "settings" ? "settings" : VIEW); } });
   // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV/print are only in the full app.
   try { localStorage.removeItem(KEY); } catch (e) {}
   save = function () {};
+  window.print = function () { toast("Backup, restore, CSV export and printing are in the full app"); };
   document.addEventListener("click", ev => {
     const el = ev.target.closest("button, label, a, input[type=file]");
     if (el && el.id !== "buyLink" && /csv|backup|restore|print/i.test(el.textContent + " " + (el.id || ""))) {
