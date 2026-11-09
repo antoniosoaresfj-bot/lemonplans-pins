@@ -12,6 +12,7 @@
 :root[data-accent="gold"]{--accent:#946414;--fill:#DDB46A;--glass:#F3E7CF;--soft:#F6EFE1}:root[data-accent="gold"][data-theme="dark"]{--accent:#EAC67A;--accent-ink:#1E1606;--fill:#B88C3C;--glass:#3A3020;--soft:#2A251B}
 :root[data-accent="lilac"]{--accent:#7A4FA8;--fill:#B79AD8;--glass:#ECE3F6;--soft:#F3EEF9}:root[data-accent="lilac"][data-theme="dark"]{--accent:#C9AEEB;--accent-ink:#1C1029;--fill:#8B68B8;--glass:#33284A;--soft:#251F33}
 :root[data-accent="sky"]{--accent:#2F78A8;--fill:#8EC0E0;--glass:#DFEEF8;--soft:#EBF4FA}:root[data-accent="sky"][data-theme="dark"]{--accent:#93C8EC;--accent-ink:#0B1A26;--fill:#4F8DB8;--glass:#203445;--soft:#1B2731}
+:root[data-accent="pumpkin"]{--accent:#B0521C;--fill:#E39A62;--glass:#F7E3D3;--soft:#FAEEE4}:root[data-accent="pumpkin"][data-theme="dark"]{--accent:#F0AE78;--accent-ink:#2A1405;--fill:#C06A30;--glass:#43301F;--soft:#2F241B}
 :root[data-accent="berry"]{--accent:#A8324A;--fill:#D98393;--glass:#F6DDE2;--soft:#F9EBEE}:root[data-accent="berry"][data-theme="dark"]{--accent:#EE9AAB;--accent-ink:#2A0E15;--fill:#B5506A;--glass:#40252C;--soft:#2E1E23}
 :root[data-accent="navy"]{--accent:#2F4F86;--fill:#8AA3CF;--glass:#DFE6F3;--soft:#EAEEF6}:root[data-accent="navy"][data-theme="dark"]{--accent:#A9BFEA;--accent-ink:#0D1424;--fill:#4F6EA6;--glass:#25304A;--soft:#1E2433}
 *{box-sizing:border-box}
@@ -258,10 +259,17 @@ dialog::backdrop{background:rgba(20,10,14,.45)}
 .tgrid.small{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:50vh;overflow:auto;padding:2px}.tgrid.small .tcardx{padding:10px;box-shadow:none}.tgrid.small .te{font-size:20px}
 .dsel select{padding:3px 6px;border-radius:8px;border:1px solid #c9a93a;background:#FFF8DA;color:#1F2933;font-weight:700;max-width:60vw}
 .navbtn .sm{display:none}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:16px;align-items:start}
+.course .tablebar h2{margin:0}.dish .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.tagp{font-size:11px;font-weight:750;padding:1px 7px;border-radius:999px;background:var(--soft);color:var(--muted)}
+.dish.dup .name{color:var(--warn)}.shopline.isdone .name{text-decoration:line-through;color:var(--muted)}
+.dtags{display:flex;flex-wrap:wrap;gap:6px 14px}
+@media print{.pmenu h1{font-size:18pt;margin:0 0 2mm}.pmenu .sub2{color:#666;font-size:10pt;margin-bottom:5mm}.pmenu table{width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:5mm}.pmenu th{text-align:left;border-bottom:2px solid #999;padding:2mm 1mm;font-size:12pt}.pmenu td{border-bottom:1px solid #ddd;padding:2.2mm 1mm;vertical-align:top}.pmenu td.blank{color:#bbb}.pmenu .pdiet{color:#555;font-size:9.5pt}}
 .names{font-size:22px;font-weight:800;letter-spacing:-.4px}
 @media (max-width:980px){.seatwrap{grid-template-columns:1fr}.pool{position:static;max-height:none}.g4{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
  .app{grid-template-columns:1fr}
+ nav.side.n9 .navbtn{font-size:9px;letter-spacing:-.3px}nav.side.n9 .navbtn .i{font-size:16px}
+ .courses{grid-template-columns:1fr}
  .navbtn .lg{display:none}.navbtn .sm{display:inline}
  .tgrid{grid-template-columns:1fr 1fr;gap:8px}.tcardx{padding:12px}.tcardx small{font-size:12px}
  nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
@@ -293,6 +301,7 @@ dialog::backdrop{background:rgba(20,10,14,.45)}
   <button class="navbtn" data-view="guests"><span class="i">☺</span>Guests</button>
   <button class="navbtn" data-view="seating"><span class="i">◎</span>Seating</button>
   <button class="navbtn" data-view="checklist"><span class="i">✓</span><span class="lg">Checklist</span><span class="sm">To-do</span></button>
+  <button class="navbtn" data-view="menu" hidden><span class="i">🍽</span>Menu</button>
   <button class="navbtn" data-view="gifts"><span class="i">🎁</span>Gifts</button>
   <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
  </nav>
@@ -312,10 +321,10 @@ const RSVP = ["Not invited yet", "Invited", "Attending", "Declined"];
 const MEALS = ["Chicken", "Beef", "Fish", "Vegetarian", "Vegan", "Kids meal"];
 const VSTAT = ["Researching", "Booked", "Paid in full"];
 const METHODS = ["Card", "Bank transfer", "Check", "Cash", "Zelle / Venmo", "Gift from family", "Other"];
-const ACCENTS = [["blush", "Blush"], ["lilac", "Lilac"], ["sky", "Sky"], ["sage", "Sage"], ["gold", "Gold"], ["navy", "Navy"], ["berry", "Berry"]];
+const ACCENTS = [["blush", "Blush"], ["lilac", "Lilac"], ["sky", "Sky"], ["sage", "Sage"], ["gold", "Gold"], ["navy", "Navy"], ["berry", "Berry"], ["pumpkin", "Pumpkin"]];
 // Event templates: budget split (adds up to 100% in each), checklist by deadline [label, days before, tasks], labels and typical floor plan items.
 const ord = n => { n = Math.round(Number(n) || 0); const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
-const poss = n => n ? n + (/s$/i.test(n) ? "'" : "'s") : "";
+const poss = n => n ? n + (/^the\s.*s$/i.test(n) ? "'" : "'s") : "";
 const TPL = {
   quinceanera: { name: "Quinceañera", emoji: "👑", accent: "lilac", blurb: "Court, misa, vals and the big party",
     who: ["Quinceañera's name", "Sofia"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Quinceañera" : "My Quinceañera",
@@ -445,6 +454,50 @@ const TPL = {
       ["1 month", 30, ["Final head count", "Plan the toasts", "Seating chart", "Buy favors"]],
       ["1 week", 7, ["Confirm every vendor", "Pay final balances", "Finish the photo slideshow"]],
       ["After the party", -14, ["Send thank-you notes", "Share the photos with the family"]]] },
+  friendsgiving: { name: "Friendsgiving / Thanksgiving", emoji: "🦃", accent: "pumpkin", blurb: "Potluck sign-up, menu and shopping list",
+    who: ["Host", "Jess"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Friendsgiving" : "Friendsgiving",
+    dateLabel: "Dinner date", sides: ["Family", "Friends", "Neighbors & others"], head: "Head table", honoree: "Host's seat", today: "Happy Thanksgiving! 🦃", after: "Thanks for coming! 🦃",
+    tip: "A potluck keeps it cheap: the host makes the turkey (or the main) and drinks, guests sign up for the rest. Plan about 1.5 lb of whole turkey per person.",
+    budgetPh: 300, goalPh: 12, menu: true, items: ["buffet", "dessert", "bar", "kids", "welcome", "label"],
+    courses: ["Appetizers", "Main dish", "Sides", "Desserts", "Drinks"],
+    cats: [["Turkey & main dish", 30, "🦃"], ["Groceries for sides", 15, "🥔"], ["Drinks", 15, "🍷"], ["Desserts", 5, "🥧"], ["Table & decorations", 10, "🍂"],
+      ["Disposables & supplies", 8, "🍽️"], ["Rentals (chairs, tables)", 7, "🪑"], ["Other & Buffer", 10, "🧾"]],
+    when: [
+      ["2 weeks", 14, ["Set the date and the guest list", "Send invites with the potluck sign-up", "Order the turkey (or pick the main)", "Ask about allergies and diets"]],
+      ["1 week", 7, ["Check the sign-up: fill empty courses", "Fix duplicate dishes", "Make the shopping list", "Borrow chairs, tables and serving dishes"]],
+      ["4–5 days", 5, ["Thaw a frozen turkey in the fridge (1 day per 4–5 lb)", "Buy the groceries that keep"]],
+      ["1–2 days", 2, ["Buy fresh groceries, drinks and ice", "Make the pies and make-ahead sides", "Set the table and the seating"]],
+      ["The day", 0, ["Turkey in the oven (about 15 min per lb)", "Label dishes with diets (GF, V)", "Take a group photo"]],
+      ["After", -3, ["Send leftovers home", "Return borrowed dishes", "Thank everyone"]]] },
+  "christmas-dinner": { name: "Christmas Dinner", emoji: "🎅", accent: "berry", blurb: "Family dinner, dish sign-up, Secret Santa",
+    who: ["Host", "Grandma Rose"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Christmas Dinner" : "Christmas Dinner",
+    dateLabel: "Dinner date", sides: ["Mom's side", "Dad's side", "Friends"], head: "Head table", honoree: "Host's seat", today: "Merry Christmas! 🎅", after: "Merry Christmas! 🎅",
+    tip: "Share the cooking: the host makes the main, everyone signs up for a side, a dessert or drinks. Gifts and Secret Santa go in their own line.",
+    budgetPh: 600, goalPh: 16, menu: true, items: ["buffet", "dessert", "bar", "gifts", "kids", "label"],
+    courses: ["Appetizers", "Main dish", "Sides", "Desserts & cookies", "Drinks"],
+    cats: [["Main (ham, roast or turkey)", 30, "🍖"], ["Groceries for sides", 15, "🥔"], ["Drinks", 15, "🍷"], ["Desserts & cookies", 8, "🍪"], ["Table & decorations", 12, "🎄"],
+      ["Gifts / Secret Santa", 10, "🎁"], ["Supplies", 5, "🍽️"], ["Other & Buffer", 5, "🧾"]],
+    when: [
+      ["3 weeks", 21, ["Set the guest list and the time", "Send invites with the dish sign-up", "Plan a gift exchange or Secret Santa"]],
+      ["2 weeks", 14, ["Order the ham, roast or turkey", "Ask about allergies and diets", "Draw names for Secret Santa"]],
+      ["1 week", 7, ["Check the sign-up: fill empty courses", "Make the shopping list", "Borrow chairs and serving dishes"]],
+      ["1–2 days", 2, ["Buy fresh groceries and drinks", "Bake cookies and make-ahead sides", "Set the table and the seating"]],
+      ["The day", 0, ["Main in the oven on time", "Label dishes with diets", "Family photo by the tree"]],
+      ["After", -3, ["Send leftovers home", "Thank-you notes for gifts"]]] },
+  "new-years-eve": { name: "New Year's Eve Party", emoji: "🥳", accent: "navy", blurb: "Countdown, snacks sign-up, champagne",
+    who: ["Host", "Sam"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " New Year's Eve Party" : "New Year's Eve Party",
+    dateLabel: "Party date", sides: ["Friends", "Family", "Neighbors & others"], head: "Head table", honoree: "Host's table", today: "Happy New Year! 🥳", after: "Happy New Year! 🥳",
+    tip: "Drinks and food are most of a New Year's Eve party. Ask guests to bring a snack or a dessert, and keep money for rides home.",
+    budgetPh: 500, goalPh: 20, menu: true, items: ["bar", "buffet", "dance", "dj", "dessert", "photobooth", "label"],
+    courses: ["Appetizers", "Late-night food", "Snacks", "Desserts", "Drinks"],
+    cats: [["Food & snacks", 30, "🍕"], ["Drinks & champagne", 25, "🍾"], ["Decorations & party favors", 12, "🎉"], ["Music / DJ", 8, "🎶"], ["Venue / rentals", 10, "🪑"],
+      ["Rides home", 5, "🚕"], ["Other & Buffer", 10, "🧾"]],
+    when: [
+      ["3 weeks", 21, ["Set the guest list", "Send invites with the potluck sign-up", "Plan the countdown (TV or playlist)"]],
+      ["1 week", 7, ["Check the sign-up: fill empty categories", "Make the shopping list", "Plan rides home"]],
+      ["1–2 days", 2, ["Buy champagne, ice and snacks", "Get party hats and noisemakers", "Set up the room"]],
+      ["The night", 0, ["Countdown on at 11:55", "Midnight toast"]],
+      ["New Year's Day", -1, ["Clean up", "Thank everyone"]]] },
   custom: { name: "Custom event", emoji: "🎉", accent: "sage", blurb: "Reunion, housewarming, retirement…",
     who: ["Host or guest of honor", "The Parker family"], who2: null, age: null, title: s => s.p1 ? poss(s.p1) + " Party" : "Our event",
     dateLabel: "Event date", sides: ["Family", "Friends", "Other"], head: "Head table", honoree: "Guest of honor table", today: "It's the big day! 🎉", after: "What a day! 🎉",
@@ -460,8 +513,10 @@ const TPL = {
       ["1 week", 7, ["Confirm every vendor", "Pay final balances"]],
       ["After the event", -14, ["Log the gifts and send thank-you notes"]]] }
 };
-const TPL_ORDER = ["quinceanera", "sweet-16", "first-birthday", "kids-birthday", "milestone-birthday", "baby-shower", "graduation", "holiday-party", "anniversary", "custom"];
-const tplKey = k => TPL[k] ? k : (k === "sweet16" ? "sweet-16" : k === "milestone" ? "milestone-birthday" : k === "first" ? "first-birthday" : k === "kids" ? "kids-birthday" : k === "baby" ? "baby-shower" : k === "holiday" || k === "office-party" ? "holiday-party" : k === "quince" ? "quinceanera" : "");
+const TPL_ORDER = ["quinceanera", "friendsgiving", "sweet-16", "first-birthday", "kids-birthday", "milestone-birthday", "baby-shower", "graduation", "christmas-dinner", "new-years-eve", "holiday-party", "anniversary", "custom"];
+const tplKey = k => TPL[k] ? k : (k === "sweet16" ? "sweet-16" : k === "milestone" ? "milestone-birthday" : k === "first" ? "first-birthday" : k === "kids" ? "kids-birthday" : k === "baby" ? "baby-shower" : k === "holiday" || k === "office-party" ? "holiday-party" : k === "quince" ? "quinceanera" : k === "thanksgiving" ? "friendsgiving" : k === "christmas" ? "christmas-dinner" : k === "nye" || k === "new-years" ? "new-years-eve" : "");
+const COURSES = ["Appetizers", "Main dish", "Sides", "Desserts", "Drinks"];
+const DIET_TAGS = ["Vegetarian", "Vegan", "Gluten-free", "Dairy-free", "Nut-free"];
 
 /* ---------- sample events (one per template) ----------
    members: "Name" or "Name;Meal;Diet;R" (R: A attending, I invited, X declined); "*" after a name = a kid (Kids meal).
@@ -583,6 +638,46 @@ const SAMPLES = {
     groups: [["Our kids & grandkids", "b", "Family", 1, ["Susan Hayes & guest", "Michael Hayes & guest", "Emily Hayes*", "Jacob Hayes*", "Sophie Hayes*", "Ryan Hayes"]], ["", "p1", "Family", 2, ["Sister Carol Dunn & guest", "Brother Ray Dunn & guest"]], ["", "p2", "Family", 3, ["Cousin Bill Hayes & guest", "Aunt Mae Hayes"]],
       ["Bridge club", "b", "Friends", 4, ["Pat Gordon & guest", "Joyce Ellis & guest", "Frank Lowe & guest"]], ["", "b", "Church", 5, ["Rev. Allen & guest", "Ida Perkins", "Gloria Sims & guest"]], ["", "b", "Neighbors", 0, ["Ken Walsh & guest", "Ruth Nolan", "Dot Fisher;;;I", "Hal Price;;;X"]]],
     rules: [], gifts: [["Bridge club", "Engraved photo frame", 75, 2, false]], done: 7 },
+  friendsgiving: { p1: "Jess", days: 17, budget: 350, goal: 14, room: [32, 22],
+    tables: [["Big table", 10, "banquet", 13, 9], ["Kids' table", 6, "rect", 13, 17]],
+    items: [["buffet", 27, 6, 90, "Potluck buffet", 10, 3], ["dessert", 27, 15.5, 90, "Pie table", 6, 3], ["bar", 4, 18, 90, "Cider & drinks", 6, 2.5], ["entrance", 13, 21.4, 0, "", 6, 1.2]],
+    vendors: [["Turkey & main dish", "Whole Foods", "16 lb fresh turkey, pre-ordered", "Booked", 62, 0, 0, 2], ["Drinks", "Costco", "Wine, cider, sparkling water", "Booked", 55, 0, 0, 2],
+      ["Table & decorations", "Target", "Runner, candles, mini pumpkins", "Paid in full", 38, 0, 0, 0], ["Disposables & supplies", "Party City", "Foil pans, napkins, to-go boxes", "Paid in full", 24, 0, 0, 0],
+      ["Rentals (chairs, tables)", "Party rentals", "8 folding chairs · quote $40", "Researching", 0, 0, 0, 0]],
+    pays: [[6, "Target", 38, "Card", "Table decor"], [4, "Party City", 24, "Card", "Supplies"]],
+    groups: [["", "p2", "Friends", 1, ["Ben Ortiz", "Carla Diaz", "Dana Lee;Vegetarian", "Eli Brooks", "Fay Chen;;Gluten-free", "Gabe Hall;Vegetarian", "Hana Kim", "Ian Ross"]],
+      ["The Parkers", "p2", "Friends", 2, ["Megan Parker", "Chris Parker", "Ella Parker*", "Max Parker*"]], ["", "p1", "Family", 0, ["Kim Nguyen;Vegan", "Leo Park"]],
+      ["", "o", "Neighbors", 0, ["Ruth Adams;;;I", "Tom Baker;;;X"]]],
+    rules: [], gifts: [["Hana Kim", "Bottle of wine (host gift)", 18, 1, false]],
+    dishes: [["Main dish", "Roast turkey", "Host", 14, "Gluten-free, Dairy-free"], ["Sides", "Gravy", "Host", 14, ""], ["Drinks", "Apple cider", "Host", 14, "Vegan, Gluten-free"],
+      ["Sides", "Mashed potatoes", "Ben Ortiz", 10, "Vegetarian, Gluten-free"], ["Sides", "Mashed potatoes", "Carla Diaz", 8, "Vegetarian"], ["Sides", "Green bean casserole", "Dana Lee", 10, "Vegetarian"],
+      ["Sides", "Stuffing", "Eli Brooks", 12, ""], ["Sides", "Cranberry sauce", "Fay Chen", 14, "Vegan, Gluten-free"], ["Sides", "Mac & cheese", "Gabe Hall", 12, "Vegetarian"],
+      ["Desserts", "Pumpkin pie", "Hana Kim", 8, "Vegetarian"], ["Drinks", "Red wine", "Ian Ross", 12, "Vegan"], ["Desserts", "Apple crumble", "The Parkers", 10, "Vegetarian"]],
+    shop: [["Turkey 16 lb (pick up Tue)", "1", 62, "Roast turkey", true], ["Butter", "2 lb", 9, "Roast turkey", true], ["Fresh herbs (sage, thyme)", "3 packs", 7, "Roast turkey", false], ["Chicken stock", "2 qt", 6, "Gravy", false],
+      ["Apple cider", "2 gal", 12, "Apple cider", false], ["Ice", "2 bags", 6, "", false], ["Foil roasting pan", "1", 5, "Roast turkey", true]],
+    done: 2 },
+  "christmas-dinner": { p1: "Grandma Rose", days: 46, budget: 600, goal: 16, room: [34, 24],
+    tables: [["Family table", 12, "banquet", 14, 9], ["Kids' table", 6, "rect", 14, 19]],
+    items: [["buffet", 29, 7, 90, "Dinner buffet", 10, 3], ["dessert", 29, 17, 90, "Cookies & pies", 6, 3], ["gifts", 4, 20, 90, "Under the tree", 6, 3], ["label", 4, 4, 0, "Tree", 6, 2]],
+    vendors: [["Main (ham, roast or turkey)", "HoneyBaked Ham", "Spiral ham, 9 lb", "Booked", 85, 0, 0, 3], ["Drinks", "Trader Joe's", "Wine, eggnog, sparkling cider", "Booked", 70, 0, 0, 2], ["Table & decorations", "HomeGoods", "Red runner, candles", "Paid in full", 45, 0, 0, 0]],
+    pays: [[5, "HomeGoods", 45, "Card", "Table decor"]],
+    groups: [["The Millers", "p1", "Family", 1, ["Susan Miller", "Tom Miller", "Ava Miller*", "Noah Miller*"]], ["The Reeds", "p2", "Family", 1, ["Linda Reed", "Mark Reed", "Lucy Reed*"]],
+      ["", "p1", "Family", 1, ["Aunt June Miller;;Gluten-free", "Uncle Pete Miller", "Cousin Jake Miller;Vegetarian"]], ["", "o", "Friends", 2, ["Ella Brooks*"]], ["", "o", "Friends", 0, ["Nina Park", "Sam Park"]]],
+    rules: [], gifts: [],
+    dishes: [["Main dish", "Spiral ham", "Host", 16, "Gluten-free"], ["Sides", "Scalloped potatoes", "Susan Miller", 12, "Vegetarian"], ["Sides", "Roasted Brussels sprouts", "Linda Reed", 10, "Vegan, Gluten-free"],
+      ["Desserts & cookies", "Christmas cookies", "Aunt June Miller", 24, "Vegetarian"], ["Drinks", "Eggnog", "Host", 16, "Vegetarian"]],
+    shop: [["Spiral ham (pick up Dec 23)", "1", 85, "Spiral ham", false], ["Brown sugar glaze", "1", 4, "Spiral ham", false], ["Sparkling cider", "4 bottles", 12, "", false]],
+    done: 1 },
+  "new-years-eve": { p1: "Sam", days: 52, budget: 500, goal: 20, room: [36, 26],
+    tables: [["Lounge", 8, "round", 7, 7], ["Lounge", 8, "round", 7, 19]],
+    items: [["dance", 22, 12, 0, "Countdown dance floor", 12, 10], ["bar", 32, 5, 90, "Champagne bar", 8, 3], ["buffet", 32, 19, 90, "Snacks", 8, 3], ["dj", 22, 2.5, 0, "TV & playlist", 6, 2], ["photobooth", 15, 22, 0, "Photo corner", 6, 4]],
+    vendors: [["Drinks & champagne", "Costco", "Champagne, beer, sparkling water", "Booked", 140, 0, 0, 2], ["Decorations & party favors", "Party City", "Hats, noisemakers, balloons", "Paid in full", 48, 0, 0, 0], ["Food & snacks", "Pizza place", "Late-night pizza for 20 · quote $90", "Researching", 0, 0, 0, 0]],
+    pays: [[3, "Party City", 48, "Card", "Hats & noisemakers"]],
+    groups: [["", "o", "Friends", 1, ["Ana Cruz", "Ben Wolf", "Cat Lin", "Dev Shah;Vegetarian", "Eva Moss"]], ["", "o", "Friends", 2, ["Finn Lowe & guest", "Gia Russo & guest"]], ["", "p2", "Family", 0, ["Hal Wright", "Ivy Wright;;Nut allergy"]]],
+    rules: [], gifts: [],
+    dishes: [["Drinks", "Champagne", "Host", 20, "Vegan"], ["Appetizers", "Spinach dip", "Ana Cruz", 12, "Vegetarian"], ["Snacks", "Chips & salsa", "Ben Wolf", 15, "Vegan"], ["Desserts", "Brownies", "Cat Lin", 16, "Vegetarian"]],
+    shop: [["Ice", "4 bags", 12, "", false], ["Champagne flutes", "24", 15, "Champagne", false]],
+    done: 2 },
   custom: { p1: "Parker Family Reunion", title: "Parker Family Reunion", days: 180, budget: 3000, goal: 70, room: [64, 44],
     tables: [["Grandma's table", 10, "round", 10, 10], ["Parker cousins", 10, "round", 10, 22], ["Parker cousins", 10, "round", 10, 34], ["Hill branch", 10, "banquet", 50, 10], ["Hill branch", 10, "banquet", 50, 22], ["Kids", 10, "banquet", 50, 34]],
     items: [["buffet", 30, 5, 0, "BBQ buffet", 14, 3], ["dessert", 30, 11, 0, "", 8, 3], ["games", 30, 22, 0, "Lawn games", 12, 8], ["kids", 30, 34, 0, "", 10, 8], ["photobooth", 58, 41, 0, "Family photo spot", 6, 5], ["entrance", 30, 43.4, 0, "", 8, 1.2]],
@@ -613,7 +708,7 @@ const defaultTasks = k => (TPL[k] || TPL.custom).when.flatMap(([when, days, list
 function blank(k) {
   k = tplKey(k || "");
   return { v: 1, app: "event-planner", tpl: k, currency: "$", theme: "light", accent: k ? TPL[k].accent : "blush", p1: "", p2: "", age: "", title: "", date: "", budget: 0, guestGoal: 0,
-    cats: defaultCats(k), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks(k), plan: blankPlan(), households: [], rules: [], gifts: [] };
+    cats: defaultCats(k), vendors: [], pays: [], guests: [], tables: [], tasks: defaultTasks(k), plan: blankPlan(), households: [], rules: [], gifts: [], dishes: [], shop: [], menu: null };
 }
 // Floor plan: the room (feet), the non-table items, seat colors. Tables keep their place in tables[] (x, y = center in feet; rot in degrees).
 const blankPlan = () => ({ w: 80, l: 60, snap: true, color: "side", items: [] });
@@ -623,6 +718,9 @@ const clampN = (v, a, b, d) => { v = Number(v); return isFinite(v) && v > 0 ? Ma
 function normalize(s) {
   const o = Object.assign(blank(s.tpl), s);
   o.tpl = tplKey(o.tpl || ""); ["p1", "p2", "title"].forEach(k => o[k] = String(o[k] ?? "")); o.age = o.age === "" || o.age == null || !isFinite(o.age) ? "" : Math.round(+o.age);
+  o.menu = s.menu === true || s.menu === false ? s.menu : null;
+  o.dishes = (Array.isArray(s.dishes) ? s.dishes : []).filter(x => x && typeof x === "object").map(x => ({ id: String(x.id || uid()), course: String(x.course || "Sides"), name: String(x.name || "").trim() || "Dish", who: x.who ? String(x.who) : null, from: String(x.from || ""), host: x.host === true, serves: Math.max(0, Math.round(+x.serves || 0)), diet: (Array.isArray(x.diet) ? x.diet : []).filter(t => DIET_TAGS.includes(t)), note: String(x.note || "") }));
+  o.shop = (Array.isArray(s.shop) ? s.shop : []).filter(x => x && typeof x === "object").map(x => ({ id: String(x.id || uid()), item: String(x.item || "").trim() || "Item", qty: String(x.qty || ""), cost: Math.max(0, +x.cost || 0), dish: x.dish ? String(x.dish) : null, done: x.done === true }));
   o.gifts = (Array.isArray(s.gifts) ? s.gifts : []).filter(x => x && typeof x === "object").map(x => ({ id: String(x.id || uid()), from: String(x.from || ""), who: x.who ? String(x.who) : null, item: String(x.item || ""), value: Math.max(0, +x.value || 0), date: String(x.date || ""), thanks: x.thanks === true, note: String(x.note || "") }));
   o.plan = Object.assign(blankPlan(), s.plan && typeof s.plan === "object" ? s.plan : {});
   if (!Array.isArray(o.plan.items)) o.plan.items = [];
@@ -652,6 +750,7 @@ function normalize(s) {
 function tidyRules(st) {
   const ok = new Set(st.guests.map(g => g.id).concat(st.households.map(h => h.id)));
   st.rules = st.rules.filter(r => { r.m = [...new Set(r.m)].filter(id => ok.has(id)); return r.m.length >= 2; });
+  (st.dishes || []).forEach(x => { if (x.who && !ok.has(x.who)) { x.who = null; x.from = x.from || "Someone"; } });
   (st.gifts || []).forEach(x => { if (x.who && !ok.has(x.who)) { x.who = null; x.from = x.from || "Someone"; } }); // a deleted guest or group: the gift keeps the name
 }
 function capOf(t) { return Math.max(1, Math.min(24, Math.round(Number(t.seats) || 1))); }
@@ -739,6 +838,8 @@ function sample(k) {
   const idOf = nm => { const g = s.guests.find(x => x.name === nm); if (g) return g.id; const h = s.households.find(x => x.name === nm); return h ? h.id : null; };
   s.rules = D.rules.map(([kind, a, b], i) => ({ id: "r" + (i + 1), kind, m: [idOf(a), idOf(b)] })).filter(r => r.m.every(Boolean));
   s.gifts = D.gifts.map(([from, item, value, d, thanks]) => ({ id: uid(), from, who: idOf(from), item, value, date: ago(d), thanks, note: "" }));
+  (D.dishes || []).forEach(([course, name, by, serves, diet]) => s.dishes.push({ id: uid(), course, name, who: by === "Host" ? null : idOf(by), from: by, host: by === "Host", serves, diet: diet ? diet.split(/,\s*/) : [], note: "" }));
+  (D.shop || []).forEach(([item, qty, cost, dish, done]) => s.shop.push({ id: uid(), item, qty, cost, dish: dish ? (s.dishes.find(x => x.name === dish) || {}).id || null : null, done }));
   s.tasks.forEach((x, i) => x.done = i < D.done);
   return normalize(s);
 }
@@ -995,14 +1096,16 @@ const M = () => document.getElementById("main");
 function go(v) {
   VIEW = v;
   document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
-  const fab = document.getElementById("fab"), lab = { guests: "Add a guest", seating: "Add a guest", checklist: "Add a task", vendors: "Add a payment", budget: "Add a payment", home: "Add a payment", gifts: "Add a gift" }[v];
+  const fab = document.getElementById("fab"), lab = { guests: "Add a guest", seating: "Add a guest", checklist: "Add a task", vendors: "Add a payment", budget: "Add a payment", home: "Add a payment", gifts: "Add a gift", menu: "Add a dish" }[v];
   fab.hidden = !lab || (v === "home" && isNew()); if (lab) { fab.setAttribute("aria-label", lab); fab.title = lab; }
   render(); window.scrollTo(0, 0);
   M().focus({ preventScroll: true });
 }
 function render() {
   applyTheme();
-  ({ home, budget: budgetV, vendors: vendorsV, guests: guestsV, seating: seatingV, checklist: checklistV, gifts: giftsV, settings })[VIEW]();
+  const mb = document.querySelector('.navbtn[data-view="menu"]'); mb.hidden = !menuOn(); document.querySelector("nav.side").classList.toggle("n9", menuOn());
+  if (VIEW === "menu" && !menuOn()) { VIEW = "home"; document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === "home") b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); }); }
+  ({ home, budget: budgetV, vendors: vendorsV, guests: guestsV, seating: seatingV, checklist: checklistV, menu: menuV, gifts: giftsV, settings })[VIEW]();
 }
 
 function detailsForm(id) {
@@ -1058,6 +1161,7 @@ function home() {
     <div class="stat3"><div><span>Budget booked</span><b>${b.budget ? Math.round(b.booked / b.budget * 100) + "%" : "—"}</b></div><div><span>Guests attending</span><b>${h.attending}${S.guestGoal ? " / " + S.guestGoal : ""}</b></div><div><span>Checklist done</span><b>${S.tasks.length ? Math.round(done / S.tasks.length * 100) : 0}%</b></div></div>
     ${up.length ? (([v, n]) => `<p class="hint" style="margin:14px 0 0">💳 Next payment: <b>${mc(n.amount)}</b> ${n.kind.toLowerCase()} to ${esc(v.name)}${n.date ? (dueState(n.date) === "overdue" ? ", <b class=t-short>overdue</b> since " : ", due ") + fmtD(parse(n.date)) : ""}</p>`)(up[0]) : ""}
     ${S.guestGoal ? `<p class="hint" style="margin:10px 0 0">💌 ${h.invited} of ${S.guestGoal} guests invited · ${h.awaiting} still to reply</p>` : ""}
+    ${menuOn() ? (mt => `<p class="hint" style="margin:10px 0 0" id="homeMenu">🍽 ${plural(S.dishes.length, "dish", "dishes")} on the menu${mt.short.length ? " · still needed: " + esc(mt.short.map(c => c.course.toLowerCase() + " (" + c.left + ")").join(", ")) : " · every course covered ✓"}</p>`)(menuTotals()) : ""}
     ${S.gifts.length ? (gt => `<p class="hint" style="margin:10px 0 0" id="homeGifts">🎁 ${plural(gt.n, "gift")} logged · ${gt.todo ? plural(gt.todo, "thank-you note") + " to send" : "every thank-you sent ✓"}</p>`)(giftTotals()) : ""}
    </div>
    <div class="card"><h2>This week</h2>${week.length ? week.map(taskRow).join("") : `<div class="empty">Nothing due this week. 🎉</div>`}<div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-go="checklist">See the full checklist</button></div></div>
@@ -1753,6 +1857,146 @@ function checklistV() {
   wire();
 }
 
+/* --- menu & potluck sign-up: who brings which dish, by course; the shopping list --- */
+const menuOn = () => S.menu === true || (S.menu !== false && !!TP().menu);
+const tplCourses = () => TP().courses || COURSES;
+const courseList = () => { const c = tplCourses().slice(); S.dishes.forEach(x => { if (!c.includes(x.course)) c.push(x.course); }); return c; };
+const dishesIn = c => S.dishes.filter(x => x.course === c);
+const dishOf = id => S.dishes.find(x => x.id === id);
+const dishBy = x => x.host ? (S.p1 ? S.p1 + " (host)" : "Host") : (x.who && ruleName(x.who)) || x.from || "Someone";
+const normDish = n => String(n).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9 ]/g, "").replace(/\b(homemade|my|the|a|classic|easy)\b/g, "").replace(/(es|s)\b/g, "").replace(/\s+/g, " ").trim();
+// How many dishes each course should have for this many people (a starting point, shown as "2 of 3")
+function courseNeed(c, n) {
+  const i = tplCourses().indexOf(c);
+  return i < 0 ? 0 : [Math.max(1, Math.ceil(n / 8)), n > 16 ? 2 : 1, Math.max(2, Math.ceil(n / 4)), Math.max(1, Math.ceil(n / 8)), Math.max(1, Math.ceil(n / 10))][i] || 1;
+}
+const menuPeople = () => headcount().attending || S.guestGoal || 8;
+// Dietary needs of the guests who are coming (people): from the meal (Vegetarian / Vegan) and the "Dietary needs" text
+function dietNeeds() {
+  const n = {}; DIET_TAGS.forEach(t => n[t] = 0);
+  S.guests.filter(g => g.rsvp === "Attending").forEach(g => {
+    const d = String(g.diet || "").toLowerCase(), k = people(g);
+    if (g.meal === "Vegan" || /\bvegan\b/.test(d)) n.Vegan += k; else if (g.meal === "Vegetarian" || /vegetarian|veggie/.test(d)) n.Vegetarian += k;
+    if (/gluten|celiac|coeliac/.test(d)) n["Gluten-free"] += k;
+    if (/dairy|lactose|milk/.test(d)) n["Dairy-free"] += k;
+    if (/\bnuts?\b|peanut/.test(d)) n["Nut-free"] += k;
+  });
+  return n;
+}
+const dishFits = (x, t) => x.diet.includes(t) || (t === "Vegetarian" && x.diet.includes("Vegan"));
+function menuTotals() {
+  const n = menuPeople(), courses = courseList().map(c => { const have = dishesIn(c).length, need = courseNeed(c, n); return { course: c, have, need, left: Math.max(0, need - have) }; });
+  const shopLeft = S.shop.filter(x => !x.done);
+  return { n, courses, short: courses.filter(c => c.left), empty: courses.filter(c => !c.have && c.need), shopLeft: shopLeft.length, shopCost: shopLeft.reduce((a, x) => a + cents(x.cost), 0) };
+}
+// The checks: empty courses, courses still short, the same dish twice, diets with no dish, guests coming who haven't signed up
+function menuChecks() {
+  const t = menuTotals(), out = [];
+  t.empty.forEach(c => out.push({ w: "empty", cls: "bad", text: `Nobody is bringing ${c.course.toLowerCase()} yet` }));
+  t.short.filter(c => c.have).forEach(c => out.push({ w: "short", cls: "warn", text: `${c.course}: ${c.have} of ${c.need} for ${t.n} people — ${c.left} more would help` }));
+  const by = new Map(); S.dishes.forEach(x => { const k = normDish(x.name); if (!k) return; if (!by.has(k)) by.set(k, []); by.get(k).push(x); });
+  by.forEach(xs => { if (xs.length > 1) out.push({ w: "dup", cls: "warn", text: `${xs[0].name} × ${xs.length}: ${andList(xs.map(dishBy))}`, ids: xs.map(x => x.id) }); });
+  const need = dietNeeds();
+  DIET_TAGS.forEach(tg => { if (need[tg] && !S.dishes.some(x => dishFits(x, tg) && !/drink/i.test(x.course))) out.push({ w: "diet", cls: "bad", text: `No ${tg.toLowerCase()} dish yet for ${plural(need[tg], "guest")}` }); });
+  const signed = new Set(S.dishes.map(x => x.who).filter(Boolean)), coming = S.guests.filter(g => g.rsvp === "Attending");
+  const units = []; const seen = new Set();
+  coming.forEach(g => { const h = g.hh && hhOf(g.hh); const key = h ? h.id : g.id; if (seen.has(key)) return; seen.add(key);
+    const mem = h ? membersOf(h.id) : [g]; if (signed.has(key) || mem.some(m => signed.has(m.id))) return; units.push(h ? h.name : g.name); });
+  if (units.length) out.push({ w: "nobody", cls: "", text: `Coming, nothing to bring yet: ${units.slice(0, 8).join(", ")}${units.length > 8 ? " and " + (units.length - 8) + " more" : ""}` });
+  if (!out.length && S.dishes.length) out.push({ w: "ok", cls: "good", text: "✓ Every course covered, no duplicates, every diet has a dish." });
+  return out;
+}
+// The text to paste in the group chat
+function signupText() {
+  const t = menuTotals(), L = [eventTitle() + (S.date ? " · " + fmtLong(parse(S.date)) : "")];
+  courseList().forEach(c => { const xs = dishesIn(c), ct = t.courses.find(z => z.course === c);
+    L.push(`${c}: ${xs.length ? xs.map(x => x.name + " – " + dishBy(x)).join(", ") : "nothing yet"}${ct && ct.left ? ` — still need ${ct.left}` : ""}`); });
+  const need = dietNeeds(), dn = DIET_TAGS.filter(tg => need[tg]).map(tg => need[tg] + " " + tg.toLowerCase());
+  if (dn.length) L.push("Diets: " + dn.join(", "));
+  L.push("Reply with what you'll bring!");
+  return L.join("\n");
+}
+const dtags = x => x.diet.length ? `<div class="tags">${x.diet.map(t => `<span class="tagp">${esc(t)}</span>`).join("")}</div>` : "";
+function menuV() {
+  const t = menuTotals(), ch = menuChecks(), dupIds = new Set(ch.filter(c => c.w === "dup").flatMap(c => c.ids)), need = dietNeeds();
+  const left = t.short.reduce((a, c) => a + c.left, 0);
+  M().innerHTML = `<div class="tablebar"><div><h1>Menu &amp; potluck</h1><p class="sub" style="margin:0">Who brings which dish, what's still missing, and your shopping list.</p></div><div class="actions" style="margin:0"><button class="btn ghost" id="copySign">📋 Copy sign-up text</button><button class="btn ghost" id="printMenu">🖨 Print sign-up sheet</button><button class="btn ghost" id="csvM">⬇ Export CSV</button><button class="btn" id="addDish">+ Add a dish</button></div></div>
+  <div class="grid g4" style="margin-top:12px">
+   <div class="card"><div class="lab">Dishes</div><div class="mid" id="mN">${S.dishes.length}</div><div class="meta">for ${plural(t.n, "person", "people")}</div></div>
+   <div class="card"><div class="lab">Still needed</div><div class="mid ${left ? "t-warn" : "t-ok"}" id="mNeed">${left}</div><div class="meta">${left ? esc(t.short.map(c => c.course.toLowerCase() + " (" + c.left + ")").join(", ")) : "every course covered"}</div></div>
+   <div class="card"><div class="lab">Diets</div><div class="meta" style="margin-top:6px;font-size:13.5px;line-height:1.55" id="mDiet">${DIET_TAGS.filter(tg => need[tg]).map(tg => `<b style="color:var(--ink)">${need[tg]}</b> ${esc(tg.toLowerCase())}`).join(" · ") || "No special diets among guests coming"}</div></div>
+   <div class="card"><div class="lab">To buy</div><div class="mid" id="mShop">${t.shopLeft}</div><div class="meta">${t.shopCost ? "about " + mc(t.shopCost) + " left" : "items on the list"}</div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h2>Check</h2><ul class="warns" id="menuWarn">${ch.map(c => `<li class="${c.cls}" data-w="${c.w}">${c.cls === "bad" || c.cls === "warn" ? "⚠ " : ""}${esc(c.text)}</li>`).join("") || `<li data-w="none">Add the dishes as people sign up. The checks show empty courses, the same dish twice and diets with no dish.</li>`}</ul></div>
+  <div class="courses">${courseList().map(c => { const xs = dishesIn(c), ct = t.courses.find(z => z.course === c);
+    return `<div class="card course" data-course="${esc(c)}"><div class="tablebar"><h2>${esc(c)}</h2>${ct && ct.need ? `<span class="pill ${!ct.have ? "short" : ct.left ? "tight" : "ok"}">${ct.have} of ${ct.need}</span>` : ""}</div>
+     ${xs.length ? xs.map(x => `<div class="row dish${dupIds.has(x.id) ? " dup" : ""}" data-dish="${x.id}"><div class="grow"><div class="name">${esc(x.name)}${dupIds.has(x.id) ? ` <span class="pill tight">twice</span>` : ""}</div><div class="meta">${esc(dishBy(x))}${x.serves ? " · serves " + x.serves : ""}${x.note ? " · " + esc(x.note) : ""}</div>${dtags(x)}</div><button class="icon" data-editdish="${x.id}" aria-label="Edit ${esc(x.name)}">✎</button></div>`).join("") : `<div class="empty" style="padding:12px 4px">Nothing yet.</div>`}
+     <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-adddish="${esc(c)}">+ Add to ${esc(c.toLowerCase())}</button></div></div>`; }).join("")}</div>
+  <div class="card" style="margin-top:16px"><div class="tablebar"><h2 style="margin:0">Shopping list</h2><button class="btn small ghost" id="addShop">+ Add an item</button></div>
+   <div id="shopList">${S.shop.length ? S.shop.map(x => `<div class="task shopline${x.done ? " isdone" : ""}"><button class="tick" data-shop="${x.id}" aria-pressed="${x.done}" aria-label="${x.done ? "Mark as not bought" : "Mark as bought"}: ${esc(x.item)}">${x.done ? "✓" : ""}</button><div class="grow"><div class="name" style="font-weight:650">${esc(x.item)}</div><div class="meta">${[x.qty, x.dish && dishOf(x.dish) ? "for " + dishOf(x.dish).name : ""].filter(Boolean).map(esc).join(" · ") || "&nbsp;"}</div></div><div class="amt">${x.cost ? mc(cents(x.cost)) : ""}</div><button class="icon" data-editshop="${x.id}" aria-label="Edit ${esc(x.item)}">✎</button></div>`).join("") : `<div class="empty">Nothing on the list. Add what you need for the host's dishes.</div>`}</div>
+   ${S.shop.length ? `<div class="kv total"><span>Still to buy</span><b id="shopLeft">${plural(t.shopLeft, "item")}${t.shopCost ? " · " + mc(t.shopCost) : ""}</b></div>` : ""}</div>
+  <p class="hint" style="margin-top:16px">💡 Copy the sign-up text into your group chat, or print the sign-up sheet. Mark dishes with diets (GF, vegan…) so everyone can eat.</p>`;
+  M().querySelectorAll("[data-adddish]").forEach(b => b.onclick = () => dishDlg(null, b.dataset.adddish));
+  M().querySelectorAll("[data-editdish]").forEach(b => b.onclick = () => dishDlg(b.dataset.editdish));
+  M().querySelectorAll("[data-editshop]").forEach(b => b.onclick = () => shopDlg(b.dataset.editshop));
+  M().querySelectorAll("[data-shop]").forEach(b => b.onclick = () => { const x = S.shop.find(z => z.id === b.dataset.shop); x.done = !x.done; save(); render(); });
+  document.getElementById("addDish").onclick = () => dishDlg();
+  document.getElementById("addShop").onclick = () => shopDlg();
+  document.getElementById("csvM").onclick = () => S.dishes.length || S.shop.length ? exportCSV("menu") : toast("Add a dish first");
+  document.getElementById("printMenu").onclick = () => { buildMenuPrint(); window.print(); };
+  document.getElementById("copySign").onclick = () => copyText(signupText()).then(() => toast("Sign-up text copied: paste it in your group chat"));
+  wire();
+}
+function copyText(t) {
+  const fb = () => { const a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly", ""); a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} a.remove(); };
+  return (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t).catch(fb) : Promise.resolve(fb())).then(() => { window.__copied = t; });
+}
+// A printable sign-up sheet: the dishes so far and blank lines for what's still needed
+function buildMenuPrint() {
+  const t = menuTotals(), pa = document.getElementById("printArea");
+  pa.innerHTML = `<div class="pmenu"><h1>${couple()} · Potluck sign-up</h1><div class="sub2">${S.date ? fmtLong(parse(S.date)) + " · " : ""}${plural(t.n, "person", "people")} · Please mark your dish with GF, V (vegetarian) or VG (vegan)</div>
+   ${courseList().map(c => { const xs = dishesIn(c), ct = t.courses.find(z => z.course === c), blanks = Math.max(ct ? ct.left : 0, 1);
+     return `<table><thead><tr><th style="width:42%">${esc(c)}</th><th style="width:30%">Name</th><th>Serves · diet</th></tr></thead><tbody>${xs.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(dishBy(x))}</td><td class="pdiet">${x.serves || ""}${x.diet.length ? " · " + esc(x.diet.join(", ")) : ""}</td></tr>`).join("")}${Array.from({ length: blanks }, () => `<tr><td class="blank">______________________</td><td class="blank">______________</td><td class="blank">________</td></tr>`).join("")}</tbody></table>`; }).join("")}</div>`;
+  return pa;
+}
+function dishDlg(id, course) {
+  const x = S.dishes.find(z => z.id === id) || { course: course || tplCourses()[0], name: "", who: null, from: "", host: false, serves: "", diet: [], note: "" };
+  const hl = S.households.slice().sort((a, b) => a.name.localeCompare(b.name)), gl = S.guests.filter(g => g.rsvp !== "Declined").sort((a, b) => a.name.localeCompare(b.name)), other = !!id && !x.host && !x.who;
+  openDlg(`<h2>${id ? "Edit dish" : "Add a dish"}</h2>
+   <div class="two"><div class="field"><label for="dsCourse">Course</label><select id="dsCourse" name="course">${courseList().map(c => `<option ${c === x.course ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div><div class="field"><label for="dsName">Dish</label><input id="dsName" name="name" required value="${esc(x.name)}" placeholder="Mashed potatoes" autocomplete="off"></div></div>
+   <div class="two"><div class="field"><label for="dsWho">Brought by</label><select id="dsWho" name="who"><option value="__host" ${x.host ? "selected" : ""}>${esc(S.p1 ? S.p1 + " (host)" : "Host (you)")}</option>${hl.length ? `<optgroup label="Families / groups">${hl.map(h => `<option value="${h.id}" ${x.who === h.id ? "selected" : ""}>${esc(h.name)}</option>`).join("")}</optgroup>` : ""}${gl.length ? `<optgroup label="Guests">${gl.map(g => `<option value="${g.id}" ${x.who === g.id ? "selected" : ""}>${esc(g.name)}</option>`).join("")}</optgroup>` : ""}<option value="__other" ${other ? "selected" : ""}>Someone not on the list…</option></select></div>
+    <div class="field"><label for="dsFrom">Name (not on the list)</label><input id="dsFrom" name="from" value="${esc(other ? x.from : "")}" placeholder="Aunt Jo" ${other ? "" : "disabled"}></div></div>
+   <div class="field"><span class="fl">Diet (so everyone can eat)</span><div class="dtags">${DIET_TAGS.map(t => `<label class="checkline"><input type="checkbox" name="diet" value="${t}" ${x.diet.includes(t) ? "checked" : ""}> ${t}</label>`).join("")}</div></div>
+   <div class="two"><div class="field"><label for="dsServes">Serves (optional)</label><input id="dsServes" name="serves" type="number" min="0" max="500" step="1" value="${x.serves || ""}" placeholder="10"></div><div class="field"><label for="dsNote">Note (optional)</label><input id="dsNote" name="note" value="${esc(x.note)}" placeholder="Needs the oven at 350°F"></div></div>
+   <p class="hint" id="dsDup" style="margin:0 0 10px" hidden></p>
+   ${btns(!!id)}`, fd => {
+    const w = fd.get("who") || "__host", nm = String(fd.get("from") || "").trim(), name = String(fd.get("name") || "").trim();
+    if (!name) { toast("Type the dish"); return false; }
+    if (w === "__other" && !nm) { toast("Type who's bringing it"); return false; }
+    const o = { id: x.id || uid(), course: fd.get("course") || x.course, name, who: w === "__host" || w === "__other" ? null : w, from: w === "__other" ? nm : w === "__host" ? "Host" : ruleName(w), host: w === "__host", serves: Math.max(0, Math.round(+fd.get("serves") || 0)), diet: fd.getAll("diet").filter(t => DIET_TAGS.includes(t)), note: String(fd.get("note") || "").trim() };
+    const dup = S.dishes.filter(z => z.id !== o.id && normDish(z.name) === normDish(o.name));
+    if (id) S.dishes[S.dishes.findIndex(z => z.id === id)] = o; else S.dishes.push(o);
+    toast(dup.length ? `⚠ ${o.name} is already coming from ${andList(dup.map(dishBy))}` : (id ? "Dish updated" : `${o.name} added to ${o.course.toLowerCase()}`));
+  }, () => {
+    const sel = document.getElementById("dsWho"), nw = document.getElementById("dsFrom"), nmI = document.getElementById("dsName"), hint = document.getElementById("dsDup");
+    sel.onchange = () => { nw.disabled = sel.value !== "__other"; if (!nw.disabled) nw.focus(); };
+    nmI.oninput = () => { const d = S.dishes.filter(z => z.id !== x.id && nmI.value.trim() && normDish(z.name) === normDish(nmI.value)); hint.hidden = !d.length; if (d.length) hint.textContent = `⚠ ${d[0].name} is already on the menu (${andList(d.map(dishBy))}).`; };
+    delBtn(() => { S.dishes = S.dishes.filter(z => z.id !== id); S.shop.forEach(z => { if (z.dish === id) z.dish = null; }); save(); D().close(); render(); toast("Dish deleted"); });
+  });
+}
+function shopDlg(id) {
+  const x = S.shop.find(z => z.id === id) || { item: "", qty: "", cost: "", dish: null, done: false };
+  openDlg(`<h2>${id ? "Edit item" : "Add to the shopping list"}</h2>
+   <div class="field"><label for="shItem">Item</label><input id="shItem" name="item" required value="${esc(x.item)}" placeholder="Fresh sage" autocomplete="off"></div>
+   <div class="two"><div class="field"><label for="shQty">Quantity (optional)</label><input id="shQty" name="qty" value="${esc(x.qty)}" placeholder="2 lb"></div><div class="field"><label for="shCost">Est. cost (optional)</label><input id="shCost" name="cost" type="number" min="0" step="0.01" inputmode="decimal" value="${x.cost || ""}" placeholder="0"></div></div>
+   <div class="two"><div class="field"><label for="shDish">For (optional)</label><select id="shDish" name="dish"><option value="">—</option>${S.dishes.map(d => `<option value="${d.id}" ${x.dish === d.id ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div><div class="field"><span class="fl">Bought</span><label class="checkline"><input type="checkbox" name="done" ${x.done ? "checked" : ""}> Got it</label></div></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: x.id || uid(), item: String(fd.get("item") || "").trim() || "Item", qty: String(fd.get("qty") || "").trim(), cost: Math.max(0, +fd.get("cost") || 0), dish: fd.get("dish") || null, done: fd.get("done") === "on" };
+    if (id) S.shop[S.shop.findIndex(z => z.id === id)] = o; else S.shop.push(o);
+    toast(id ? "Item updated" : o.item + " added to the list");
+  }, () => delBtn(() => { S.shop = S.shop.filter(z => z.id !== id); save(); D().close(); render(); toast("Item deleted"); }));
+}
+
 /* --- gifts: who gave what, thank-you sent --- */
 let GFF = "all";
 const giftFrom = x => (x.who && ruleName(x.who)) || x.from || "Someone";
@@ -1811,6 +2055,7 @@ function settings() {
    <div class="card"><h2>Event type</h2><div class="row" style="border:0;padding-top:0"><div class="emo">${t.emoji}</div><div class="grow"><div class="name" id="curTpl">${S.tpl ? esc(t.name) : "Not chosen yet"}</div><div class="meta">Budget split, checklist and labels for this event</div></div></div>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="chgTpl">Change the event type</button></div>
     <p class="meta" style="margin:10px 0 0">Your guests, groups, tables, floor plan, vendors, payments and gifts stay when you change it.</p>
+    <div class="field" style="margin-top:14px"><span class="fl">Menu &amp; potluck screen</span><div class="chips"><button class="chip" id="menuTog" aria-pressed="${menuOn()}">${menuOn() ? "Shown" : "Hidden"}</button></div><small>Who brings which dish, the menu and the shopping list. On for Friendsgiving, Christmas dinner and New Year's Eve.</small></div>
     <h2 style="margin-top:22px">Look</h2>
     <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
     <div class="field"><span class="fl">Color</span><div class="chips">${ACCENTS.map(([a, t]) => `<button class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div>
@@ -1819,7 +2064,7 @@ function settings() {
    <div class="card"><h2>Backup</h2>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
     <h2 style="margin-top:22px">Export to CSV</h2>
-    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvB2">⬇ Budget CSV</button><button class="btn ghost" id="csvV2">⬇ Vendors CSV</button><button class="btn ghost" id="csvP2">⬇ Payments CSV</button><button class="btn ghost" id="csvG2">⬇ Guests CSV</button><button class="btn ghost" id="csvT2">⬇ Guests by table CSV</button><button class="btn ghost" id="csvGf2">⬇ Gifts CSV</button></div>
+    <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="csvB2">⬇ Budget CSV</button><button class="btn ghost" id="csvV2">⬇ Vendors CSV</button><button class="btn ghost" id="csvP2">⬇ Payments CSV</button><button class="btn ghost" id="csvG2">⬇ Guests CSV</button><button class="btn ghost" id="csvT2">⬇ Guests by table CSV</button><button class="btn ghost" id="csvGf2">⬇ Gifts CSV</button><button class="btn ghost" id="csvM2">⬇ Menu &amp; potluck CSV</button></div>
    </div>
    <div class="card"><h2>Start over</h2><p class="meta" style="margin:0 0 10px">The sample shows a full ${esc(t.name.toLowerCase())} plan. Erasing keeps nothing.</p>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost" id="loadSample">Load sample data</button><button class="btn danger" id="wipe">Erase everything</button></div></div>
@@ -1827,6 +2072,7 @@ function settings() {
   <p class="foot">Event Planner App v1.0 · © The Lemon Plans · For personal use. Planning tool, not financial advice.</p>`;
   const df = document.getElementById("detF"); if (df) df.onsubmit = e => { e.preventDefault(); readDetails(df); save(); render(); toast("Saved"); };
   document.getElementById("chgTpl").onclick = () => tplDlg();
+  document.getElementById("menuTog").onclick = () => { S.menu = !menuOn(); save(); render(); toast(S.menu ? "Menu & potluck screen shown" : "Menu & potluck screen hidden"); };
   M().querySelectorAll("button[data-theme]").forEach(b => b.onclick = () => { S.theme = b.dataset.theme; save(); render(); });
   M().querySelectorAll("button[data-accent]").forEach(b => b.onclick = () => { S.accent = b.dataset.accent; save(); render(); });
   const cf = document.getElementById("curF"); cf.onsubmit = e => { e.preventDefault(); S.currency = cf.currency.value.trim() || "$"; save(); render(); toast("Saved"); };
@@ -1838,6 +2084,7 @@ function settings() {
   document.getElementById("csvG2").onclick = () => S.guests.length ? exportCSV("guests") : toast("Add a guest first");
   document.getElementById("csvT2").onclick = () => S.tables.length ? exportCSV("bytable") : toast("Add a table first");
   document.getElementById("csvGf2").onclick = () => S.gifts.length ? exportCSV("gifts") : toast("Add a gift first");
+  document.getElementById("csvM2").onclick = () => S.dishes.length || S.shop.length ? exportCSV("menu") : toast("Add a dish first");
   document.getElementById("loadSample").onclick = () => confirmDlg("Load sample data?", `This replaces what you have now with the sample ${esc(t.name.toLowerCase())}. Download a backup first if you want to keep your data.`, "Load sample", () => { const th = S.theme; S = sample(S.tpl || "quinceanera"); S.theme = th; save(); go("home"); });
   document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your budget, vendors, payments, guests, tables, floor plan, gifts and checklist from this browser. It can't be undone.", "Erase", () => { const th = S.theme; S = blank(); S.theme = th; save(); go("home"); });
 }
@@ -1893,6 +2140,11 @@ function csvText(kind) {
       if (!seen.size) L.push([tableNo(t.id), t.name || "", "", "(empty)", "", "", "", "", "", "", "", ""]);
       seen.forEach((idx, g) => L.push([tableNo(t.id), t.name || "", idx.join(" "), g.name, people(g), hn(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || "", ruleNotes(g, cl)])); });
     S.guests.filter(g => g.rsvp !== "Declined" && !tabOf(g.table)).forEach(g => L.push(["Not seated", "", "", g.name, people(g), hn(g), sideName(g.side), g.group || "", g.rsvp, g.meal || "", g.diet || "", ruleNotes(g, cl)]));
+  } else if (kind === "menu") {
+    L = [["Course", "Dish", "Brought by", "Serves", "Diet", "Note"]];
+    courseList().forEach(c => dishesIn(c).forEach(x => L.push([c, x.name, dishBy(x), x.serves || "", x.diet.join("; "), x.note])));
+    menuTotals().short.forEach(c => L.push([c.course, "(still needed: " + c.left + ")", "", "", "", ""]));
+    if (S.shop.length) { L.push([]); L.push(["Shopping list", "Quantity", "For", "Est. cost", "Bought", ""]); S.shop.forEach(x => L.push([x.item, x.qty, x.dish && dishOf(x.dish) ? dishOf(x.dish).name : "", x.cost ? f2(cents(x.cost)) : "", x.done ? "Yes" : "No", ""])); }
   } else if (kind === "gifts") {
     L = [["Received", "From", "Gift", "Value", "Thank-you sent", "Note"]];
     S.gifts.slice().sort((a, b) => (a.date || "").localeCompare(b.date || "")).forEach(x => L.push([x.date || "", giftFrom(x), x.item, x.value ? f2(cents(x.value)) : "", x.thanks ? "Yes" : "No", x.note || ""]));
@@ -1904,7 +2156,7 @@ function csvText(kind) {
   return L.map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
 }
 function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
-function exportCSV(kind) { download(slug() + "-" + (kind === "bytable" ? "guests-by-table" : kind) + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+function exportCSV(kind) { download(slug() + "-" + (kind === "bytable" ? "guests-by-table" : kind === "menu" ? "menu-potluck" : kind) + "-" + iso(today()) + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
 
 /* ---------- dialogs ---------- */
 const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
@@ -2224,7 +2476,7 @@ function wire() {
   M().querySelectorAll("[data-tick]").forEach(b => b.onclick = () => { const t = S.tasks.find(x => x.id === b.dataset.tick); t.done = !t.done; save(); render(); if (t.done && S.tasks.every(x => x.done)) toast("Every task done! 🎉"); });
 }
 document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
-document.getElementById("fab").onclick = () => VIEW === "guests" || VIEW === "seating" ? guestDlg() : VIEW === "checklist" ? taskDlg() : VIEW === "gifts" ? giftDlg() : payDlg();
+document.getElementById("fab").onclick = () => VIEW === "guests" || VIEW === "seating" ? guestDlg() : VIEW === "checklist" ? taskDlg() : VIEW === "gifts" ? giftDlg() : VIEW === "menu" ? dishDlg() : payDlg();
 const hashTpl = () => { const m = /(?:^|[#&])template=([\w-]+)/.exec(location.hash); return m ? tplKey(m[1].toLowerCase()) : ""; };
 if (DEMO) {
   document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
@@ -2242,7 +2494,7 @@ if (DEMO) {
     }
   }, true);
 }
-window.__lp = { TPL, TPL_ORDER, switchTpl, giftTotals, eventTitle, autoTitle, pickTpl, autoSeat, runAuto, get AUTO() { return AUTO; }, placeUI, clashes, wouldClash, ruleNotes, parseList, listFromFile, catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
+window.__lp = { menuOn, menuTotals, menuChecks, signupText, dietNeeds, buildMenuPrint, TPL, TPL_ORDER, switchTpl, giftTotals, eventTitle, autoTitle, pickTpl, autoSeat, runAuto, get AUTO() { return AUTO; }, placeUI, clashes, wouldClash, ruleNotes, parseList, listFromFile, catRow, catEst, budgetTotals, nextDue, vendorPaid, vendorBal, headcount, meals, seating, tableSeated, taskDue, taskState, daysToGo, csvText, sample, seat, seatGuest, seatMap, tGeo, normalize, buildPrint, dietOf, render, go, get S() { return S; }, set S(v) { S = v; }, get SEL() { return SEL; }, get VB() { return VB; } };
 if (!DEMO) {
   const k0 = hashTpl(); if (k0 && isNew()) pickTpl(k0);
   addEventListener("hashchange", () => { const k = hashTpl(); if (k && isNew()) { pickTpl(k); go("home"); } });
