@@ -171,6 +171,23 @@ dialog::backdrop{background:rgba(10,14,18,.45)}
  .row.bill .amt{margin-left:auto}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/*mobile-actions-fix*/
+@media (max-width:860px){
+ #main{padding-bottom:var(--mact-pb,180px)!important}
+ html.mact-nofab .fab{display:none!important}
+ .mact-head{display:block!important;padding-right:0!important}
+ .mact-bar{display:grid;gap:8px;margin-top:14px;width:100%}
+ .mact-bar .btn{width:100%;min-height:44px;margin:0;white-space:normal;text-align:center;line-height:1.2}
+ .mact-bar>.mact-pri{min-height:50px;font-size:16px}
+ .mact-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .mact-grid>:last-child:nth-child(odd){grid-column:1/-1}
+ .mact-more{position:relative;display:grid}
+ .mact-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;display:grid;gap:2px;padding:6px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.18)}
+ .mact-menu[hidden]{display:none}
+ .mact-menu .btn{background:transparent;justify-content:flex-start;text-align:left;border-radius:10px}
+ .mact-menu .btn:hover,.mact-menu .btn:focus-visible{background:var(--soft)}
+}
 </style>
 </head>
 <body>
@@ -707,6 +724,99 @@ if (DEMO) {
 }
 window.__lp = { month, year, goalInfo, billStatus, billTotals, planned, status, csvText, sample, get VM() { return VM; }, set VM(v) { VM = v; }, get S() { return S; }, set S(v) { S = v; } };
 go("home");
+</script>
+<script>/*mobile-actions-fix*/
+(() => {
+  const MQ = matchMedia("(max-width:860px)");
+  const RARE = /\b(csv|export|print|pdf|clear sample|backup|restore|import)\b/i;
+  const ADD = /(^|\s)\+|\b(add|new|log|record)\b/i;
+  const main = document.getElementById("main"); if (!main) return;
+  const txt = b => (b.textContent || "") + " " + (b.getAttribute("aria-label") || "");
+  const vis = e => e && !e.hidden && getComputedStyle(e).display !== "none";
+  let openMenu = null;
+  function closeMenu(focus) {
+    if (!openMenu) return; const m = openMenu; openMenu = null;
+    m.menu.hidden = true; m.btn.setAttribute("aria-expanded", "false"); if (focus) m.btn.focus();
+  }
+  function items(m) { return [...m.querySelectorAll('[role="menuitem"]')].filter(vis); }
+  function openM(w, i) {
+    closeMenu(); const menu = w.querySelector(".mact-menu"), btn = w.querySelector(".mact-morebtn");
+    menu.hidden = false; btn.setAttribute("aria-expanded", "true"); openMenu = { menu, btn };
+    const it = items(menu); if (it.length) it[i < 0 ? it.length - 1 : 0].focus();
+  }
+  function head() {
+    const h = main.firstElementChild;
+    return h && (h.classList.contains("tablebar") || h.classList.contains("top")) ? h : null;
+  }
+  function apply() {
+    const h = head(), mobile = MQ.matches;
+    const hasAdd = !!h && [...h.querySelectorAll("button,a.btn")].some(b => vis(b) && ADD.test(txt(b)));
+    document.documentElement.classList.toggle("mact-nofab", mobile && hasAdd);
+    if (mobile && h && !h.dataset.mact) {
+      h.dataset.mact = "1";
+      const title = h.firstElementChild;
+      const acts = [...h.querySelectorAll("button.btn,a.btn")].filter(b => !title.contains(b) && !b.closest(".mact-bar"));
+      if (acts.length) {
+        const pri = [...acts].reverse().find(b => !b.classList.contains("ghost") && !b.classList.contains("small"));
+        const rest = acts.filter(b => b !== pri);
+        let rare = rest.filter(b => RARE.test(txt(b)));
+        if (rare.length < 2 || rare.length === rest.length && !pri) rare = [];
+        const sec = rest.filter(b => !rare.includes(b));
+        const bar = document.createElement("div"); bar.className = "mact-bar";
+        if (pri) { pri.classList.add("mact-pri"); bar.append(pri); }
+        if (sec.length || rare.length) {
+          const g = document.createElement("div"); g.className = "mact-grid"; g.append(...sec);
+          if (rare.length) {
+            const w = document.createElement("div"); w.className = "mact-more";
+            const id = "mactMenu" + Math.random().toString(36).slice(2, 7);
+            w.innerHTML = `<button type="button" class="btn ghost mact-morebtn" aria-haspopup="menu" aria-expanded="false" aria-controls="${id}" aria-label="More actions">⋯ More</button><div class="mact-menu" id="${id}" role="menu" aria-label="More actions" hidden></div>`;
+            const menu = w.lastElementChild;
+            rare.forEach(b => { b.setAttribute("role", "menuitem"); b.tabIndex = -1; menu.append(b); });
+            g.append(w);
+          }
+          bar.append(g);
+        }
+        const old = [...h.children].filter(c => c !== title && !c.children.length && !c.textContent.trim());
+        title.after(bar); old.forEach(c => c.remove());
+        h.classList.add("mact-head");
+      }
+    }
+    pad();
+  }
+  function pad() {
+    if (!MQ.matches) return;
+    let top = innerHeight;
+    document.querySelectorAll("body>*,.app>*").forEach(e => {
+      if (e === main || e.tagName === "DIALOG" || !vis(e)) return;
+      const cs = getComputedStyle(e); if (cs.position !== "fixed" || cs.pointerEvents === "none" || +cs.opacity === 0) return;
+      const r = e.getBoundingClientRect(); if (r.height && r.top > innerHeight / 2) top = Math.min(top, r.top);
+    });
+    const pb = Math.max(96, Math.ceil(innerHeight - top + 16)) + "px";
+    if (document.documentElement.style.getPropertyValue("--mact-pb") !== pb) document.documentElement.style.setProperty("--mact-pb", pb);
+  }
+  new MutationObserver(apply).observe(main, { childList: true });
+  const fab = document.getElementById("fab");
+  if (fab) new MutationObserver(pad).observe(fab, { attributes: true, attributeFilter: ["hidden", "style", "class"] });
+  addEventListener("resize", pad);
+  MQ.addEventListener("change", () => { closeMenu(); if (typeof render === "function") render(); else apply(); setTimeout(pad, 50); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest(".mact-morebtn");
+    if (b) { const w = b.parentElement; if (openMenu && openMenu.btn === b) closeMenu(); else openM(w, 0); return; }
+    if (openMenu && !openMenu.menu.contains(e.target)) closeMenu();
+    else if (openMenu && e.target.closest('[role="menuitem"]')) closeMenu();
+  });
+  document.addEventListener("keydown", e => {
+    const b = e.target.closest && e.target.closest(".mact-morebtn");
+    if (b && (e.key === "ArrowDown" || e.key === "ArrowUp")) { e.preventDefault(); openM(b.parentElement, e.key === "ArrowUp" ? -1 : 0); return; }
+    if (!openMenu) return;
+    const it = items(openMenu.menu), i = it.indexOf(document.activeElement);
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeMenu(true); }
+    else if (e.key === "Tab") closeMenu();
+    else if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const n = it.length; if (n) it[(i + (e.key === "ArrowDown" ? 1 : -1) + n) % n].focus(); }
+    else if (e.key === "Home" || e.key === "End") { e.preventDefault(); if (it.length) it[e.key === "Home" ? 0 : it.length - 1].focus(); }
+  }, true);
+  apply(); addEventListener("load", pad); setTimeout(pad, 300);
+})();
 </script>
 </body>
 </html>
