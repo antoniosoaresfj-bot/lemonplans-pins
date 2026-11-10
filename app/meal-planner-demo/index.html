@@ -251,12 +251,18 @@ dialog::backdrop{background:rgba(30,18,24,.45)}
 .lp-brandbar{display:none}
 .brand .lp-lemon{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:5px}
 .brand .lp-lemon svg,.lp-brandbar svg{width:100%;height:100%;display:block}
+.brand small a{color:inherit;text-decoration:none}
+.brand small a:hover,.brand small a:focus-visible{text-decoration:underline}
+.brand .lp-more{display:block;margin-top:6px;font-weight:600;opacity:.8}
 @media (max-width:860px){
- .lp-brandbar{display:flex;align-items:center;gap:7px;padding:12px 64px 0 18px;font:600 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
+ .lp-brandbar{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;padding:6px 16px 0 18px;font:600 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
   color:var(--muted);letter-spacing:.1px;min-width:0}
  .lp-brandbar .lp-lemon{width:18px;height:18px;flex:none}
- .lp-brandbar b{color:var(--ink,var(--text,inherit));font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
- .lp-brandbar span{white-space:nowrap;opacity:.85}
+ .lp-brandbar b{color:var(--ink);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+ .lp-brandbar a{color:inherit;text-decoration:none;white-space:nowrap;padding:10px 0;flex:none}
+ .lp-brandbar a:hover,.lp-brandbar a:focus-visible{text-decoration:underline}
+ .lp-brandbar .lp-more{margin-left:auto;padding-left:10px;color:var(--ink);opacity:.75}
+ .lp-brandbar .lp-more:first-child,.lp-brandbar b{max-width:calc(100% - 140px)}
 }
 @media print{.lp-brandbar{display:none!important}}
 </style>
@@ -264,7 +270,7 @@ dialog::backdrop{background:rgba(30,18,24,.45)}
 <body>
 <div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
 <div id="bkBar" class="bkbar noprint" role="status" hidden></div>
-<div class="lp-brandbar" id="lpBrand" aria-hidden="true"></div>
+<div class="lp-brandbar" id="lpBrand"></div>
 <div class="app">
  <nav class="side" aria-label="Main">
   <div class="brand">Budget Meal Planner<small>Meals, grocery list &amp; budget · by The Lemon Plans</small></div>
@@ -1003,10 +1009,20 @@ go(S.seenNotice || DEMO ? "week" : "notice");
   if (!br || !bar) return;
   const c = br.cloneNode(true); c.querySelectorAll("small").forEach(s => s.remove());
   const name = c.textContent.replace(/\s+/g, " ").trim();
-  bar.innerHTML = '<span class="lp-lemon">' + L + '</span><b></b><span>· The Lemon Plans</span>';
+  // "More plans" vai para a seção do site do mesmo tema; "The Lemon Plans" vai para a loja inteira
+  const SEC = [[/wedding/i, "wedding/"], [/event|party/i, "events/"], [/debt/i, "debt-payoff/"], [/saving/i, "savings/"],
+    [/bookkeeping|rental/i, "small-business/"], [/habit|cleaning/i, "holidays-2027/"], [/meal|budget|spend/i, "budgeting/"]];
+  const sec = (SEC.find(x => x[0].test(name)) || [0, ""])[1];
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const utm = "?utm_source=app&utm_medium=" + slug + "&utm_campaign=";
+  const SHOP = "https://shop.thelemonplans.com/" + utm + "brand", MORE = "https://thelemonplans.com/" + sec + utm + "more_plans";
+  const a = (href, cls, txt) => '<a class="' + cls + '" href="' + href + '" target="_blank" rel="noopener">' + txt + '</a>';
+  bar.innerHTML = '<span class="lp-lemon">' + L + '</span><b></b><span class="lp-dot">·</span>' + a(SHOP, "lp-shop", "The Lemon Plans") + a(MORE, "lp-more", "More plans ›");
   bar.querySelector("b").textContent = name;
   const sm = br.querySelector("small");
-  if (sm && !sm.querySelector(".lp-lemon")) sm.insertAdjacentHTML("afterbegin", '<span class="lp-lemon">' + L + '</span>');
+  if (sm && !sm.querySelector(".lp-lemon")) {
+    sm.innerHTML = '<span class="lp-lemon">' + L + '</span>by ' + a(SHOP, "lp-shop", "The Lemon Plans") + a(MORE, "lp-more", "More plans ›");
+  }
 })();
 </script>
 </body>
