@@ -213,10 +213,23 @@ main h1{padding-right:48px}
  .mact-menu .btn{background:transparent;justify-content:flex-start;text-align:left;border-radius:10px}
  .mact-menu .btn:hover,.mact-menu .btn:focus-visible{background:var(--soft)}
 }
+/*lp-brand*/
+.lp-brandbar{display:none}
+.brand .lp-lemon{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:5px}
+.brand .lp-lemon svg,.lp-brandbar svg{width:100%;height:100%;display:block}
+@media (max-width:860px){
+ .lp-brandbar{display:flex;align-items:center;gap:7px;padding:12px 64px 0 18px;font:600 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--muted);letter-spacing:.1px;min-width:0}
+ .lp-brandbar .lp-lemon{width:18px;height:18px;flex:none}
+ .lp-brandbar b{color:var(--ink,var(--text,inherit));font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+ .lp-brandbar span{white-space:nowrap;opacity:.85}
+}
+@media print{.lp-brandbar{display:none!important}}
 </style>
 </head>
 <body>
 <div id="demoBar" class="demo" hidden>Demo: Emma's sample habits through April 18, 2027 · Nothing is saved · <a id="buyLink" href="#" target="_blank" rel="noopener">Get the full app</a></div>
+<div class="lp-brandbar" id="lpBrand" aria-hidden="true"></div>
 <div class="app">
  <nav class="side" aria-label="Main">
   <div class="brand">2027 <em>Habit Tracker</em><small>by The Lemon Plans</small></div>
@@ -281,7 +294,7 @@ function load() {
 function save(quiet) {
   if (!quiet) S.backup.changes = (S.backup.changes || 0) + 1;
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); }
-  if (!quiet && S.backup.changes && S.backup.changes % BK_EVERY === 0) setTimeout(() => toast("Lots of changes since your last backup", backupNow, "Back up now"), 2600);
+  if (!DEMO && !quiet && S.backup.changes && S.backup.changes % BK_EVERY === 0) setTimeout(() => toast("Lots of changes since your last backup", backupNow, "Back up now"), 2600);
 }
 // Emma's sample from the spreadsheet. In the full app it is moved so its last day is today.
 function sample() {
@@ -389,6 +402,7 @@ function backupNow() {
   toast("Backup saved · Keep the file somewhere safe (Files, Drive or email)");
 }
 function dataNote() {
+  if (DEMO) return ""; // demo: no backup messages (nothing is saved)
   if (!S.backup.seen) return `<div class="card datanote" id="dataNote" role="note"><h2>Your data lives only on this device</h2>
    <p>Your habits are saved in this browser, on this phone or computer. Nothing goes online. If you switch devices, clear your browser data or delete the browser, they are gone.</p>
    <p>A backup is one small file you keep (in Files, Google Drive or an email to yourself). On a new device: open the app, go to Settings › Restore backup and pick the file.</p>
@@ -739,6 +753,19 @@ go("today");
     else if (e.key === "Home" || e.key === "End") { e.preventDefault(); if (it.length) it[e.key === "Home" ? 0 : it.length - 1].focus(); }
   }, true);
   apply(); addEventListener("load", pad); setTimeout(pad, 300);
+})();
+</script>
+<script>/*lp-brand*/
+(() => {
+  const L = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="19" cy="21" r="16" fill="#F2C94C"/><circle cx="19" cy="21" r="13.6" fill="#FFF6CC"/><g fill="#F7DA63"><path d="M19 21L31 21A12 12 0 0 0 27.5 12.5Z"/><path d="M19 21L19 9A12 12 0 0 0 10.5 12.5Z"/><path d="M19 21L7 21A12 12 0 0 0 10.5 29.5Z"/><path d="M19 21L19 33A12 12 0 0 0 27.5 29.5Z"/></g><path d="M27 6q6-3 10 0q-5 4-10 0z" fill="#2E7D5B"/></svg>';
+  const br = document.querySelector(".side .brand"), bar = document.getElementById("lpBrand");
+  if (!br || !bar) return;
+  const c = br.cloneNode(true); c.querySelectorAll("small").forEach(s => s.remove());
+  const name = c.textContent.replace(/\s+/g, " ").trim();
+  bar.innerHTML = '<span class="lp-lemon">' + L + '</span><b></b><span>· The Lemon Plans</span>';
+  bar.querySelector("b").textContent = name;
+  const sm = br.querySelector("small");
+  if (sm && !sm.querySelector(".lp-lemon")) sm.insertAdjacentHTML("afterbegin", '<span class="lp-lemon">' + L + '</span>');
 })();
 </script>
 </body>
