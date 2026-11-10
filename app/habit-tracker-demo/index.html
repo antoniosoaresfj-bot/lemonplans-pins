@@ -413,7 +413,7 @@ function today() {
   const act = S.habits.filter(h => activeOn(h, d)), n = act.filter(h => isDone(h, d)).length, mon = monday(d);
   const W = weekStats(mon, T), cons = consistency(+d.slice(0, 4), +d.slice(5, 7), T);
   const later = S.habits.filter(h => !activeOn(h, d));
-  M().innerHTML = `<div class="dayrow"><div><h1>${isT ? "Today" : d === addDays(T, -1) ? "Yesterday" : esc(fmtShort(d))}</h1><p class="sub" style="margin:0">${esc(fmtLong(d))}${S.name ? " · " + esc(S.name) : ""}</p></div>${pick("day", isT ? "Today" : esc(fmtShort(d)), false, isT)}</div>
+  M().innerHTML = `<div class="dayrow"><div><h1>${isT ? "Today" : d === addDays(T, -1) ? "Yesterday" : esc(fmtShort(d))}</h1><p class="sub" style="margin:0">${esc(fmtLong(d))}${S.name ? " · " + esc(S.name) : ""}</p></div>${pick("day", esc(parse(d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })), false, isT)}</div>
   <div class="card ringcard">${ringSVG(n, act.length)}<div><div class="lab">${isT ? "Today" : "This day"}</div><div class="big" id="todayCount">${n} of ${act.length}</div><div class="meta">${n === act.length && act.length ? "All done. Beautiful! ✨" : "Tap a habit when it's done"} · ${pc(cons)} on target this month</div></div></div>
   <div class="hlist" id="hlist">${act.map(h => {
     const on = isDone(h, d), st = streakNow(h, d), wk = W.per[h.id] || 0;
@@ -509,7 +509,7 @@ function settings() {
    <div class="card" style="margin-top:14px"><h2>Look</h2>
     <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button type="button" class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
     <div class="field"><span class="fl">Color</span><div class="chips">${[["rose", "Rose"], ["lavender", "Lavender"], ["sage", "Sage"], ["peach", "Peach"]].map(([a, t]) => `<button type="button" class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
-   <div class="card" style="margin-top:14px"><h2>On your phone</h2><p class="meta" style="margin:0">Open this file in your phone's browser and use <b>Add to Home Screen</b> (Safari: Share button; Chrome: ⋮ menu) to open it like an app. Each device keeps its own data: move it with Download backup / Restore backup.</p></div>
+   <div class="card" style="margin-top:14px"><h2>On your phone</h2><p class="meta" style="margin:0"><b>Android:</b> download the file on the phone, open the Files app (Downloads), tap the file and choose Chrome. Always open the same file in the same browser. <b>iPhone and iPad</b> don't run app files saved on the phone, so use it on a computer or an Android phone. Each device keeps its own data: move it with Download backup and Restore backup.</p></div>
   </div><div>
    <div class="card"><h2>Export</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel and Google Sheets.</p>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" type="button" id="cT">⬇ Every tick CSV</button><button class="btn ghost small" type="button" id="cY">⬇ ${VY} overview CSV</button><button class="btn ghost small" type="button" id="cW">⬇ Check-ins CSV</button></div></div>
