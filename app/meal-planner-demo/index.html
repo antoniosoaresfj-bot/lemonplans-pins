@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FBF6F0">
+<title>Budget Meal Planner App · The Lemon Plans</title>
+<style>
+:root{--bg:#FBF6F0;--card:#FFFFFF;--ink:#2B2326;--muted:#7A6A70;--line:#EADFE1;--soft:#F5EDE8;--accent:#3E6652;--accent-ink:#fff;--fill:#86AE95;--glass:#E3EEE6;--rose:#A3456A;--blush:#F9E1E5;--good:#3E7A5A;--warn:#93560F;--bad:#B3364F;--goodbg:#E5F1E9;--warnbg:#FCEBD3;--badbg:#FBE3E7;--shadow:0 10px 28px rgba(80,50,60,.07);--r:18px;--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+:root[data-theme="dark"]{--bg:#17141A;--card:#211C23;--ink:#F2E9EC;--muted:#AE9EA5;--line:#352D36;--soft:#2A232C;--accent:#9FCDB0;--accent-ink:#10231A;--fill:#5E8F72;--glass:#263A2F;--rose:#EBA3BC;--blush:#3A2630;--good:#7FCB9F;--warn:#E8B86A;--bad:#F08A9C;--goodbg:#1B3126;--warnbg:#372B1A;--badbg:#3B2028;--shadow:0 10px 30px rgba(0,0,0,.35)}
+:root[data-accent="blush"]{--accent:#A3456A;--fill:#D98CA7;--glass:#F6E0E7;--soft:#F8EDEE}:root[data-accent="blush"][data-theme="dark"]{--accent:#EBA3BC;--accent-ink:#2A1019;--fill:#B8607C;--glass:#3A2A30;--soft:#2C2226}
+:root[data-accent="lavender"]{--accent:#6B579B;--fill:#A493CF;--glass:#ECE6F5;--soft:#F2EEF6}:root[data-accent="lavender"][data-theme="dark"]{--accent:#C2B2EC;--accent-ink:#18102A;--fill:#7E68B0;--glass:#2E2840;--soft:#251F30}
+:root[data-accent="peach"]{--accent:#A6512C;--fill:#E39A74;--glass:#F7E4D8;--soft:#F9EEE6}:root[data-accent="peach"][data-theme="dark"]{--accent:#F2B08E;--accent-ink:#2A1408;--fill:#C47450;--glass:#3A2A20;--soft:#2B221C}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh;position:relative}
+nav.side{padding:22px 12px;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;background:var(--bg)}
+.brand{font-family:var(--serif);font-weight:700;font-size:20px;padding:0 10px 18px;letter-spacing:-.2px;line-height:1.15}
+.brand small{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.2px;margin-top:4px}
+.navbtn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:650;color:var(--muted);text-align:left}
+.navbtn .i{width:22px;text-align:center;font-size:17px}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+main{padding:26px 30px 120px;max-width:1180px;width:100%;min-width:0}
+main:focus{outline:none}
+h1{font-family:var(--serif);font-size:30px;font-weight:700;margin:0 0 4px;letter-spacing:-.4px;line-height:1.15}
+h2{font-size:17px;margin:0 0 12px;letter-spacing:-.2px}
+.sub{color:var(--muted);margin:0 0 18px}
+.grid{display:grid;gap:12px}
+.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}.grid>*{min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);min-width:0}
+.lab{font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.mid{font-size:25px;font-weight:800;letter-spacing:-.6px;margin-top:2px;color:var(--ink)}
+.mid.neg{color:var(--bad)}.mid.acc{color:var(--accent)}
+.meta{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-weight:750;font-size:12px;white-space:nowrap}
+.ok{background:var(--goodbg);color:var(--good)}.soon{background:var(--warnbg);color:var(--warn)}.low{background:var(--badbg);color:var(--bad)}.plain{background:var(--soft);color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:13px;padding:11px 17px;font-weight:800;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;white-space:nowrap;min-height:44px}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.btn.small{padding:7px 12px;border-radius:10px;font-size:13.5px;min-height:36px}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.icon{border:0;background:var(--soft);border-radius:10px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:14px;flex:none;color:var(--ink)}
+.bar{height:9px;border-radius:999px;background:var(--glass);overflow:hidden}.bar i{display:block;height:100%;background:var(--fill);border-radius:999px}
+.bar i.over{background:var(--bad)}
+.fab{position:fixed;right:26px;bottom:26px;width:60px;height:60px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:32px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.22);cursor:pointer;z-index:20}
+.app{position:relative}
+.themetog{position:absolute;top:22px;right:28px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;z-index:10;padding:0;transition:color .15s,border-color .15s}
+.themetog:hover,.themetog:focus-visible{color:var(--ink);border-color:var(--muted)}
+.themetog svg{width:18px;height:18px;display:block}
+main h1{padding-right:48px}
+@media (max-width:860px){.themetog{top:14px;right:14px;width:36px;height:36px}}
+@media (min-width:861px){main>.tablebar:first-child{padding-right:52px}}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.top .sub{margin:0}
+.top .actions{margin:0}
+@media (min-width:861px){.top{padding-right:56px}}
+.empty{color:var(--muted);text-align:center;padding:22px 10px}
+.hint{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted);gap:10px}.kv b{color:var(--ink);text-align:right;white-space:nowrap}
+.tablebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.filters input,.filters select{padding:9px 12px;border-radius:11px;border:1px solid var(--line);background:var(--card);min-width:0;max-width:100%;height:42px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}
+table.t th,table.t td{padding:8px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.t th:first-child,table.t td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+table.t thead th{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+table.t tr.sum td{font-weight:800;border-top:2px solid var(--line)}
+table.t tr.now td{background:var(--soft)}
+table.t td.neg{color:var(--bad);font-weight:750}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 13px;cursor:pointer;font-weight:650;font-size:14px;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* meal bank tray */
+.tray{margin:14px 0}
+.tray .filters{margin-bottom:10px}
+.mchips{display:flex;flex-wrap:wrap;gap:8px;max-height:212px;overflow-y:auto;padding:2px}
+.mchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 12px;cursor:grab;font-weight:700;font-size:13.5px;max-width:100%;text-align:left;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.mchip small{font-weight:650;color:var(--muted);white-space:nowrap}
+.mchip .tn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.mchip[aria-pressed="true"]{border-color:var(--accent);background:var(--glass);box-shadow:0 0 0 2px var(--accent) inset}
+.mchip.dragging{opacity:.45}
+.tdot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--muted)}
+.t-Breakfast{background:#E2A44C}.t-Lunch{background:#7FA68D}.t-Dinner{background:#C46A86}.t-Snack{background:#9B86C9}.t-Any{background:#B6A8AD}
+/* week grid */
+.wk{position:relative}
+.whead,.wrow{display:grid;grid-template-columns:104px repeat(4,minmax(0,1fr)) 80px;gap:8px;align-items:stretch}
+.whead{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);font-weight:800;padding:0 0 6px}
+.whead span:last-child{text-align:right}
+.wrow{padding:8px 0;border-top:1px solid var(--line)}
+.wday{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+.wday b{font-size:15px}.wday .meta{font-size:12.5px}
+.wday .note{font-size:12px;color:var(--rose);font-weight:650;border:0;background:none;padding:0;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow.today .wday b{color:var(--accent)}
+.wcost{display:flex;align-items:center;justify-content:flex-end;font-weight:800;white-space:nowrap}
+.slot{position:relative;min-height:58px;border:1.5px dashed var(--line);border-radius:13px;background:transparent;display:flex;align-items:center;min-width:0}
+.slot.full{border-style:solid;background:var(--soft);border-color:transparent}
+.slot .sb{flex:1;min-width:0;align-self:stretch;border:0;background:none;text-align:left;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:1px;border-radius:13px;touch-action:manipulation}
+.slot .sl{display:none;font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.slot .sn{font-weight:700;font-size:13.5px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.slot .sc{font-size:12px;color:var(--muted);font-weight:650}
+.slot .add{color:var(--muted);font-weight:700;font-size:13px}
+.slot .x{border:0;background:none;color:var(--muted);width:34px;align-self:stretch;cursor:pointer;font-size:15px;flex:none;border-radius:0 13px 13px 0}
+.slot .sb[draggable="true"]{cursor:grab}
+.slot.over,.picking .slot:hover{border-color:var(--accent);border-style:solid;box-shadow:0 0 0 2px var(--accent) inset}
+.picking .slot{border-color:var(--fill)}
+.wtot{display:grid;grid-template-columns:104px repeat(4,minmax(0,1fr)) 80px;gap:8px;border-top:2px solid var(--line);padding-top:10px;font-weight:800;font-size:13.5px}
+.wtot span{text-align:left}.wtot span:last-child{text-align:right}
+.pickbar{position:sticky;top:8px;z-index:15;display:flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:14px;padding:10px 14px;margin:0 0 12px;font-weight:700;box-shadow:var(--shadow)}
+.pickbar span{flex:1;min-width:0}
+.pickbar button{border:0;background:rgba(255,255,255,.22);color:inherit;border-radius:10px;padding:6px 12px;font-weight:800;cursor:pointer}
+/* grocery list */
+.prog{margin:0 0 14px}
+.prog .row1{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.prog .row1 b{font-size:20px}
+.glist{position:relative}
+.gsec{margin:0 0 14px;padding:12px 16px 6px;break-inside:avoid}
+@media (min-width:1100px){.glist{columns:2;column-gap:14px}.gsec{display:inline-block;width:100%}}
+.gsec h2{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 4px;padding:0 4px;font-size:13px;letter-spacing:.9px;text-transform:uppercase;color:var(--rose)}
+.gsec h2 small{color:var(--muted);font-weight:700;letter-spacing:0;text-transform:none;font-size:12.5px}
+.gi{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);min-height:64px}
+.gi:first-of-type{border-top:0}
+.gck{flex:1;min-width:0;display:flex;align-items:center;gap:14px;border:0;background:none;text-align:left;padding:10px 4px;cursor:pointer;min-height:64px;touch-action:manipulation}
+.gck .box{width:30px;height:30px;border-radius:50%;border:2px solid var(--fill);flex:none;display:grid;place-items:center;font-size:17px;font-weight:900;color:transparent;transition:background .15s}
+.gck .gn{font-size:17px;font-weight:700;line-height:1.25;display:block}
+.gck .gq{font-size:14px;color:var(--muted);font-weight:650;display:block;margin-top:1px}
+.gck .tag{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--rose);margin-left:6px}
+.gi .ge{font-weight:750;white-space:nowrap;text-align:right;font-size:15px;padding-right:4px}
+.gi .ge small{display:block;font-size:11.5px;color:var(--muted);font-weight:650}
+.gi .paid{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);font-weight:700}
+.gi .paid input{width:84px;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--bg);padding:6px 9px;text-align:right;font-weight:800;font-size:16px;min-width:0}
+.gi.got .box{background:var(--fill);color:#fff;border-color:var(--fill)}
+.gi.got .gn{text-decoration:line-through;color:var(--muted)}
+.gi .paid input::placeholder{color:var(--muted);opacity:.5;font-weight:600}
+.gi .ed{width:32px;height:32px;font-size:13px}
+/* meals, pantry */
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .meta{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.amt{font-weight:800;white-space:nowrap;text-align:right}
+.amt small{display:block;font-weight:650;color:var(--muted);font-size:12px}
+.rowbtn{flex:1;min-width:0;border:0;background:none;text-align:left;padding:0;cursor:pointer;display:flex;align-items:center;gap:12px}
+.fav{color:var(--rose)}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:36px;height:36px;border-radius:10px;border:0;background:var(--soft);font-weight:800;font-size:17px;cursor:pointer}
+.step b{min-width:42px;text-align:center;font-size:14px}
+.recipe ol{padding-left:20px;margin:6px 0 0}
+.recipe li{margin:0 0 4px}
+.ingt{width:100%;border-collapse:collapse;font-size:14px}.ingt td{padding:6px 0;border-bottom:1px solid var(--line)}.ingt td:last-child{text-align:right;white-space:nowrap;font-weight:700}
+.ingrow{display:grid;grid-template-columns:minmax(0,2fr) 70px 80px minmax(0,1.5fr) 82px 36px;gap:6px;margin-bottom:6px;align-items:center}
+.ingrow input,.ingrow select{width:100%;height:42px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);min-width:0;font-size:14px}
+.inghead{display:grid;grid-template-columns:minmax(0,2fr) 70px 80px minmax(0,1.5fr) 82px 36px;gap:6px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.secrow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.secrow input{flex:1;min-width:0;height:42px;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+dialog{border:0;border-radius:22px;padding:0;background:var(--card);color:var(--ink);width:min(560px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35);max-height:92vh}
+dialog.wide{width:min(780px,96vw)}
+dialog::backdrop{background:rgba(30,18,24,.45)}
+.dlg{padding:22px}
+.field{display:grid;gap:5px;margin-bottom:12px;min-width:0}
+.field label,.field .fl{font-size:12.5px;font-weight:750;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+/*field-fix*/.field{align-content:start}.field input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color]),.field select{height:48px;line-height:1.25}.field input[type=date]{display:block;min-width:0}
+/*field-fix-2*/@supports (grid-template-rows:subgrid){.two>.field{grid-row:span 3;grid-template-rows:subgrid;row-gap:6px}}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.field small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.tick{display:flex;gap:10px;align-items:center;font-weight:650;cursor:pointer;margin:2px 0 12px}
+.tick input{width:20px;height:20px;accent-color:var(--accent)}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.opt input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+.opt b{display:block}
+.plist{max-height:52vh;overflow-y:auto;margin:0 -4px 8px;padding:0 4px}
+.plist button{display:flex;width:100%;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);background:none;padding:12px 4px;text-align:left;cursor:pointer;min-height:52px}
+.plist button .grow{flex:1;min-width:0;font-weight:700}
+.bkbar{background:var(--soft);color:var(--ink);border-bottom:1px solid var(--line);padding:9px 16px;text-align:center;font-size:13.5px;font-weight:650}
+.bkbar button{border:0;background:none;color:var(--accent);font-weight:800;cursor:pointer;text-decoration:underline;padding:2px 4px;font-size:13.5px}
+.notice{max-width:620px;margin:10px auto 0;padding:28px}
+.notice ul{padding-left:20px;margin:10px 0 16px}.notice li{margin-bottom:6px}
+.demo{background:#F6D6DF;color:#4A1F30;padding:10px 16px;text-align:center;font-weight:700;font-size:14px}
+.demo a{color:#4A1F30}
+.locknote{color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.foot{color:var(--muted);font-size:12px;margin-top:30px}
+.isdemo .wk::after,.isdemo .glist::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='260'%3E%3Ctext x='170' y='110' transform='rotate%28-28 170 110%29' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='20' font-weight='700' fill='%23A3456A' fill-opacity='.22'%3EDEMO %C2%B7 thelemonplans.com%3C/text%3E%3C/svg%3E");background-size:420px 260px}
+:root[data-theme="dark"].isdemo .wk::after,:root[data-theme="dark"].isdemo .glist::after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='260'%3E%3Ctext x='170' y='110' transform='rotate%28-28 170 110%29' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='20' font-weight='700' fill='%23EBA3BC' fill-opacity='.22'%3EDEMO %C2%B7 thelemonplans.com%3C/text%3E%3C/svg%3E")}
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ nav.side{position:fixed;bottom:0;top:auto;left:0;right:0;height:auto;z-index:30;display:flex;justify-content:space-around;padding:6px 2px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line);background:var(--card)}
+ .brand{display:none}
+ .navbtn{flex-direction:column;gap:2px;font-size:10.5px;padding:6px 1px;justify-content:center;align-items:center;text-align:center;min-width:0}
+ .navbtn .i{font-size:19px}
+ main{padding:20px 14px 150px}
+ h1{font-size:26px}
+ .g2{grid-template-columns:1fr}
+ .fab{bottom:86px;right:18px}
+ .toast{bottom:160px}
+ .card{padding:14px}
+ .top{padding-right:44px}
+ .mid{font-size:21px}
+ .mchips{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;padding-bottom:6px;scroll-snap-type:x proximity}
+ .mchip{flex:none;max-width:240px;scroll-snap-align:start;padding:10px 12px}
+ .whead,.wtot{display:none}
+ .wrow{display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+ .wday{flex-direction:row;justify-content:flex-start;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin-bottom:8px;padding-right:76px;position:relative}
+ .wday .note{flex-basis:100%}
+ .wcost{position:absolute;top:12px;right:12px}
+ .wrow{position:relative}
+ .slot{margin-top:6px;min-height:56px}
+ .slot .sl{display:block}
+ .gck .gn{font-size:18px}
+ .ingrow,.inghead{grid-template-columns:minmax(0,1fr) 64px 72px 36px}
+ .inghead span:nth-child(4),.inghead span:nth-child(5){display:none}
+ .ingrow .isec{grid-column:1 / 3}.ingrow .icost{grid-column:3 / 5}
+ .ingrow{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+ .three{grid-template-columns:1fr 1fr}
+ .notice{margin-top:44px;padding:20px}
+}
+@media print{
+ .app nav,.fab,.toast,#demoBar,dialog,.themetog,.noprint,.prog,.tray,.pickbar{display:none!important}
+ .app{display:block}main{padding:0;max-width:none}
+ body{background:#fff;color:#000}.card{box-shadow:none;border:0}
+ .gi{min-height:0}.gck{min-height:0;padding:4px}.gck .gn{font-size:13px}.gck .gq{font-size:11px;display:inline;margin-left:8px}.gck .box{width:14px;height:14px}
+ .glist{columns:2;column-gap:28px}.gsec{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="demoBar" class="demo" hidden>Demo with sample data · Nothing is saved: reload to start over · <a id="buyLink" href="#">Get the full app</a></div>
+<div id="bkBar" class="bkbar noprint" role="status" hidden></div>
+<div class="app">
+ <nav class="side" aria-label="Main">
+  <div class="brand">Budget Meal Planner<small>Meals, grocery list &amp; budget · by The Lemon Plans</small></div>
+  <button class="navbtn" data-view="week"><span class="i">▦</span>Week</button>
+  <button class="navbtn" data-view="list"><span class="i">✓</span>List</button>
+  <button class="navbtn" data-view="meals"><span class="i">❦</span>Meals</button>
+  <button class="navbtn" data-view="pantry"><span class="i">▤</span>Pantry</button>
+  <button class="navbtn" data-view="budget"><span class="i">$</span>Budget</button>
+  <button class="navbtn" data-view="settings"><span class="i">⚙</span>Settings</button>
+ </nav>
+ <button class="themetog" id="themeTog" type="button"></button>
+ <main id="main" tabindex="-1"></main>
+</div>
+<button class="fab" id="fab" aria-label="Add" title="Add">+</button>
+<dialog id="dlg"><form method="dialog" class="dlg" id="dlgForm"></form></dialog>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const DEMO = true;
+const BUY_URL = "https://thelemonplans.com/l/budget-meal-planner";
+const KEY = DEMO ? "lp-mealplanner-demo" : "lp-mealplanner-v1";
+const SAMPLE = {"name":"The Rivera family","people":4,"budget":650,"year":2027,"week":"2027-01-11","sections":["Produce","Meat & Seafood","Dairy & Eggs","Bread & Bakery","Grains, Pasta & Beans","Canned & Jarred","Frozen","Baking, Spices & Oils","Snacks & Drinks","Household & Other"],"meals":[{"name":"Peanut Butter Banana Overnight Oats","type":"Breakfast","serves":4,"mins":5,"tags":"No-cook · make ahead","fav":true,"cheap":true,"steps":"Mash the bananas in a bowl, then stir in the oats, milk, peanut butter and cinnamon. Spoon into 4 jars and chill overnight. Eat cold, or warm it for a minute.","ings":[{"item":"Rolled oats","qty":2,"unit":"cup","sec":"Grains, Pasta & Beans","cost":0.6},{"item":"Milk","qty":2,"unit":"cup","sec":"Dairy & Eggs","cost":0.5},{"item":"Banana","qty":2,"unit":"each","sec":"Produce","cost":0.5},{"item":"Peanut butter","qty":4,"unit":"tbsp","sec":"Canned & Jarred","cost":0.4},{"item":"Cinnamon","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.05}]},{"name":"Veggie Egg Muffins","type":"Breakfast","serves":4,"mins":25,"tags":"Make ahead · freezer","fav":false,"cheap":true,"steps":"Heat the oven to 350°F and grease a 12-cup muffin pan. Whisk the eggs, stir in the chopped spinach, pepper and cheese, and fill the cups. Bake 18 to 20 minutes. Keeps 4 days in the fridge.","ings":[{"item":"Eggs","qty":10,"unit":"each","sec":"Dairy & Eggs","cost":3},{"item":"Spinach","qty":2,"unit":"cup","sec":"Produce","cost":0.8},{"item":"Bell pepper","qty":1,"unit":"each","sec":"Produce","cost":1},{"item":"Shredded cheddar","qty":0.5,"unit":"cup","sec":"Dairy & Eggs","cost":0.65}]},{"name":"Sweet Potato Breakfast Hash","type":"Breakfast","serves":4,"mins":30,"tags":"One pan","fav":false,"cheap":true,"steps":"Dice the sweet potatoes and onion and cook in the oil over medium heat for 15 minutes. Add the sliced sausage for 5 minutes. Make 4 wells, crack in the eggs, cover and cook until set.","ings":[{"item":"Sweet potato","qty":2,"unit":"each","sec":"Produce","cost":2},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Eggs","qty":4,"unit":"each","sec":"Dairy & Eggs","cost":1.2},{"item":"Smoked sausage","qty":0.5,"unit":"pack","sec":"Meat & Seafood","cost":1.75},{"item":"Olive oil","qty":2,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.2}]},{"name":"Cinnamon Apple Baked Oatmeal","type":"Breakfast","serves":6,"mins":40,"tags":"Make ahead","fav":false,"cheap":true,"steps":"Heat the oven to 375°F. Mix the oats, sugar, cinnamon and baking powder, then stir in the milk, eggs and chopped apples. Bake in a greased 8-inch dish for 35 minutes and cut into squares for the week.","ings":[{"item":"Rolled oats","qty":2,"unit":"cup","sec":"Grains, Pasta & Beans","cost":0.6},{"item":"Apple","qty":2,"unit":"each","sec":"Produce","cost":1.4},{"item":"Milk","qty":1.5,"unit":"cup","sec":"Dairy & Eggs","cost":0.38},{"item":"Eggs","qty":2,"unit":"each","sec":"Dairy & Eggs","cost":0.6},{"item":"Brown sugar","qty":0.25,"unit":"cup","sec":"Baking, Spices & Oils","cost":0.25},{"item":"Cinnamon","qty":2,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1},{"item":"Baking powder","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.05}]},{"name":"Black Bean & Cheese Quesadillas","type":"Lunch","serves":4,"mins":15,"tags":"Meatless","fav":false,"cheap":true,"steps":"Mash the beans with the cumin and a spoon of salsa. Spread on 4 tortillas, add the cheese and top with the other 4. Cook in a dry pan 2 to 3 minutes a side until golden. Serve with the rest of the salsa.","ings":[{"item":"Flour tortillas","qty":8,"unit":"each","sec":"Bread & Bakery","cost":2},{"item":"Black beans","qty":1,"unit":"can","sec":"Canned & Jarred","cost":1},{"item":"Shredded cheddar","qty":1.5,"unit":"cup","sec":"Dairy & Eggs","cost":1.95},{"item":"Salsa","qty":0.5,"unit":"cup","sec":"Canned & Jarred","cost":0.63},{"item":"Ground cumin","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1}]},{"name":"Tuna Salad Wraps","type":"Lunch","serves":4,"mins":10,"tags":"No-cook","fav":false,"cheap":true,"steps":"Drain the tuna and mix it with the mayo and finely chopped celery. Lay lettuce on each tortilla, add the tuna, roll up tightly and cut in half.","ings":[{"item":"Canned tuna","qty":2,"unit":"can","sec":"Canned & Jarred","cost":2.6},{"item":"Mayonnaise","qty":3,"unit":"tbsp","sec":"Canned & Jarred","cost":0.3},{"item":"Celery","qty":2,"unit":"stalk","sec":"Produce","cost":0.4},{"item":"Flour tortillas","qty":4,"unit":"each","sec":"Bread & Bakery","cost":1},{"item":"Romaine lettuce","qty":0.5,"unit":"head","sec":"Produce","cost":1}]},{"name":"Smashed Chickpea Salad Sandwiches","type":"Lunch","serves":4,"mins":10,"tags":"Meatless · no-cook","fav":false,"cheap":true,"steps":"Drain the chickpeas and smash them with a fork, leaving a few chunks. Stir in the mayo, chopped celery, lemon juice, salt and pepper. Pile onto the bread for 4 sandwiches.","ings":[{"item":"Chickpeas","qty":1,"unit":"can","sec":"Canned & Jarred","cost":1.1},{"item":"Mayonnaise","qty":3,"unit":"tbsp","sec":"Canned & Jarred","cost":0.3},{"item":"Celery","qty":1,"unit":"stalk","sec":"Produce","cost":0.2},{"item":"Lemon","qty":1,"unit":"each","sec":"Produce","cost":0.6},{"item":"Sandwich bread","qty":8,"unit":"slice","sec":"Bread & Bakery","cost":1.2}]},{"name":"Broccoli Cheddar Baked Potatoes","type":"Lunch","serves":4,"mins":20,"tags":"Meatless","fav":false,"cheap":true,"steps":"Prick the potatoes and microwave 10 to 12 minutes (or bake 1 hour at 400°F). Steam the chopped broccoli. Split the potatoes, add butter, broccoli and cheese, and finish with a spoon of sour cream.","ings":[{"item":"Russet potato","qty":4,"unit":"each","sec":"Produce","cost":2},{"item":"Broccoli","qty":1,"unit":"head","sec":"Produce","cost":1.75},{"item":"Shredded cheddar","qty":1,"unit":"cup","sec":"Dairy & Eggs","cost":1.3},{"item":"Sour cream","qty":0.5,"unit":"cup","sec":"Dairy & Eggs","cost":0.6},{"item":"Butter","qty":2,"unit":"tbsp","sec":"Dairy & Eggs","cost":0.3}]},{"name":"Peanut Ramen Noodle Bowls","type":"Lunch","serves":4,"mins":15,"tags":"Meatless","fav":false,"cheap":true,"steps":"Cook the noodles and frozen vegetables together for 3 minutes (skip the flavor packets). Whisk the peanut butter and soy sauce with 4 tablespoons of hot water. Drain, toss with the sauce and top each bowl with an egg.","ings":[{"item":"Ramen noodles","qty":4,"unit":"pack","sec":"Grains, Pasta & Beans","cost":1.4},{"item":"Peanut butter","qty":4,"unit":"tbsp","sec":"Canned & Jarred","cost":0.4},{"item":"Soy sauce","qty":3,"unit":"tbsp","sec":"Canned & Jarred","cost":0.3},{"item":"Frozen mixed vegetables","qty":1,"unit":"bag","sec":"Frozen","cost":1.5},{"item":"Eggs","qty":4,"unit":"each","sec":"Dairy & Eggs","cost":1.2}]},{"name":"One-Pan Chicken Thighs & Potatoes","type":"Dinner","serves":4,"mins":45,"tags":"One pan","fav":true,"cheap":true,"steps":"Heat the oven to 425°F. Toss chunks of potato and carrot with half the oil and seasoning on a sheet pan. Rub the rest on the chicken and lay it on top. Roast 35 to 40 minutes, until the chicken reaches 175°F.","ings":[{"item":"Chicken thighs","qty":2,"unit":"lb","sec":"Meat & Seafood","cost":5},{"item":"Russet potato","qty":4,"unit":"each","sec":"Produce","cost":2},{"item":"Carrot","qty":4,"unit":"each","sec":"Produce","cost":1},{"item":"Olive oil","qty":2,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.2},{"item":"Garlic powder","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1},{"item":"Dried oregano","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1}]},{"name":"Hearty Lentil & Vegetable Soup","type":"Dinner","serves":6,"mins":40,"tags":"Meatless · freezer","fav":false,"cheap":true,"steps":"Soften the chopped onion, carrot and celery in the oil for 8 minutes. Add the rinsed lentils, tomatoes, broth and cumin and simmer 25 to 30 minutes, until the lentils are tender. Freezes well.","ings":[{"item":"Dry lentils","qty":1.5,"unit":"cup","sec":"Grains, Pasta & Beans","cost":1.05},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Carrot","qty":2,"unit":"each","sec":"Produce","cost":0.5},{"item":"Celery","qty":2,"unit":"stalk","sec":"Produce","cost":0.4},{"item":"Diced tomatoes","qty":1,"unit":"can","sec":"Canned & Jarred","cost":1.2},{"item":"Vegetable broth","qty":6,"unit":"cup","sec":"Canned & Jarred","cost":3},{"item":"Ground cumin","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1},{"item":"Olive oil","qty":1,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.1}]},{"name":"Sheet-Pan Sausage & Veggies","type":"Dinner","serves":4,"mins":30,"tags":"One pan","fav":false,"cheap":true,"steps":"Heat the oven to 425°F. Cut the potatoes small and roast them with half the oil for 10 minutes. Add the sliced sausage, peppers and onion with the rest of the oil and roast 15 to 18 minutes more.","ings":[{"item":"Smoked sausage","qty":1,"unit":"pack","sec":"Meat & Seafood","cost":3.5},{"item":"Russet potato","qty":3,"unit":"each","sec":"Produce","cost":1.5},{"item":"Bell pepper","qty":2,"unit":"each","sec":"Produce","cost":2},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Olive oil","qty":2,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.2}]},{"name":"Turkey Taco Rice Skillet","type":"Dinner","serves":5,"mins":30,"tags":"One pan","fav":true,"cheap":true,"steps":"Brown the turkey in a large skillet with the taco seasoning. Stir in the rice, broth, salsa and drained beans, cover and simmer 18 to 20 minutes. Sprinkle the cheese on top and cover until it melts.","ings":[{"item":"Ground turkey","qty":1,"unit":"lb","sec":"Meat & Seafood","cost":4.5},{"item":"Long-grain rice","qty":1,"unit":"cup","sec":"Grains, Pasta & Beans","cost":0.4},{"item":"Black beans","qty":1,"unit":"can","sec":"Canned & Jarred","cost":1},{"item":"Salsa","qty":1,"unit":"cup","sec":"Canned & Jarred","cost":1.25},{"item":"Taco seasoning","qty":1,"unit":"packet","sec":"Baking, Spices & Oils","cost":1},{"item":"Shredded cheddar","qty":1,"unit":"cup","sec":"Dairy & Eggs","cost":1.3},{"item":"Chicken broth","qty":2,"unit":"cup","sec":"Canned & Jarred","cost":1}]},{"name":"Chickpea Coconut Curry","type":"Dinner","serves":4,"mins":30,"tags":"Meatless","fav":false,"cheap":true,"steps":"Start the rice. Cook the chopped onion with the curry powder for 5 minutes, then add the chickpeas, tomatoes and coconut milk and simmer 15 minutes. Stir in the spinach until it wilts and serve over the rice.","ings":[{"item":"Chickpeas","qty":2,"unit":"can","sec":"Canned & Jarred","cost":2.2},{"item":"Coconut milk","qty":1,"unit":"can","sec":"Canned & Jarred","cost":2},{"item":"Diced tomatoes","qty":1,"unit":"can","sec":"Canned & Jarred","cost":1.2},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Curry powder","qty":1,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.25},{"item":"Spinach","qty":2,"unit":"cup","sec":"Produce","cost":0.8},{"item":"Long-grain rice","qty":1.5,"unit":"cup","sec":"Grains, Pasta & Beans","cost":0.6}]},{"name":"Spinach Baked Pasta","type":"Dinner","serves":6,"mins":35,"tags":"Meatless · make ahead","fav":false,"cheap":true,"steps":"Heat the oven to 400°F. Boil the pasta 2 minutes less than the package says and drain. Mix with the sauce, spinach and garlic powder in a baking dish, top with the mozzarella and bake 15 minutes.","ings":[{"item":"Penne pasta","qty":1,"unit":"lb","sec":"Grains, Pasta & Beans","cost":1.5},{"item":"Marinara sauce","qty":1,"unit":"jar","sec":"Canned & Jarred","cost":2.5},{"item":"Spinach","qty":3,"unit":"cup","sec":"Produce","cost":1.2},{"item":"Shredded mozzarella","qty":1.5,"unit":"cup","sec":"Dairy & Eggs","cost":1.95},{"item":"Garlic powder","qty":1,"unit":"tsp","sec":"Baking, Spices & Oils","cost":0.1}]},{"name":"Egg Fried Rice with Peas","type":"Dinner","serves":4,"mins":20,"tags":"Meatless · uses leftover rice","fav":false,"cheap":true,"steps":"Cook the rice a day ahead (cold rice fries best). Scramble the eggs in a hot pan and set aside. Fry the diced carrot and peas 3 minutes, add the rice and soy sauce, then fold the eggs and green onions back in.","ings":[{"item":"Long-grain rice","qty":2,"unit":"cup","sec":"Grains, Pasta & Beans","cost":0.8},{"item":"Eggs","qty":4,"unit":"each","sec":"Dairy & Eggs","cost":1.2},{"item":"Frozen peas","qty":1,"unit":"bag","sec":"Frozen","cost":1.5},{"item":"Carrot","qty":2,"unit":"each","sec":"Produce","cost":0.5},{"item":"Soy sauce","qty":3,"unit":"tbsp","sec":"Canned & Jarred","cost":0.3},{"item":"Green onions","qty":1,"unit":"bunch","sec":"Produce","cost":0.9}]},{"name":"Cabbage & Sausage Skillet","type":"Dinner","serves":4,"mins":25,"tags":"One pan","fav":false,"cheap":true,"steps":"Brown the sliced sausage in the butter, then add the diced potatoes and onion and cook 10 minutes. Add the sliced cabbage with a splash of water, cover and cook 8 to 10 minutes until tender.","ings":[{"item":"Green cabbage","qty":0.5,"unit":"head","sec":"Produce","cost":1},{"item":"Smoked sausage","qty":1,"unit":"pack","sec":"Meat & Seafood","cost":3.5},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Butter","qty":2,"unit":"tbsp","sec":"Dairy & Eggs","cost":0.3},{"item":"Russet potato","qty":2,"unit":"each","sec":"Produce","cost":1}]},{"name":"Slow Cooker Chicken & Bean Chili","type":"Dinner","serves":6,"mins":15,"tags":"Slow cooker · freezer","fav":false,"cheap":true,"steps":"Put everything in the slow cooker (drain the beans) and cook on low 6 hours or high 3 hours. Shred the chicken with two forks and stir it back in. Top with cheese or sour cream if you have it.","ings":[{"item":"Chicken thighs","qty":1.5,"unit":"lb","sec":"Meat & Seafood","cost":3.75},{"item":"Kidney beans","qty":2,"unit":"can","sec":"Canned & Jarred","cost":2},{"item":"Diced tomatoes","qty":2,"unit":"can","sec":"Canned & Jarred","cost":2.4},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Chili powder","qty":2,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.4},{"item":"Frozen corn","qty":1,"unit":"bag","sec":"Frozen","cost":1.5}]},{"name":"Stovetop Popcorn","type":"Snack","serves":4,"mins":10,"tags":"Under $0.25 a serving","fav":false,"cheap":true,"steps":"Heat the oil with 3 kernels in a big covered pot. When they pop, add the rest, cover and shake now and then until the popping slows. Toss with melted butter and a pinch of salt.","ings":[{"item":"Popcorn kernels","qty":0.5,"unit":"cup","sec":"Snacks & Drinks","cost":0.4},{"item":"Vegetable oil","qty":2,"unit":"tbsp","sec":"Baking, Spices & Oils","cost":0.15},{"item":"Butter","qty":2,"unit":"tbsp","sec":"Dairy & Eggs","cost":0.3}]},{"name":"Apple Slices & Peanut Yogurt Dip","type":"Snack","serves":4,"mins":5,"tags":"No-cook","fav":false,"cheap":true,"steps":"Stir the yogurt, peanut butter and honey together until smooth. Slice the apples and serve with the dip.","ings":[{"item":"Apple","qty":4,"unit":"each","sec":"Produce","cost":2.8},{"item":"Plain yogurt","qty":1,"unit":"cup","sec":"Dairy & Eggs","cost":0.9},{"item":"Peanut butter","qty":3,"unit":"tbsp","sec":"Canned & Jarred","cost":0.3},{"item":"Honey","qty":1,"unit":"tbsp","sec":"Canned & Jarred","cost":0.15}]},{"name":"Leftovers","type":"Any","serves":null,"mins":0,"tags":"Uses extra servings from an earlier meal ($0)","fav":false,"cheap":false,"steps":"","ings":[]},{"name":"Friday Pizza Night","type":"Dinner","serves":4,"mins":30,"tags":"Family favorite","fav":true,"cheap":false,"steps":"","ings":[{"item":"Pizza dough","qty":1,"unit":"each","sec":"Bread & Bakery","cost":2.5},{"item":"Marinara sauce","qty":0.5,"unit":"jar","sec":"Canned & Jarred","cost":1.25},{"item":"Shredded mozzarella","qty":2,"unit":"cup","sec":"Dairy & Eggs","cost":2.6},{"item":"Pepperoni","qty":1,"unit":"pack","sec":"Meat & Seafood","cost":3}]},{"name":"Sunday Pancakes","type":"Breakfast","serves":4,"mins":20,"tags":"Weekend treat","fav":false,"cheap":false,"steps":"","ings":[{"item":"Pancake mix","qty":2,"unit":"cup","sec":"Baking, Spices & Oils","cost":1},{"item":"Milk","qty":1.5,"unit":"cup","sec":"Dairy & Eggs","cost":0.38},{"item":"Eggs","qty":2,"unit":"each","sec":"Dairy & Eggs","cost":0.6},{"item":"Frozen berries","qty":1,"unit":"cup","sec":"Frozen","cost":1},{"item":"Maple syrup","qty":0.25,"unit":"cup","sec":"Canned & Jarred","cost":0.75}]},{"name":"Grandma's Chicken Noodle Soup","type":"Dinner","serves":6,"mins":45,"tags":"Family favorite · freezer","fav":false,"cheap":false,"steps":"","ings":[{"item":"Chicken thighs","qty":1,"unit":"lb","sec":"Meat & Seafood","cost":2.5},{"item":"Egg noodles","qty":0.5,"unit":"bag","sec":"Grains, Pasta & Beans","cost":1.25},{"item":"Carrot","qty":3,"unit":"each","sec":"Produce","cost":0.75},{"item":"Celery","qty":3,"unit":"stalk","sec":"Produce","cost":0.6},{"item":"Onion","qty":1,"unit":"each","sec":"Produce","cost":0.8},{"item":"Chicken broth","qty":8,"unit":"cup","sec":"Canned & Jarred","cost":4}]}],"menu":[["Peanut Butter Banana Overnight Oats","Smashed Chickpea Salad Sandwiches","One-Pan Chicken Thighs & Potatoes","Stovetop Popcorn"],["Peanut Butter Banana Overnight Oats","Leftovers","Turkey Taco Rice Skillet","Apple Slices & Peanut Yogurt Dip"],["Veggie Egg Muffins","Leftovers","Hearty Lentil & Vegetable Soup",null],["Veggie Egg Muffins","Black Bean & Cheese Quesadillas","Egg Fried Rice with Peas","Stovetop Popcorn"],["Peanut Butter Banana Overnight Oats","Leftovers","Friday Pizza Night",null],["Sweet Potato Breakfast Hash","Peanut Ramen Noodle Bowls","Cabbage & Sausage Skillet","Apple Slices & Peanut Yogurt Dip"],["Sunday Pancakes","Leftovers","Grandma's Chicken Noodle Soup","Stovetop Popcorn"]],"notes":["Prep day: oats jars + egg muffins","","","","Movie night","","Double the soup, freeze half"],"pantry":[{"item":"Long-grain rice","sec":"Grains, Pasta & Beans","have":6,"unit":"cup","keep":4,"price":0.4,"use":null},{"item":"Rolled oats","sec":"Grains, Pasta & Beans","have":3,"unit":"cup","keep":4,"price":0.3,"use":null},{"item":"Eggs","sec":"Dairy & Eggs","have":6,"unit":"each","keep":12,"price":0.3,"use":"2027-01-24"},{"item":"Olive oil","sec":"Baking, Spices & Oils","have":20,"unit":"tbsp","keep":8,"price":0.1,"use":null},{"item":"Peanut butter","sec":"Canned & Jarred","have":10,"unit":"tbsp","keep":16,"price":0.1,"use":null},{"item":"Soy sauce","sec":"Canned & Jarred","have":20,"unit":"tbsp","keep":6,"price":0.1,"use":null},{"item":"Cinnamon","sec":"Baking, Spices & Oils","have":10,"unit":"tsp","keep":4,"price":0.05,"use":null},{"item":"Ground cumin","sec":"Baking, Spices & Oils","have":8,"unit":"tsp","keep":4,"price":0.1,"use":null},{"item":"Garlic powder","sec":"Baking, Spices & Oils","have":10,"unit":"tsp","keep":4,"price":0.1,"use":null},{"item":"Taco seasoning","sec":"Baking, Spices & Oils","have":0,"unit":"packet","keep":1,"price":1,"use":null},{"item":"Milk","sec":"Dairy & Eggs","have":4,"unit":"cup","keep":null,"price":0.25,"use":"2027-01-13"},{"item":"Butter","sec":"Dairy & Eggs","have":16,"unit":"tbsp","keep":8,"price":0.15,"use":"2027-02-20"},{"item":"Chicken broth","sec":"Canned & Jarred","have":4,"unit":"cup","keep":4,"price":0.5,"use":null},{"item":"Frozen peas","sec":"Frozen","have":0,"unit":"bag","keep":1,"price":1.5,"use":null},{"item":"Paper towels","sec":"Household & Other","have":1,"unit":"roll","keep":2,"price":1.25,"use":null}],"extras":[{"item":"Dish soap","qty":1,"sec":"Household & Other","cost":2.49},{"item":"Coffee","qty":1,"sec":"Snacks & Drinks","cost":7.99}],"trips":[{"date":"2027-01-04","store":"Aldi","amount":142.35,"note":"Big stock-up"},{"date":"2027-01-11","store":"Walmart","amount":128.9,"note":""},{"date":"2027-01-18","store":"Aldi","amount":136.12,"note":""},{"date":"2027-01-25","store":"Kroger","amount":151.4,"note":""},{"date":"2027-01-29","store":"Costco","amount":89.99,"note":"Paper goods, rice"},{"date":"2027-02-01","store":"Aldi","amount":131.2,"note":""},{"date":"2027-02-08","store":"Walmart","amount":118.45,"note":""},{"date":"2027-02-15","store":"Aldi","amount":139.8,"note":""},{"date":"2027-02-22","store":"Kroger","amount":122.67,"note":"Valentine's dinner at home"},{"date":"2027-03-01","store":"Aldi","amount":127.44,"note":""},{"date":"2027-03-08","store":"Costco","amount":164.3,"note":""}]};
+const SECT = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bread & Bakery", "Grains, Pasta & Beans", "Canned & Jarred", "Frozen", "Baking, Spices & Oils", "Snacks & Drinks", "Household & Other"];
+const TYPES = ["Breakfast", "Lunch", "Dinner", "Snack", "Any"];
+const SLOTS = ["Breakfast", "Lunch", "Dinner", "Snacks"], SLOT_TYPE = ["Breakfast", "Lunch", "Dinner", "Snack"];
+const UNITS = ["each", "lb", "oz", "cup", "tbsp", "tsp", "can", "jar", "bag", "pack", "bunch", "head", "slice", "stalk", "packet", "box", "bottle", "roll", "dozen", "gal", "qt", "g", "kg"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const MON = MONTHS.map(m => m.slice(0, 3)), DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/* ---------- dates (local calendar days) ---------- */
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const parse = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const today = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+const monday = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return iso(x); };
+const fmtD = s => parse(s).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const fmtDs = s => parse(s).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const daysTo = s => Math.round((parse(s) - today()) / 86400000);
+
+/* ---------- state ---------- */
+const uid = () => Math.random().toString(36).slice(2, 9);
+const emptyMenu = () => Array.from({ length: 7 }, () => [null, null, null, null]);
+function mealFrom(m) { return { id: uid(), name: m.name, type: m.type || "Any", serves: m.serves ?? null, mins: m.mins || 0, tags: m.tags || "", fav: !!m.fav, cheap: !!m.cheap, steps: m.steps || "", ings: (m.ings || []).map(i => ({ item: i.item, qty: i.qty ?? null, unit: i.unit || "", sec: i.sec || "", cost: i.cost || 0 })) }; }
+// the 20 cheap meals and "Leftovers" come with every copy, like in the spreadsheet
+const builtIn = () => SAMPLE.meals.filter(m => m.cheap || m.name === "Leftovers").map(m => mealFrom(Object.assign({}, m, { fav: false })));
+function blank() {
+  return { v: 1, app: "meal-planner", currency: "$", theme: "light", accent: "sage", name: "", people: 4, budget: 0, year: today().getFullYear(), week: monday(today()),
+    sections: SECT.slice(), meals: builtIn(), menu: emptyMenu(), notes: ["", "", "", "", "", "", ""], pantry: [], extras: [], bought: {}, trips: [], mb: {}, hideGot: false, sample: false, lastBackup: "", changes: 0, seenNotice: false };
+}
+function valid(s) { return s && s.v === 1 && s.app === "meal-planner" && ["meals", "menu", "pantry", "extras", "trips", "sections"].every(k => Array.isArray(s[k])); }
+function normalize(s) {
+  const o = Object.assign(blank(), s);
+  ["bought", "mb"].forEach(k => { if (!o[k] || typeof o[k] !== "object" || Array.isArray(o[k])) o[k] = {}; });
+  if (o.menu.length !== 7) o.menu = emptyMenu();
+  o.menu = o.menu.map(r => [0, 1, 2, 3].map(j => (Array.isArray(r) && r[j]) || null));
+  if (!Array.isArray(o.notes) || o.notes.length !== 7) o.notes = ["", "", "", "", "", "", ""];
+  if (!["sage", "blush", "lavender", "peach"].includes(o.accent)) o.accent = "sage";
+  // the app always starts light. "auto" was the old default, so it becomes light; "device" is the Auto chosen in Settings.
+  if (!["light", "dark", "device"].includes(o.theme)) o.theme = "light";
+  return o;
+}
+function load() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (valid(s)) return normalize(s); } catch (e) {}
+  return DEMO ? sample() : blank();
+}
+let save = function () { S.changes = (S.changes || 0) + 1; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast("Couldn't save in this browser"); } };
+function sample() {
+  const s = blank(), id = {};
+  s.name = SAMPLE.name; s.people = SAMPLE.people; s.budget = SAMPLE.budget; s.year = SAMPLE.year; s.week = SAMPLE.week; s.sections = SAMPLE.sections.slice(); s.sample = true; s.seenNotice = !DEMO;
+  s.meals = SAMPLE.meals.map(m => { const o = mealFrom(m); id[m.name] = o.id; return o; });
+  s.menu = SAMPLE.menu.map(r => r.map(n => (n && id[n]) || null));
+  s.notes = SAMPLE.notes.slice();
+  s.pantry = SAMPLE.pantry.map(p => ({ id: uid(), item: p.item, sec: p.sec, have: p.have, unit: p.unit, keep: p.keep ?? null, price: p.price ?? null, use: p.use || "" }));
+  s.extras = SAMPLE.extras.map(x => ({ id: uid(), item: x.item, qty: x.qty ?? 1, sec: x.sec, cost: x.cost }));
+  s.trips = SAMPLE.trips.map(t => ({ id: uid(), date: t.date, store: t.store, amount: t.amount, note: t.note || "" }));
+  return s;
+}
+let S = load();
+
+/* ---------- the math (same rules as the spreadsheet) ---------- */
+const n0 = v => { const x = Number(v); return isFinite(x) ? x : 0; };
+const mealById = id => S.meals.find(m => m.id === id);
+const mealCost = m => m ? m.ings.reduce((a, i) => a + n0(i.cost), 0) : 0;
+const perServing = m => m && n0(m.serves) ? mealCost(m) / n0(m.serves) : null;
+const lc = s => String(s ?? "").trim().toLowerCase();
+const pkey = (item, unit) => lc(item) + "|" + lc(unit);
+const secIdx = s => { const i = S.sections.indexOf(s); return i >= 0 ? i + 1 : 10; };
+const secName = s => S.sections.includes(s) ? s : "Other";
+function timesOnMenu() { const t = {}; S.menu.forEach(r => r.forEach(id => { if (id) t[id] = (t[id] || 0) + 1; })); return t; }
+function week() {
+  const t = timesOnMenu(), days = S.menu.map(r => r.reduce((a, id) => a + mealCost(mealById(id)), 0));
+  const slots = [0, 1, 2, 3].map(j => S.menu.reduce((a, r) => a + mealCost(mealById(r[j])), 0));
+  const total = days.reduce((a, b) => a + b, 0), planned = S.menu.flat().filter(id => id && mealById(id)).length;
+  const left = S.menu.flat().filter(id => { const m = mealById(id); return m && m.name === "Leftovers"; }).length;
+  const wb = S.budget ? Math.round(S.budget * 12 / 52 * 100 + 1e-7) / 100 : null;
+  return { t, days, slots, total, planned, left, wb, perDay: n0(S.people) ? total / n0(S.people) / 7 : null, leftWeek: wb === null ? null : wb - total };
+}
+function pantryStatus(p) {
+  if (p.keep !== null && p.keep !== "" && p.keep !== undefined && n0(p.have) < n0(p.keep)) return "Restock";
+  if (p.use && daysTo(p.use) <= 3) return "Use soon";
+  return "OK";
+}
+// Grocery list: every ingredient of every meal on the menu (× times on the menu), the same item + unit added up,
+// grouped by store section (in your order), minus what's in the pantry. Restock = below "keep at least", beyond the menu.
+function groceries() {
+  const t = timesOnMenu(), agg = new Map(); let row = 0;
+  S.meals.forEach(m => m.ings.forEach(i => {
+    row++;
+    if (!lc(i.item) || !t[m.id]) return;
+    const k = secIdx(i.sec) + "|" + lc(i.item) + "|" + lc(i.unit);
+    if (!agg.has(k)) agg.set(k, { key: "L|" + k, ord: secIdx(i.sec) * 100000 + row, item: i.item.trim(), unit: i.unit, sec: secName(i.sec), need: 0, cost: 0, pk: pkey(i.item, i.unit) });
+    const a = agg.get(k); a.need += (i.qty === null || i.qty === "" ? 1 : n0(i.qty)) * t[m.id]; a.cost += n0(i.cost) * t[m.id];
+  }));
+  const have = {}; S.pantry.forEach(p => { const k = pkey(p.item, p.unit); have[k] = (have[k] || 0) + n0(p.have); });
+  const list = [];
+  agg.forEach(a => { const buy = Math.max(0, a.need - (have[a.pk] || 0)); if (buy > 1e-9) list.push({ key: a.key, kind: "menu", ord: a.ord, sec: a.sec, item: a.item, qty: buy, unit: a.unit, est: a.need ? a.cost * buy / a.need : 0 }); });
+  list.sort((a, b) => a.ord - b.ord);
+  const need = {}; agg.forEach(a => { need[a.pk] = (need[a.pk] || 0) + a.need; });
+  const restock = [];
+  S.pantry.forEach((p, r) => {
+    if (p.keep === null || p.keep === "" || p.keep === undefined) return;
+    const k = need[pkey(p.item, p.unit)] || 0, q = Math.max(0, k + n0(p.keep) - n0(p.have)) - Math.max(0, k - n0(p.have));
+    if (q > 1e-9) restock.push({ key: "R|" + p.id, kind: "restock", ord: secIdx(p.sec) * 100000 + r, sec: secName(p.sec), item: p.item, qty: q, unit: p.unit, est: p.price === null || p.price === "" ? 0 : q * n0(p.price) });
+  });
+  restock.sort((a, b) => a.ord - b.ord);
+  const extras = S.extras.filter(x => lc(x.item)).map(x => ({ key: "X|" + x.id, kind: "extra", id: x.id, sec: x.sec ? secName(x.sec) : "Household & Other", item: x.item, qty: x.qty, unit: x.unit || "", est: n0(x.cost) }));
+  const all = list.concat(restock, extras), total = all.reduce((a, x) => a + x.est, 0);
+  const order = S.sections.concat(["Other"]);
+  const bySec = order.map(sec => ({ sec, items: list.filter(x => x.sec === sec).concat(restock.filter(x => x.sec === sec), extras.filter(x => x.sec === sec)) })).filter(g => g.items.length);
+  let got = 0, paid = 0, typed = 0;
+  all.forEach(x => { const b = S.bought[x.key]; if (b) { got++; const p = b.paid === null || b.paid === undefined || b.paid === "" ? x.est : n0(b.paid); paid += p; if (!(b.paid === null || b.paid === undefined || b.paid === "")) typed++; } });
+  return { list, restock, extras, all, total, bySec, got, paid, typed, left: all.filter(x => !S.bought[x.key]).reduce((a, x) => a + x.est, 0) };
+}
+// what's in the cart and not saved as a trip yet counts in the month of the planned week
+function cartUnsaved(G = groceries()) { let a = 0; G.all.forEach(x => { const b = S.bought[x.key]; if (b && !b.trip) a += b.paid === null || b.paid === undefined || b.paid === "" ? x.est : n0(b.paid); }); return a; }
+const ym = (y, m) => y + "-" + String(m).padStart(2, "0");
+function monthBudget(y, m) { const o = S.mb[ym(y, m)]; return o !== undefined && o !== null && o !== "" ? n0(o) : (S.budget ? n0(S.budget) : null); }
+function budgetYear(y) {
+  const cart = cartUnsaved(), wk = parse(S.week);
+  return Array.from({ length: 12 }, (_, i) => {
+    const k = ym(y, i + 1), tr = S.trips.filter(t => t.date && t.date.slice(0, 7) === k);
+    let spent = tr.reduce((a, t) => a + n0(t.amount), 0), n = tr.length;
+    if (cart > 0 && wk.getFullYear() === y && wk.getMonth() === i) { spent += cart; n += 1; }
+    const b = monthBudget(y, i + 1);
+    return { m: i + 1, budget: b, spent, trips: n, left: b === null ? null : b - spent, perPerson: n0(S.people) ? spent / n0(S.people) : null, avg: n ? spent / n : null };
+  });
+}
+
+/* ---------- formatting ---------- */
+function money(v, dec) { const n = Math.round(Math.abs(v) * 100 + 1e-7) / 100, neg = v < 0 && n > 0 ? "-" : "", d = dec ?? 2; return neg + S.currency + n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }); }
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const FR = { 25: "¼", 50: "½", 75: "¾", 33: "⅓", 67: "⅔" };
+function qtyTxt(q) {
+  if (q === null || q === undefined || q === "") return "";
+  const x = Math.round(n0(q) * 100) / 100, w = Math.floor(x), f = Math.round((x - w) * 100);
+  if (!f) return String(w);
+  if (FR[f]) return (w ? w : "") + FR[f];
+  return String(x);
+}
+const qu = (q, u) => [qtyTxt(q), u].filter(Boolean).join(" ");
+function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2400); }
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+const statusPill = st => `<span class="pill ${st === "Restock" ? "low" : st === "Use soon" ? "soon" : "ok"}">${st}</span>`;
+const secOpts = sel => S.sections.map(s => `<option ${s === sel ? "selected" : ""}>${esc(s)}</option>`).join("") + (sel && !S.sections.includes(sel) ? `<option selected>${esc(sel)}</option>` : "");
+const typeOpts = sel => TYPES.map(t => `<option ${t === sel ? "selected" : ""}>${t}</option>`).join("");
+const dayDate = k => addDays(S.week, k);
+const dayName = k => DOW[parse(dayDate(k)).getDay()];
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  const dark = S.theme === "dark" || (S.theme === "device" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.accent = S.accent;
+  paintThemeToggle();
+}
+function paintThemeToggle() {
+  const b = document.getElementById("themeTog"); if (!b) return;
+  const dark = document.documentElement.dataset.theme === "dark";
+  b.innerHTML = dark ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+  const t = dark ? "Switch to light mode" : "Switch to dark mode";
+  b.setAttribute("aria-label", t); b.title = t;
+}
+document.getElementById("themeTog").addEventListener("click", ev => {
+  ev.stopPropagation();
+  S.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  save(); render();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", applyTheme);
+
+/* ---------- views ---------- */
+let VIEW = "week", PICK = null, MF = { q: "", f: "all" }, TF = "all", PF = "all", BY = null;
+const M = () => document.getElementById("main");
+function go(v) {
+  if (VIEW === "notice" && v !== "notice" && !S.seenNotice) { S.seenNotice = true; save(); }
+  VIEW = v; if (v !== "week") PICK = null;
+  document.querySelectorAll(".navbtn").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  render(); window.scrollTo(0, 0); M().focus({ preventScroll: true });
+}
+function render() { applyTheme(); paintBackupBar(); ({ notice: noticeView, week: weekView, list: listView, meals: mealsView, pantry: pantryView, budget: budgetView, settings: settingsView })[VIEW](); document.getElementById("fab").hidden = ["settings", "week", "notice", "list"].includes(VIEW); }
+/* ---------- backups: the data lives only in this browser ---------- */
+const BK_DAYS = 7, BK_CHANGES = 25;
+const bkAge = () => S.lastBackup ? Math.floor((Date.now() - new Date(S.lastBackup).getTime()) / 86400000) : null;
+const agoTxt = d => d === 0 ? "today" : d === 1 ? "yesterday" : d + " days ago";
+function backupNow() {
+  download("meal-planner-backup-" + iso(today()) + ".json", JSON.stringify(Object.assign({}, S, { lastBackup: new Date().toISOString(), changes: 0 }), null, 1), "application/json");
+  S.lastBackup = new Date().toISOString(); S.changes = 0; S.seenNotice = true;
+  try { if (!DEMO) localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  toast("Backup saved to your downloads. Keep it somewhere safe");
+}
+function paintBackupBar() {
+  const b = document.getElementById("bkBar"), age = bkAge();
+  let t = "";
+  if (VIEW !== "notice") {
+    if (age !== null && age > BK_DAYS) t = `Last backup: ${agoTxt(age)}`;
+    else if ((S.changes || 0) >= BK_CHANGES) t = age === null ? "Lots of changes and no backup yet" : `Lots of changes since your last backup (${agoTxt(age)})`;
+  }
+  b.hidden = !t; b.innerHTML = t ? `${t} · <button type="button" id="bkNow">Back up now</button>` : "";
+  if (t) document.getElementById("bkNow").onclick = () => { backupNow(); render(); };
+}
+function noticeView() {
+  M().innerHTML = `<div class="card notice" id="notice"><h1>Your data lives only on this device</h1>
+   <p class="sub" style="margin:8px 0 0">Your meals, lists and budget are saved in this browser, on this phone or computer. Nothing goes to the internet, and there is no account.</p>
+   <ul><li>A new phone or computer starts empty.</li><li>Clearing your browser data, or deleting the browser, erases it.</li><li>A backup is one small file. Keep it in your email, Google Drive or iCloud.</li></ul>
+   <p class="meta" style="margin:0 0 16px">To move to a new device: open the app there, go to Settings › Restore backup and pick the file.</p>
+   <div class="actions" style="justify-content:flex-start"><button type="button" class="btn" id="firstBk">Save my first backup</button><button type="button" class="btn ghost" id="noticeLater">Not now</button></div></div>`;
+  document.getElementById("firstBk").onclick = () => { backupNow(); go("week"); };
+  document.getElementById("noticeLater").onclick = () => { S.seenNotice = true; save(); go("week"); };
+}
+const topbar = (h, sub, right) => `<div class="top"><div><h1>${h}</h1><p class="sub">${sub}</p></div>${right || ""}</div>`;
+// one change = one save + one render; nothing happens when the value is the same
+function set(fn) { if (fn() === false) return; save(); render(); }
+
+/* week */
+function trayHTML() {
+  const q = lc(MF.q), list = S.meals.filter(m => (TF === "all" || m.type === TF || (TF === "fav" && m.fav)) && (!q || lc(m.name).includes(q)));
+  return `<div class="card tray noprint" id="tray"><div class="tablebar" style="margin-bottom:8px"><h2 style="margin:0">Meal bank</h2><span class="meta">Drag a meal onto a day, or tap a meal and then tap a slot.</span></div>
+   <div class="filters"><input id="tq" type="search" placeholder="Search meals" value="${esc(MF.q)}" aria-label="Search meals" style="flex:1 1 160px">
+   <div class="chips" role="group" aria-label="Meal type">${[["all", "All"], ["fav", "★"], ["Breakfast", "Breakfast"], ["Lunch", "Lunch"], ["Dinner", "Dinner"], ["Snack", "Snacks"]].map(([k, n]) => `<button type="button" class="chip" data-tf="${k}" aria-pressed="${TF === k}">${n}</button>`).join("")}</div></div>
+   <div class="mchips" id="mchips">${list.map(m => { const c = mealCost(m); return `<button type="button" class="mchip" draggable="true" data-meal="${m.id}" aria-pressed="${PICK === m.id}"><span class="tdot t-${esc(m.type)}"></span><span class="tn">${esc(m.name)}</span><small>${c ? money(c) : "$0"}</small></button>`; }).join("") || `<span class="meta">No meals match.</span>`}</div></div>`;
+}
+function weekView() {
+  const W = week(), G = groceries(), t0 = iso(today());
+  const use = S.pantry.filter(p => pantryStatus(p) === "Use soon");
+  M().innerHTML = topbar("This week", `Week of ${fmtD(S.week)}${S.name ? " · " + esc(S.name) : ""} · ${plural(n0(S.people), "person").replace("persons", "people")}`, `<div class="actions"><button type="button" class="btn ghost small" id="nextWeek">Start next week</button></div>`) + `
+  <div class="grid g4">
+   <div class="card"><div class="lab">This week's meals</div><div class="mid acc" id="cWeek">${money(W.total)}</div><div class="meta">${W.planned} of 28 slots${W.left ? " · " + W.left + " leftovers ($0)" : ""}</div></div>
+   <div class="card"><div class="lab">Per person a day</div><div class="mid" id="cPer">${W.perDay === null ? "–" : money(W.perDay)}</div><div class="meta">${n0(S.people) ? "for " + plural(n0(S.people), "person").replace("persons", "people") : "set people in Settings"}</div></div>
+   <div class="card"><div class="lab">Left in weekly budget</div><div class="mid ${W.leftWeek !== null && W.leftWeek < 0 ? "neg" : ""}" id="cLeftW">${W.leftWeek === null ? "–" : money(W.leftWeek)}</div><div class="meta">${W.wb === null ? "set a grocery budget in Budget" : "weekly budget " + money(W.wb)}</div></div>
+   <div class="card"><div class="lab">Grocery list</div><div class="mid" id="cList">${money(G.total)}</div><div class="meta">${plural(G.all.length, "item")} · <button type="button" class="btn small ghost" data-go="list" style="min-height:0;padding:2px 8px">Open</button></div></div>
+  </div>
+  ${use.length ? `<p class="hint" style="margin-top:12px">⏳ Use soon: ${use.map(p => `<b>${esc(p.item)}</b> (${fmtDs(p.use)})`).join(", ")}. Plan a meal with ${use.length === 1 ? "it" : "them"} this week.</p>` : ""}
+  ${trayHTML()}
+  ${PICK && mealById(PICK) ? `<div class="pickbar" id="pickbar"><span>Tap a slot for <b>${esc(mealById(PICK).name)}</b></span><button type="button" id="pickCancel">Cancel</button></div>` : ""}
+  <div class="card ${PICK ? "picking" : ""}"><div class="wk" id="weekGrid">
+   <div class="whead"><span>Day</span>${SLOTS.map(s => `<span>${s}</span>`).join("")}<span>Day cost</span></div>
+   ${S.menu.map((r, k) => `<div class="wrow ${dayDate(k) === t0 ? "today" : ""}" data-day="${k}"><div class="wday"><b>${dayName(k)}</b><span class="meta">${fmtDs(dayDate(k))}</span><button type="button" class="note" data-note="${k}">${S.notes[k] ? "✎ " + esc(S.notes[k]) : "+ note"}</button></div>
+     ${r.map((id, j) => { const m = mealById(id); return `<div class="slot ${m ? "full" : ""}" data-slot="${k},${j}"><button type="button" class="sb" data-tap="${k},${j}"${m ? ' draggable="true"' : ""} aria-label="${SLOTS[j]} on ${dayName(k)}${m ? ": " + esc(m.name) : ", empty"}"><span class="sl">${SLOTS[j]}</span>${m ? `<span class="sn">${esc(m.name)}</span><span class="sc">${mealCost(m) ? money(mealCost(m)) : "$0"}</span>` : `<span class="add">+ Add</span>`}</button>${m ? `<button type="button" class="x" data-clear="${k},${j}" aria-label="Remove ${esc(m.name)}" title="Remove">✕</button>` : ""}</div>`; }).join("")}
+     <div class="wcost" data-daycost="${k}">${money(W.days[k])}</div></div>`).join("")}
+   <div class="wtot"><span>Total</span>${W.slots.map(v => `<span>${money(v)}</span>`).join("")}<span id="weekTot">${money(W.total)}</span></div>
+  </div></div>`;
+  wireWeek();
+}
+function place(k, j, id) { if (S.menu[k][j] === id) { PICK = null; render(); return; } S.menu[k][j] = id; PICK = null; save(); render(); toast((mealById(id) || {}).name + " → " + dayName(k) + " " + SLOTS[j].toLowerCase()); }
+function move(from, to) { const [a, b] = from, [c, d] = to; if (a === c && b === d) return; const x = S.menu[a][b]; S.menu[a][b] = S.menu[c][d]; S.menu[c][d] = x; save(); render(); }
+function wireWeek() {
+  const m = M();
+  document.getElementById("nextWeek").onclick = nextWeekDlg;
+  const tq = document.getElementById("tq"); tq.oninput = () => { MF.q = tq.value; const pos = tq.selectionStart; render(); const n = document.getElementById("tq"); n.focus(); n.setSelectionRange(pos, pos); };
+  m.querySelectorAll("[data-tf]").forEach(b => b.onclick = () => { if (TF !== b.dataset.tf) { TF = b.dataset.tf; render(); } });
+  m.querySelectorAll(".mchip").forEach(c => {
+    c.onclick = () => { PICK = PICK === c.dataset.meal ? null : c.dataset.meal; render(); };
+    c.ondragstart = e => { e.dataTransfer.setData("text/plain", "meal:" + c.dataset.meal); e.dataTransfer.effectAllowed = "copyMove"; c.classList.add("dragging"); };
+    c.ondragend = () => c.classList.remove("dragging");
+  });
+  const pc = document.getElementById("pickCancel"); if (pc) pc.onclick = () => { PICK = null; render(); };
+  m.querySelectorAll(".slot").forEach(z => {
+    const [k, j] = z.dataset.slot.split(",").map(Number);
+    const sb = z.querySelector(".sb"); if (sb.draggable) sb.ondragstart = e => { e.dataTransfer.setData("text/plain", "slot:" + k + "," + j); e.dataTransfer.effectAllowed = "move"; };
+    z.ondragover = e => { e.preventDefault(); z.classList.add("over"); };
+    z.ondragleave = () => z.classList.remove("over");
+    z.ondrop = e => { e.preventDefault(); z.classList.remove("over"); const d = e.dataTransfer.getData("text/plain");
+      if (d.startsWith("meal:")) { const id = d.slice(5); if (mealById(id)) place(k, j, id); }
+      else if (d.startsWith("slot:")) move(d.slice(5).split(",").map(Number), [k, j]); };
+  });
+  m.querySelectorAll("[data-tap]").forEach(b => b.onclick = () => { const [k, j] = b.dataset.tap.split(",").map(Number); if (PICK && mealById(PICK)) place(k, j, PICK); else slotDlg(k, j); });
+  m.querySelectorAll("[data-clear]").forEach(b => b.onclick = e => { e.stopPropagation(); const [k, j] = b.dataset.clear.split(",").map(Number); if (S.menu[k][j]) { S.menu[k][j] = null; save(); render(); } });
+  m.querySelectorAll("[data-note]").forEach(b => b.onclick = () => noteDlg(+b.dataset.note));
+  m.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+}
+
+/* grocery list */
+function listView() {
+  const G = groceries(), hide = S.hideGot;
+  const row = x => { const b = S.bought[x.key], got = !!b;
+    if (hide && got) return "";
+    return `<div class="gi ${got ? "got" : ""}" data-key="${esc(x.key)}"><button type="button" class="gck" data-ck="${esc(x.key)}" aria-pressed="${got}"><span class="box">✓</span><span style="min-width:0"><span class="gn">${esc(x.item)}${x.kind === "restock" ? `<span class="tag">restock</span>` : x.kind === "extra" ? `<span class="tag">extra</span>` : ""}</span><span class="gq">${esc(qu(x.qty, x.unit)) || "&nbsp;"}</span></span></button>
+     ${got ? `<label class="paid">Paid ${esc(S.currency)}<input type="number" inputmode="decimal" step="0.01" min="0" data-paid="${esc(x.key)}" value="${b.paid ?? ""}" placeholder="${(Math.round(x.est * 100) / 100).toFixed(2)}" aria-label="Price paid for ${esc(x.item)}"></label>` : `<span class="ge">${money(x.est)}<small>est.</small></span>`}
+     ${x.kind === "extra" ? `<button type="button" class="icon ed" data-editx="${x.id}" aria-label="Edit ${esc(x.item)}" title="Edit">✎</button>` : ""}</div>`; };
+  const nb = G.all.length;
+  M().innerHTML = topbar("Grocery list", `Week of ${fmtD(S.week)} · ${plural(nb, "item")} · est. ${money(G.total)}`, `<div class="actions noprint"><button type="button" class="btn ghost small" id="addX">+ Add item</button><button type="button" class="btn ghost small" id="printL">Print</button></div>`) + `
+  <div class="card prog" id="prog"><div class="row1"><span><b id="gotN">${G.got} of ${nb}</b> in the cart</span><span class="meta" id="paidTxt">Paid so far <b>${money(G.paid)}</b>${G.got && G.typed < G.got ? ` (${G.got - G.typed} at the estimate)` : ""} · still to get ≈ ${money(G.left)}</span></div>${`<div class="bar"><i style="width:${nb ? (G.got / nb * 100).toFixed(1) : 0}%"></i></div>`}
+   <div class="actions" style="justify-content:flex-start;margin-top:10px"><button type="button" class="chip" id="hideGot" aria-pressed="${hide}">Hide items in the cart</button><button type="button" class="btn small" id="saveTrip">Save this trip to Budget</button>${G.got ? `<button type="button" class="btn small ghost" id="untick">Untick all</button>` : ""}</div></div>
+  <div class="glist" id="glist">${G.bySec.map(g => { const left = g.items.filter(x => !S.bought[x.key]).length, rows = g.items.map(row).join("");
+     return `<section class="gsec card" data-sec="${esc(g.sec)}"><h2>${esc(g.sec)}<small>${left ? left + " to get" : "✓ all in the cart"}</small></h2>${rows || `<p class="meta" style="margin:4px">All in the cart.</p>`}</section>`; }).join("") || `<div class="card empty">Your list is empty. Add meals to <button type="button" class="btn small ghost" data-go="week">This week</button> and the list writes itself.</div>`}</div>
+  <p class="meta noprint">Quantities add up across meals (onions from three recipes become one line). What's in your Pantry comes off the list. Tick an item when it goes in the cart and type what you paid: it goes to your grocery budget.</p>`;
+  const m = M();
+  m.querySelectorAll("[data-ck]").forEach(b => b.onclick = () => { const k = b.dataset.ck; if (S.bought[k]) delete S.bought[k]; else S.bought[k] = { paid: null, date: iso(today()) }; save(); render(); });
+  m.querySelectorAll("[data-paid]").forEach(i => i.onchange = () => { const b = S.bought[i.dataset.paid]; if (!b) return; const v = i.value === "" ? null : Math.round(Math.max(0, n0(i.value)) * 100) / 100; if (b.paid === v) return; b.paid = v; delete b.trip; save(); paintProgress(); });
+  m.querySelectorAll("[data-editx]").forEach(b => b.onclick = () => extraDlg(b.dataset.editx));
+  m.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+  document.getElementById("addX").onclick = () => extraDlg();
+  document.getElementById("printL").onclick = () => window.print();
+  document.getElementById("hideGot").onclick = () => set(() => { S.hideGot = !S.hideGot; });
+  document.getElementById("saveTrip").onclick = tripFromCart;
+  const u = document.getElementById("untick"); if (u) u.onclick = () => confirmDlg("Untick everything?", "Every item goes back on the list and the prices you typed are cleared. Trips already saved stay in Budget.", "Untick all", () => { S.bought = {}; save(); render(); });
+}
+function paintProgress() { const G = groceries(), p = document.getElementById("paidTxt"); if (p) p.innerHTML = `Paid so far <b>${money(G.paid)}</b>${G.got && G.typed < G.got ? ` (${G.got - G.typed} at the estimate)` : ""} · still to get ≈ ${money(G.left)}`; }
+function tripFromCart() {
+  const G = groceries(), keys = G.all.filter(x => S.bought[x.key] && !S.bought[x.key].trip), amt = cartUnsaved(G);
+  if (!keys.length) { toast(G.got ? "This trip is already in Budget" : "Tick what goes in the cart first"); return; }
+  const t0 = today(), d = Math.abs(daysTo(S.week)) <= 7 ? iso(t0) : S.week;
+  tripDlg(null, { date: d, store: "", amount: Math.round(amt * 100) / 100, note: plural(keys.length, "item") + " from the list" }, id => keys.forEach(x => { S.bought[x.key].trip = id; }));
+}
+
+/* meals */
+function mealsView() {
+  const t = timesOnMenu(), q = lc(MF.q);
+  let list = S.meals.filter(m => (MF.f === "all" || (MF.f === "fav" && m.fav) || (MF.f === "cheap" && m.cheap) || m.type === MF.f) && (!q || lc(m.name).includes(q) || lc(m.tags).includes(q)));
+  if (MF.sort === "cheap") list = list.slice().sort((a, b) => (perServing(a) ?? 1e9) - (perServing(b) ?? 1e9));
+  const cheapest = S.meals.filter(m => perServing(m) !== null && mealCost(m) > 0).sort((a, b) => perServing(a) - perServing(b))[0];
+  M().innerHTML = topbar("Meals", `${plural(S.meals.length, "meal")} · cheapest per serving: ${cheapest ? esc(cheapest.name) + " " + money(perServing(cheapest)) : "–"}`, `<div class="actions"><button type="button" class="btn small" id="addMeal">+ New meal</button></div>`) + `
+  <div class="filters"><input id="mq" type="search" placeholder="Search meals or tags" value="${esc(MF.q)}" aria-label="Search meals" style="flex:1 1 180px">
+   <select id="msort" aria-label="Sort"><option value="">Meal bank order</option><option value="cheap" ${MF.sort === "cheap" ? "selected" : ""}>Cheapest per serving</option></select></div>
+  <div class="chips" style="margin-bottom:12px" role="group" aria-label="Show">${[["all", "All"], ["cheap", "20 cheap meals"], ["fav", "★ Favorites"], ["Breakfast", "Breakfast"], ["Lunch", "Lunch"], ["Dinner", "Dinner"], ["Snack", "Snacks"]].map(([k, n]) => `<button type="button" class="chip" data-mf="${k}" aria-pressed="${MF.f === k}">${n}</button>`).join("")}</div>
+  <div class="card">${list.map(m => { const c = mealCost(m), ps = perServing(m); return `<div class="row"><button type="button" class="rowbtn" data-meal="${m.id}"><span class="tdot t-${esc(m.type)}"></span><span class="grow" style="min-width:0"><span class="name" style="display:block">${m.fav ? '<span class="fav">★</span> ' : ""}${esc(m.name)}</span><span class="meta" style="display:block">${esc(m.type)}${m.serves ? " · serves " + m.serves : ""}${m.mins ? " · " + m.mins + " min" : ""}${m.tags ? " · " + esc(m.tags) : ""}</span></span></button>${t[m.id] ? `<span class="pill ok">${t[m.id]}× this week</span>` : ""}<div class="amt">${ps !== null ? money(ps) : c ? money(c) : "$0"}<small>${ps !== null ? "per serving · " + money(c) : "total"}</small></div></div>`; }).join("") || `<div class="empty">No meals match.</div>`}</div>`;
+  const m = M();
+  const mq = document.getElementById("mq"); mq.oninput = () => { MF.q = mq.value; const pos = mq.selectionStart; render(); const n = document.getElementById("mq"); n.focus(); n.setSelectionRange(pos, pos); };
+  document.getElementById("msort").onchange = e => { MF.sort = e.target.value; render(); };
+  m.querySelectorAll("[data-mf]").forEach(b => b.onclick = () => { if (MF.f !== b.dataset.mf) { MF.f = b.dataset.mf; render(); } });
+  m.querySelectorAll("[data-meal]").forEach(b => b.onclick = () => mealInfoDlg(b.dataset.meal));
+  document.getElementById("addMeal").onclick = () => mealDlg();
+}
+
+/* pantry */
+function pantryView() {
+  const st = S.pantry.map(p => pantryStatus(p)), cnt = k => st.filter(x => x === k).length;
+  const list = S.pantry.filter((p, i) => PF === "all" || st[i] === PF);
+  M().innerHTML = topbar("Pantry", `${cnt("Restock")} to restock · ${cnt("Use soon")} to use soon (3 days or less). What you have comes off the grocery list.`, `<div class="actions"><button type="button" class="btn small" id="addP">+ Add to pantry</button></div>`) + `
+  <div class="chips" style="margin-bottom:12px">${[["all", "All"], ["Restock", "Restock"], ["Use soon", "Use soon"], ["OK", "OK"]].map(([k, n]) => `<button type="button" class="chip" data-pf="${k}" aria-pressed="${PF === k}">${n}</button>`).join("")}</div>
+  <div class="card">${list.map(p => `<div class="row" data-pid="${p.id}"><button type="button" class="rowbtn" data-editp="${p.id}"><span class="grow" style="min-width:0"><span class="name" style="display:block">${esc(p.item)}</span><span class="meta" style="display:block">${esc(p.sec || "")}${p.keep !== null && p.keep !== "" ? " · keep " + esc(qu(p.keep, p.unit)) : ""}${p.use ? " · use by " + fmtDs(p.use) : ""}</span></span></button>
+    ${statusPill(pantryStatus(p))}<div class="step"><button type="button" data-dec="${p.id}" aria-label="One less ${esc(p.item)}">−</button><b data-have="${p.id}">${esc(qu(p.have, p.unit))}</b><button type="button" data-inc="${p.id}" aria-label="One more ${esc(p.item)}">+</button></div></div>`).join("") || `<div class="empty">${S.pantry.length ? "Nothing here." : "Add what's already in your kitchen: it comes off the grocery list, and anything below \"keep at least\" goes on it."}</div>`}</div>`;
+  const m = M();
+  m.querySelectorAll("[data-pf]").forEach(b => b.onclick = () => { if (PF !== b.dataset.pf) { PF = b.dataset.pf; render(); } });
+  m.querySelectorAll("[data-editp]").forEach(b => b.onclick = () => pantryDlg(b.dataset.editp));
+  m.querySelectorAll("[data-inc],[data-dec]").forEach(b => b.onclick = () => { const p = S.pantry.find(x => x.id === (b.dataset.inc || b.dataset.dec)); const v = Math.max(0, n0(p.have) + (b.dataset.inc ? 1 : -1)); if (v === n0(p.have)) return; p.have = v; save(); render(); });
+  document.getElementById("addP").onclick = () => pantryDlg();
+}
+
+/* budget */
+function budgetView() {
+  const y = BY || parse(S.week).getFullYear(), rows = budgetYear(y), wm = parse(S.week).getMonth(), R = rows[y === parse(S.week).getFullYear() ? wm : 0], cart = cartUnsaved();
+  const tot = rows.reduce((a, r) => ({ b: a.b + (r.budget || 0), s: a.s + r.spent, n: a.n + r.trips }), { b: 0, s: 0, n: 0 });
+  const trips = S.trips.filter(t => t.date && t.date.slice(0, 4) === String(y)).sort((a, b) => b.date.localeCompare(a.date));
+  M().innerHTML = topbar("Grocery budget", `Monthly grocery budget ${S.budget ? money(S.budget) : "not set"} · weekly ${S.budget ? money(Math.round(S.budget * 12 / 52 * 100 + 1e-7) / 100) : "–"}`, `<div class="actions"><button type="button" class="btn ghost small" id="setBud">✎ Set budget</button><button type="button" class="btn small" id="addTrip">+ Log a trip</button></div>`) + `
+  <div class="grid g4">
+   <div class="card"><div class="lab">${MONTHS[R.m - 1]} budget</div><div class="mid" id="bBud">${R.budget === null ? "–" : money(R.budget)}</div><div class="meta">${S.mb[ym(y, R.m)] !== undefined ? "set for this month" : "monthly budget"}</div></div>
+   <div class="card"><div class="lab">Spent in ${MON[R.m - 1]}</div><div class="mid acc" id="bSpent">${money(R.spent)}</div><div class="meta">${plural(R.trips, "trip")}${cart > 0 ? " · " + money(cart) + " in the cart now" : ""}</div></div>
+   <div class="card"><div class="lab">Left in ${MON[R.m - 1]}</div><div class="mid ${R.left !== null && R.left < 0 ? "neg" : ""}" id="bLeft">${R.left === null ? "–" : money(R.left)}</div>${R.budget ? `<div class="bar" style="margin-top:6px"><i class="${R.spent > R.budget ? "over" : ""}" style="width:${Math.min(100, R.spent / R.budget * 100).toFixed(1)}%"></i></div>` : ""}</div>
+   <div class="card"><div class="lab">Per person</div><div class="mid">${R.perPerson === null ? "–" : money(R.perPerson)}</div><div class="meta">this month</div></div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="tablebar"><h2 style="margin:0">Month by month</h2><div class="chips"><button type="button" class="chip" id="prevY" aria-label="Previous year">‹</button><span class="chip" style="cursor:default" id="yLab">${y}</span><button type="button" class="chip" id="nextY" aria-label="Next year">›</button></div></div>
+   <div class="scroll"><table class="t" id="ytab"><thead><tr><th>Month</th><th>Budget</th><th>Spent</th><th>Left</th><th>Trips</th><th>Per person</th><th>Avg trip</th><th></th></tr></thead><tbody>
+   ${rows.map(r => `<tr class="${r.m === wm + 1 && y === parse(S.week).getFullYear() ? "now" : ""}" data-m="${r.m}"><td>${MONTHS[r.m - 1]}</td><td>${r.budget === null ? "–" : money(r.budget, 0)}${S.mb[ym(y, r.m)] !== undefined ? " *" : ""}</td><td>${r.spent ? money(r.spent) : "–"}</td><td class="${r.left !== null && r.left < 0 ? "neg" : ""}">${r.left === null ? "–" : money(r.left)}</td><td>${r.trips || "–"}</td><td>${r.perPerson && r.spent ? money(r.perPerson) : "–"}</td><td>${r.avg === null ? "–" : money(r.avg)}</td><td><button type="button" class="icon" data-mb="${r.m}" aria-label="Edit ${MONTHS[r.m - 1]} budget" title="Budget for this month" style="width:30px;height:30px">✎</button></td></tr>`).join("")}
+   <tr class="sum"><td>${y}</td><td>${money(tot.b, 0)}</td><td>${money(tot.s)}</td><td class="${tot.b - tot.s < 0 ? "neg" : ""}">${money(tot.b - tot.s)}</td><td>${tot.n}</td><td></td><td></td><td></td></tr></tbody></table></div>
+   <p class="meta" style="margin:8px 0 0">* budget set for that month only. Ready for the Groceries line of your Budget Planner.</p></div>
+  <div class="card" style="margin-top:12px"><h2>Trips in ${y}</h2>${trips.map(t => `<div class="row"><button type="button" class="rowbtn" data-edittrip="${t.id}"><span class="grow" style="min-width:0"><span class="name" style="display:block">${esc(t.store || "Groceries")}</span><span class="meta" style="display:block">${fmtD(t.date)}${t.note ? " · " + esc(t.note) : ""}</span></span></button><div class="amt">${money(n0(t.amount))}</div></div>`).join("") || `<div class="empty">No trips yet. Tick items on the grocery list and save the trip, or log one here.</div>`}</div>`;
+  const m = M();
+  document.getElementById("prevY").onclick = () => { BY = y - 1; render(); };
+  document.getElementById("nextY").onclick = () => { BY = y + 1; render(); };
+  document.getElementById("addTrip").onclick = () => tripDlg();
+  document.getElementById("setBud").onclick = budgetDlg;
+  m.querySelectorAll("[data-edittrip]").forEach(b => b.onclick = () => tripDlg(b.dataset.edittrip));
+  m.querySelectorAll("[data-mb]").forEach(b => b.onclick = () => monthBudgetDlg(y, +b.dataset.mb));
+}
+
+/* settings */
+function settingsView() {
+  M().innerHTML = topbar("Settings", "Your household, store sections, look and backups.") + `
+  <div class="grid g2">
+   <div>
+    <div class="card"><h2>Household</h2><form id="hhF">
+     <div class="field"><label for="sName">Your name or family name</label><input id="sName" name="name" value="${esc(S.name)}" placeholder="The Rivera family"${DEMO ? " readonly" : ""}>${DEMO ? `<small class="locknote">Changing the name is in the full app</small>` : ""}</div>
+     <div class="two"><div class="field"><label for="sPeople">People you cook for</label><input id="sPeople" name="people" type="number" min="1" step="1" inputmode="numeric" value="${S.people}"></div><div class="field"><label for="sBud">Monthly grocery budget</label><input id="sBud" name="budget" type="number" min="0" step="0.01" inputmode="decimal" value="${S.budget || ""}"></div></div>
+     <div class="two"><div class="field"><label for="sWeek">This week starts on</label><input id="sWeek" name="week" type="date" required value="${S.week}"></div><div class="field"><label for="sCur">Currency symbol</label><input id="sCur" name="currency" maxlength="3" value="${esc(S.currency)}"></div></div>
+     <button class="btn" id="saveHH">Save</button></form></div>
+    <div class="card" style="margin-top:12px"><h2>Look</h2>
+     <div class="field"><span class="fl">Theme</span><div class="chips">${[["light", "Light"], ["dark", "Dark"], ["device", "Auto"]].map(([t, n]) => `<button type="button" class="chip" data-theme="${t}" aria-pressed="${S.theme === t}"${t === "device" ? ' title="Follow the device setting"' : ""}>${n}</button>`).join("")}</div></div>
+     <div class="field"><span class="fl">Color</span><div class="chips">${[["sage", "Sage"], ["blush", "Blush"], ["lavender", "Lavender"], ["peach", "Peach"]].map(([a, t]) => `<button type="button" class="chip" data-accent="${a}" aria-pressed="${S.accent === a}">${t}</button>`).join("")}</div></div></div>
+   </div>
+   <div>
+    <div class="card"><h2>Store sections</h2><p class="meta" style="margin:-6px 0 10px">Your grocery list follows this order. Rename or move them to match your store.</p>
+     ${S.sections.map((s, i) => `<div class="secrow"><input data-sec="${i}" value="${esc(s)}" aria-label="Section ${i + 1}"><button type="button" class="icon" data-up="${i}" aria-label="Move ${esc(s)} up" ${i ? "" : "disabled"}>↑</button><button type="button" class="icon" data-down="${i}" aria-label="Move ${esc(s)} down" ${i < S.sections.length - 1 ? "" : "disabled"}>↓</button></div>`).join("")}</div>
+    <div class="card" style="margin-top:12px"><h2>Export</h2><p class="meta" style="margin:-6px 0 10px">CSV files open in Excel and Google Sheets.</p>
+     <div class="actions" style="justify-content:flex-start"><button type="button" class="btn ghost small" id="cL">⬇ Grocery list CSV</button><button type="button" class="btn ghost small" id="cW">⬇ Weekly menu CSV</button><button type="button" class="btn ghost small" id="cM">⬇ Meals CSV</button><button type="button" class="btn ghost small" id="cB">⬇ Grocery budget CSV</button></div></div>
+    <div class="card" style="margin-top:12px"><h2>Backup</h2><p class="meta" style="margin:-6px 0 10px">Your plan lives only on this device, in this browser. Download a backup every week, and use it to move to a new phone or computer (Restore backup there).</p>
+     <p class="hint" id="lastBk" style="margin:0 0 10px">Last backup: <b>${S.lastBackup ? new Date(S.lastBackup).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) + " (" + agoTxt(bkAge()) + ")" : "never"}</b></p>
+     <div class="actions" style="justify-content:flex-start"><button type="button" class="btn ghost" id="exp">⬇ Download backup</button><label class="btn ghost" style="cursor:pointer">⬆ Restore backup<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+     <h2 style="margin-top:20px">Start over</h2>
+     <div class="actions" style="justify-content:flex-start">${S.sample ? `<button type="button" class="btn ghost" id="clearSample">Clear sample data</button>` : `<button type="button" class="btn ghost" id="loadSample">Load sample week</button>`}<button type="button" class="btn danger" id="wipe">Erase everything</button></div></div>
+   </div>
+  </div>
+  <p class="foot">Budget Meal Planner App v1.0 · © The Lemon Plans · Recipes and prices are a guide: check labels for allergies. Please don't share or resell this file.</p>`;
+  const m = M();
+  m.querySelectorAll("button[data-theme]").forEach(x => x.onclick = () => { if (S.theme !== x.dataset.theme) set(() => { S.theme = x.dataset.theme; }); });
+  m.querySelectorAll("button[data-accent]").forEach(x => x.onclick = () => { if (S.accent !== x.dataset.accent) set(() => { S.accent = x.dataset.accent; }); });
+  document.getElementById("hhF").onsubmit = e => { e.preventDefault(); const f = e.target;
+    const o = { name: DEMO ? S.name : f.name.value.trim(), people: Math.max(1, Math.round(n0(f.people.value)) || 1), budget: Math.round(Math.max(0, n0(f.budget.value)) * 100) / 100, week: f.week.value || S.week, currency: f.currency.value.trim() || "$" };
+    if (Object.keys(o).every(k => S[k] === o[k])) { toast("Nothing changed"); return; }
+    Object.assign(S, o); save(); render(); toast("Saved"); };
+  m.querySelectorAll("[data-sec]").forEach(i => i.onchange = () => { const k = +i.dataset.sec, old = S.sections[k], v = i.value.trim();
+    if (!v || v === old) { i.value = old; return; } if (S.sections.includes(v)) { toast("There's already a section called " + v); i.value = old; return; }
+    S.sections[k] = v; S.meals.forEach(mm => mm.ings.forEach(x => { if (x.sec === old) x.sec = v; })); S.pantry.forEach(p => { if (p.sec === old) p.sec = v; }); S.extras.forEach(x => { if (x.sec === old) x.sec = v; });
+    save(); render(); toast("Section renamed"); });
+  const mv = (i, d) => { const a = S.sections; [a[i], a[i + d]] = [a[i + d], a[i]]; save(); render(); };
+  m.querySelectorAll("[data-up]").forEach(b => b.onclick = () => mv(+b.dataset.up, -1));
+  m.querySelectorAll("[data-down]").forEach(b => b.onclick = () => mv(+b.dataset.down, 1));
+  document.getElementById("cL").onclick = () => exportCSV("list");
+  document.getElementById("cW").onclick = () => exportCSV("menu");
+  document.getElementById("cM").onclick = () => exportCSV("meals");
+  document.getElementById("cB").onclick = () => exportCSV("budget");
+  document.getElementById("exp").onclick = () => { backupNow(); render(); };
+  document.getElementById("imp").onchange = e => { const file = e.target.files[0]; if (!file) return; file.text().then(t => { const d = JSON.parse(t); if (!valid(d)) throw 0; S = normalize(d); S.seenNotice = true; S.changes = 0; save(); S.changes = 0; toast("Backup restored"); go("week"); }).catch(() => toast("That file isn't a Meal Planner backup")).finally(() => { e.target.value = ""; }); };
+  const ls = document.getElementById("loadSample"); if (ls) ls.onclick = () => confirmDlg("Load the sample week?", "This replaces what you have now with the Rivera family's sample week. Download a backup first if you want to keep your data.", "Load sample", () => { const lb = S.lastBackup; S = sample(); S.lastBackup = lb; save(); go("week"); });
+  const cs = document.getElementById("clearSample"); if (cs) cs.onclick = () => confirmDlg("Clear the sample data?", "The sample menu, pantry, trips and family meals go away. The 20 cheap meals stay in your meal bank.", "Clear sample", () => { const t = S.theme, a = S.accent; const lb = S.lastBackup; S = blank(); S.theme = t; S.accent = a; S.lastBackup = lb; S.seenNotice = true; save(); go("week"); toast("Sample cleared. Pick your meals!"); });
+  document.getElementById("wipe").onclick = () => confirmDlg("Erase everything?", "This deletes your meals, menu, pantry and trips from this browser and puts back the 20 cheap meals. It can't be undone.", "Erase", () => { S = blank(); S.seenNotice = true; save(); go("week"); });
+}
+
+/* ---------- CSV ---------- */
+const q = v => /[",\n\r]/.test(String(v ?? "")) ? '"' + String(v).replace(/"/g, '""') + '"' : String(v ?? ""), f2 = v => (Math.round(n0(v) * 100 + 1e-7) / 100).toFixed(2);
+function csvText(kind) {
+  const out = (head, rows) => [head, ...rows].map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
+  if (kind === "list") { const G = groceries(); return out(["Section", "Item", "Qty", "Unit", "Est. cost", "In the cart", "Paid", "Kind"], G.bySec.flatMap(g => g.items.map(x => { const b = S.bought[x.key]; return [g.sec, x.item, Math.round(n0(x.qty) * 100) / 100, x.unit, f2(x.est), b ? "yes" : "", b && b.paid !== null && b.paid !== undefined ? f2(b.paid) : "", x.kind]; }))); }
+  if (kind === "menu") { const W = week(); return out(["Day", "Date", ...SLOTS, "Day cost", "Notes"], S.menu.map((r, k) => [dayName(k), dayDate(k), ...r.map(id => (mealById(id) || {}).name || ""), f2(W.days[k]), S.notes[k]]).concat([["Total", "", ...W.slots.map(f2), f2(W.total), ""]])); }
+  if (kind === "meals") return out(["Meal", "Type", "Serves", "Minutes", "Tags", "Total cost", "Cost per serving", "Ingredients"], S.meals.map(m => [m.name, m.type, m.serves ?? "", m.mins || "", m.tags, f2(mealCost(m)), perServing(m) === null ? "" : f2(perServing(m)), m.ings.map(i => qu(i.qty, i.unit) + " " + i.item).join("; ")]));
+  const y = BY || parse(S.week).getFullYear(), rows = budgetYear(y);
+  return out(["Month", "Budget", "Spent", "Left", "Trips", "Per person", "Avg trip"], rows.map(r => [MONTHS[r.m - 1] + " " + y, r.budget === null ? "" : f2(r.budget), f2(r.spent), r.left === null ? "" : f2(r.left), r.trips, r.perPerson === null ? "" : f2(r.perPerson), r.avg === null ? "" : f2(r.avg)]))
+    + "\r\n" + out(["Date", "Store", "Amount", "Note"], S.trips.slice().sort((a, b) => a.date.localeCompare(b.date)).map(t => [t.date, t.store, f2(t.amount), t.note]));
+}
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function exportCSV(kind) { download("meal-planner-" + kind + "-" + S.week + ".csv", "﻿" + csvText(kind), "text/csv"); toast("CSV downloaded"); }
+
+/* ---------- dialogs ---------- */
+const D = () => document.getElementById("dlg"), F = () => document.getElementById("dlgForm");
+function openDlg(html, onSubmit, after, wide) {
+  D().classList.toggle("wide", !!wide);
+  F().innerHTML = html; F().onsubmit = e => { if (e.submitter && e.submitter.value === "cancel") return; e.preventDefault(); if (onSubmit(new FormData(F())) !== false) { D().close(); save(); render(); } };
+  D().showModal(); after && after();
+  if (matchMedia("(pointer:fine)").matches) { const first = F().querySelector("input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([readonly]),select"); first && first.focus(); }
+}
+const btns = (del, ok) => `<div class="actions">${del ? `<button type="button" class="btn danger" id="delBtn" style="margin-right:auto">Delete</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn" value="ok">${ok || "Save"}</button></div>`;
+const num = (fd, k) => { const v = fd.get(k); return v === "" || v === null ? null : Number(v); };
+const r2 = v => Math.round((Number(v) || 0) * 100) / 100;
+function confirmDlg(title, text, ok, fn) {
+  openDlg(`<h2>${title}</h2><p class="sub">${text}</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Cancel</button><button class="btn danger" value="ok">${ok}</button></div>`, () => false);
+  F().onsubmit = e => { e.preventDefault(); D().close(); if (e.submitter && e.submitter.value === "ok") fn(); };
+}
+// demo: the sample stays, and up to 5 new things of each kind can be tried
+const SAMPLE_NAMES = new Set(SAMPLE.meals.map(m => m.name)), DEMO_MAX = 5;
+const demoNew = { meals: () => S.meals.filter(m => !SAMPLE_NAMES.has(m._orig || m.name) && !m._sample).length };
+if (DEMO) S.meals.forEach(m => { m._sample = true; });
+function demoRoom(kind, list) {
+  if (!DEMO) return true;
+  const n = kind === "meals" ? S.meals.filter(m => !m._sample).length : list.filter(x => !x._sample).length;
+  if (n < DEMO_MAX) return true;
+  openDlg(`<h2>The demo has room for ${DEMO_MAX} new ${kind}</h2><p class="sub">The full app has no limit, keeps everything you add and comes with backup and CSV export.</p><div class="actions"><button class="btn ghost" value="cancel" formnovalidate>Close</button><a class="btn" href="${BUY_URL}" target="_blank" rel="noopener">Get the full app</a></div>`, () => true);
+  return false;
+}
+if (DEMO) ["pantry", "extras", "trips"].forEach(k => S[k].forEach(x => { x._sample = true; }));
+
+function slotDlg(k, j) {
+  let show = SLOT_TYPE[j];
+  const cur = S.menu[k][j];
+  const paint = () => {
+    const list = S.meals.filter(m => show === "all" || m.type === show || m.type === "Any");
+    document.getElementById("plist").innerHTML = list.map(m => `<button type="button" data-pick="${m.id}" ${m.id === cur ? 'aria-current="true"' : ""}><span class="tdot t-${esc(m.type)}"></span><span class="grow">${m.id === cur ? "✓ " : ""}${esc(m.name)}</span><span class="meta">${mealCost(m) ? money(mealCost(m)) : "$0"}</span></button>`).join("") || `<p class="meta">No ${show.toLowerCase()} meals yet.</p>`;
+    F().querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { D().close(); place(k, j, b.dataset.pick); });
+  };
+  openDlg(`<h2>${SLOTS[j]} · ${dayName(k)} ${fmtDs(dayDate(k))}</h2>
+   <div class="chips" style="margin-bottom:10px"><button type="button" class="chip" data-sh="${SLOT_TYPE[j]}" aria-pressed="true">${SLOTS[j]} meals</button><button type="button" class="chip" data-sh="all" aria-pressed="false">All meals</button></div>
+   <div class="plist" id="plist"></div>
+   <div class="actions">${cur ? `<button type="button" class="btn danger" id="clrSlot" style="margin-right:auto">Remove</button>` : ""}<button class="btn ghost" value="cancel" formnovalidate>Close</button></div>`, () => false, () => {
+    paint();
+    F().querySelectorAll("[data-sh]").forEach(b => b.onclick = () => { show = b.dataset.sh; F().querySelectorAll("[data-sh]").forEach(x => x.setAttribute("aria-pressed", x === b)); paint(); });
+    const c = document.getElementById("clrSlot"); if (c) c.onclick = () => { S.menu[k][j] = null; D().close(); save(); render(); };
+  });
+}
+function noteDlg(k) {
+  openDlg(`<h2>Note for ${dayName(k)} ${fmtDs(dayDate(k))}</h2><div class="field"><label for="nt">Note</label><input id="nt" name="note" maxlength="80" value="${esc(S.notes[k])}" placeholder="Prep day, movie night, double the soup…"></div>${btns(false)}`, fd => {
+    const v = fd.get("note").trim(); if (v === S.notes[k]) { D().close(); return false; } S.notes[k] = v; });
+}
+function nextWeekDlg() {
+  const G = groceries(), unsaved = G.all.filter(x => S.bought[x.key] && !S.bought[x.key].trip).length;
+  openDlg(`<h2>Start the week of ${fmtD(addDays(S.week, 7))}</h2>
+   <label class="opt"><input type="radio" name="how" value="copy" checked><span><b>Copy this week's meals</b><span class="meta">Same menu, new dates. Change what you like.</span></span></label>
+   <label class="opt"><input type="radio" name="how" value="clear"><span><b>Start with an empty week</b><span class="meta">Your meal bank, pantry and budget stay.</span></span></label>
+   <p class="hint" style="margin:0 0 10px">The grocery list starts fresh.${unsaved ? ` What's in the cart now (${money(cartUnsaved(G))}) is saved to Budget as a trip first.` : ""}</p>
+   ${btns(false, "Start next week")}`, fd => {
+    if (unsaved) { const amt = r2(cartUnsaved(G)), last = Object.values(S.bought).filter(b => !b.trip).map(b => b.date).sort().pop(); const d = last && Math.abs(daysTo(S.week)) <= 7 ? last : S.week; S.trips.push({ id: uid(), date: d, store: "Groceries", amount: amt, note: "Week of " + fmtDs(S.week) }); }
+    S.week = addDays(S.week, 7); S.bought = {}; S.notes = ["", "", "", "", "", "", ""];
+    if (fd.get("how") === "clear") S.menu = emptyMenu();
+    toast("Week of " + fmtDs(S.week) + " is ready");
+  });
+}
+function ingRow(i = {}) {
+  return `<div class="ingrow"><input name="ii" list="dlItems" value="${esc(i.item || "")}" placeholder="Ingredient" aria-label="Ingredient"><input name="iq" type="number" step="any" min="0" inputmode="decimal" value="${i.qty ?? ""}" placeholder="Qty" aria-label="Quantity"><input name="iu" list="dlUnits" value="${esc(i.unit || "")}" placeholder="Unit" aria-label="Unit"><select name="is" class="isec" aria-label="Store section">${secOpts(i.sec || S.sections[0])}</select><input name="ic" class="icost" type="number" step="0.01" min="0" inputmode="decimal" value="${i.cost ?? ""}" placeholder="$ cost" aria-label="Cost for this amount"><button type="button" class="icon" data-delrow aria-label="Remove ingredient">✕</button></div>`;
+}
+function mealDlg(id) {
+  const m = mealById(id) || { name: "", type: "Dinner", serves: 4, mins: "", tags: "", fav: false, steps: "", ings: [] };
+  if (!id && !demoRoom("meals")) return;
+  const locked = DEMO && id && m._sample;
+  const items = [...new Set(S.meals.flatMap(x => x.ings.map(i => i.item)).concat(S.pantry.map(p => p.item)))].sort();
+  openDlg(`<h2>${id ? "Edit meal" : "New meal"}</h2>
+   <div class="field"><label for="mN">Meal</label><input id="mN" name="name" required maxlength="60" value="${esc(m.name)}" placeholder="Taco Tuesday"${locked ? " readonly" : ""}>${locked ? `<small class="locknote">Renaming sample meals is in the full app</small>` : ""}</div>
+   <div class="three"><div class="field"><label for="mT">Type</label><select id="mT" name="type">${typeOpts(m.type)}</select></div><div class="field"><label for="mS">Serves</label><input id="mS" name="serves" type="number" min="0" step="1" inputmode="numeric" value="${m.serves ?? ""}"></div><div class="field"><label for="mM">Minutes</label><input id="mM" name="mins" type="number" min="0" step="1" inputmode="numeric" value="${m.mins || ""}"></div></div>
+   <div class="field"><label for="mG">Notes / tags</label><input id="mG" name="tags" maxlength="80" value="${esc(m.tags)}" placeholder="One pan · freezer"></div>
+   <label class="tick"><input type="checkbox" name="fav" ${m.fav ? "checked" : ""}> ★ Favorite</label>
+   <div class="fl lab" style="margin:4px 0 6px">Ingredients (cost = what this amount costs you)</div>
+   <div class="inghead"><span>Ingredient</span><span>Qty</span><span>Unit</span><span>Section</span><span>Cost</span><span></span></div>
+   <div id="ings">${(m.ings.length ? m.ings : [{}]).map(ingRow).join("")}</div>
+   <button type="button" class="btn small ghost" id="addIng">+ Add ingredient</button> <span class="meta" id="mCost"></span>
+   <datalist id="dlItems">${items.map(v => `<option value="${esc(v)}">`).join("")}</datalist><datalist id="dlUnits">${UNITS.map(u => `<option value="${u}">`).join("")}</datalist>
+   <div class="field" style="margin-top:12px"><label for="mR">How to make it (optional)</label><textarea id="mR" name="steps" rows="3">${esc(m.steps)}</textarea></div>
+   ${btns(!!id)}`, fd => {
+    const rows = [...F().querySelectorAll(".ingrow")].map(r => ({ item: r.querySelector("[name=ii]").value.trim(), qty: r.querySelector("[name=iq]").value === "" ? null : n0(r.querySelector("[name=iq]").value), unit: r.querySelector("[name=iu]").value.trim(), sec: r.querySelector("[name=is]").value, cost: r2(r.querySelector("[name=ic]").value) })).filter(i => i.item);
+    const name = locked ? m.name : fd.get("name").trim();
+    if (!name) return false;
+    if (S.meals.some(x => x.id !== id && lc(x.name) === lc(name))) { toast("There's already a meal called " + name); return false; }
+    const o = Object.assign({}, m, { id: id || uid(), name, type: fd.get("type"), serves: num(fd, "serves"), mins: num(fd, "mins") || 0, tags: fd.get("tags").trim(), fav: fd.get("fav") === "on", steps: fd.get("steps").trim(), ings: rows });
+    if (id) { if (JSON.stringify(o) === JSON.stringify(m)) { D().close(); return false; } S.meals[S.meals.findIndex(x => x.id === id)] = o; } else S.meals.push(o);
+    toast(id ? "Meal updated" : name + " added to your meal bank");
+  }, () => {
+    const box = document.getElementById("ings"), cost = () => { const c = [...box.querySelectorAll("[name=ic]")].reduce((a, i) => a + n0(i.value), 0), sv = n0(F().serves.value); document.getElementById("mCost").textContent = "Total " + money(c) + (sv ? " · " + money(c / sv) + " per serving" : ""); };
+    const wireRows = () => { box.querySelectorAll("[data-delrow]").forEach(b => b.onclick = () => { b.closest(".ingrow").remove(); cost(); }); box.querySelectorAll("[name=ic]").forEach(i => i.oninput = cost); };
+    document.getElementById("addIng").onclick = () => { box.insertAdjacentHTML("beforeend", ingRow({})); wireRows(); box.lastElementChild.querySelector("input").focus(); };
+    F().serves.oninput = cost; wireRows(); cost();
+    const del = document.getElementById("delBtn"); if (del) del.onclick = () => { const on = S.menu.flat().filter(x => x === id).length;
+      S.meals = S.meals.filter(x => x.id !== id); S.menu = S.menu.map(r => r.map(x => x === id ? null : x)); save(); D().close(); render(); toast("Meal deleted" + (on ? ", and taken off " + plural(on, "slot") : "")); };
+  }, true);
+}
+function mealInfoDlg(id) {
+  const m = mealById(id); if (!m) return;
+  const c = mealCost(m), ps = perServing(m);
+  openDlg(`<h2 style="font-family:var(--serif);font-size:22px">${m.fav ? '<span class="fav">★</span> ' : ""}${esc(m.name)}</h2>
+   <p class="meta" style="margin:-6px 0 12px">${esc(m.type)}${m.serves ? " · serves " + m.serves : ""}${m.mins ? " · " + m.mins + " min" : ""}${m.tags ? " · " + esc(m.tags) : ""}</p>
+   <div class="grid g2" style="margin-bottom:12px"><div class="card" style="box-shadow:none;padding:12px"><div class="lab">Total</div><div class="mid">${money(c)}</div></div><div class="card" style="box-shadow:none;padding:12px"><div class="lab">Per serving</div><div class="mid acc">${ps === null ? "–" : money(ps)}</div></div></div>
+   <div class="recipe">${m.ings.length ? `<table class="ingt">${m.ings.map(i => `<tr><td>${esc(qu(i.qty, i.unit))} ${esc(i.item)} <span class="meta">· ${esc(i.sec)}</span></td><td>${money(n0(i.cost))}</td></tr>`).join("")}</table>` : `<p class="meta">No ingredients: this one costs $0.</p>`}
+   ${m.steps ? `<h2 style="margin-top:14px">How to make it</h2><ol>${m.steps.split(/(?<=\.)\s+(?=[A-Z])/).map(s => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}</div>
+   <div class="actions"><button type="button" class="btn ghost" id="editMeal" style="margin-right:auto">✎ Edit</button><button class="btn ghost" value="cancel" formnovalidate>Close</button><button type="button" class="btn" id="planMeal">Add to this week</button></div>`, () => false, () => {
+    document.getElementById("editMeal").onclick = () => { D().close(); mealDlg(id); };
+    document.getElementById("planMeal").onclick = () => { D().close(); PICK = id; go("week"); toast("Now tap a slot for " + m.name); };
+  });
+}
+function pantryDlg(id) {
+  const p = S.pantry.find(x => x.id === id) || { item: "", sec: S.sections[0], have: "", unit: "each", keep: "", price: "", use: "" };
+  if (!id && !demoRoom("pantry items", S.pantry)) return;
+  const locked = DEMO && id && p._sample;
+  openDlg(`<h2>${id ? "Edit pantry item" : "Add to pantry"}</h2>
+   <div class="field"><label for="pI">Item</label><input id="pI" name="item" required maxlength="50" value="${esc(p.item)}" placeholder="Rolled oats"${locked ? " readonly" : ""}>${locked ? `<small class="locknote">Renaming sample items is in the full app</small>` : `<small>Use the same name and unit as in your meals so it comes off the list</small>`}</div>
+   <div class="two"><div class="field"><label for="pH">On hand</label><input id="pH" name="have" type="number" min="0" step="any" inputmode="decimal" value="${p.have}"></div><div class="field"><label for="pU">Unit</label><input id="pU" name="unit" list="dlUnits2" value="${esc(p.unit)}"></div></div>
+   <div class="two"><div class="field"><label for="pK">Keep at least</label><input id="pK" name="keep" type="number" min="0" step="any" inputmode="decimal" value="${p.keep ?? ""}"><small>Below this, it goes on the list</small></div><div class="field"><label for="pP">Price per unit</label><input id="pP" name="price" type="number" min="0" step="0.01" inputmode="decimal" value="${p.price ?? ""}"></div></div>
+   <div class="two"><div class="field"><label for="pS">Store section</label><select id="pS" name="sec">${secOpts(p.sec)}</select></div><div class="field"><label for="pD">Use by</label><input id="pD" name="use" type="date" value="${p.use || ""}"></div></div>
+   <datalist id="dlUnits2">${UNITS.map(u => `<option value="${u}">`).join("")}</datalist>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, p, { id: p.id || uid(), item: locked ? p.item : fd.get("item").trim(), have: Math.max(0, num(fd, "have") || 0), unit: fd.get("unit").trim(), keep: num(fd, "keep"), price: num(fd, "price"), sec: fd.get("sec"), use: fd.get("use") });
+    if (!o.item) return false;
+    if (id) { if (JSON.stringify(o) === JSON.stringify(p)) { D().close(); return false; } S.pantry[S.pantry.findIndex(x => x.id === id)] = o; } else S.pantry.push(o);
+    toast(id ? "Pantry updated" : o.item + " added to the pantry");
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S.pantry = S.pantry.filter(x => x.id !== id); delete S.bought["R|" + id]; save(); D().close(); render(); toast("Removed from the pantry"); }; });
+}
+function extraDlg(id) {
+  const x = S.extras.find(v => v.id === id) || { item: "", qty: 1, sec: "Household & Other", cost: "" };
+  if (!id && !demoRoom("list items", S.extras)) return;
+  openDlg(`<h2>${id ? "Edit item" : "Add to the grocery list"}</h2>
+   <div class="field"><label for="xI">Item</label><input id="xI" name="item" required maxlength="50" value="${esc(x.item)}" placeholder="Dish soap, coffee, birthday cake…"></div>
+   <div class="two"><div class="field"><label for="xQ">Qty</label><input id="xQ" name="qty" type="number" min="0" step="any" inputmode="decimal" value="${x.qty ?? ""}"></div><div class="field"><label for="xC">Est. cost</label><input id="xC" name="cost" type="number" min="0" step="0.01" inputmode="decimal" value="${x.cost}"></div></div>
+   <div class="field"><label for="xS">Store section</label><select id="xS" name="sec">${secOpts(x.sec)}</select></div>
+   ${btns(!!id)}`, fd => {
+    const o = Object.assign({}, x, { id: x.id || uid(), item: fd.get("item").trim(), qty: num(fd, "qty"), sec: fd.get("sec"), cost: r2(num(fd, "cost")) });
+    if (!o.item) return false;
+    if (id) { if (JSON.stringify(o) === JSON.stringify(x)) { D().close(); return false; } S.extras[S.extras.findIndex(v => v.id === id)] = o; } else S.extras.push(o);
+    toast(id ? "Item updated" : o.item + " added to the list");
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S.extras = S.extras.filter(v => v.id !== id); delete S.bought["X|" + id]; save(); D().close(); render(); toast("Item removed"); }; });
+}
+function tripDlg(id, pre, after) {
+  const t = S.trips.find(v => v.id === id) || pre || { date: iso(today()), store: "", amount: "", note: "" };
+  if (!id && !demoRoom("trips", S.trips)) return;
+  openDlg(`<h2>${id ? "Edit trip" : pre ? "Save this trip" : "Log a grocery trip"}</h2>
+   <div class="two"><div class="field"><label for="tD">Date</label><input id="tD" name="date" type="date" required value="${t.date}"></div><div class="field"><label for="tA">Amount paid</label><input id="tA" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" required value="${t.amount}" style="font-weight:800"></div></div>
+   <div class="field"><label for="tS">Store</label><input id="tS" name="store" maxlength="40" value="${esc(t.store)}" placeholder="Aldi, Walmart, Kroger…"></div>
+   <div class="field"><label for="tN">Note</label><input id="tN" name="note" maxlength="80" value="${esc(t.note)}"></div>
+   ${btns(!!id)}`, fd => {
+    const o = { id: t.id || uid(), date: fd.get("date"), store: fd.get("store").trim(), amount: r2(num(fd, "amount")), note: fd.get("note").trim() };
+    if (!o.amount) { toast("Enter the amount"); return false; }
+    if (id) { if (["date", "store", "amount", "note"].every(k => o[k] === t[k])) { D().close(); return false; } S.trips[S.trips.findIndex(v => v.id === id)] = Object.assign({}, t, o); } else { S.trips.push(o); after && after(o.id); }
+    toast(id ? "Trip updated" : money(o.amount) + " added to " + MONTHS[parse(o.date).getMonth()]);
+  }, () => { const del = document.getElementById("delBtn"); if (del) del.onclick = () => { S.trips = S.trips.filter(v => v.id !== id); Object.values(S.bought).forEach(b => { if (b.trip === id) delete b.trip; }); save(); D().close(); render(); toast("Trip deleted"); }; });
+}
+function budgetDlg() {
+  openDlg(`<h2>Grocery budget</h2><div class="two"><div class="field"><label for="bM">Monthly grocery budget</label><input id="bM" name="budget" type="number" min="0" step="0.01" inputmode="decimal" value="${S.budget || ""}"><small>Weekly = × 12 ÷ 52</small></div><div class="field"><label for="bP">People you cook for</label><input id="bP" name="people" type="number" min="1" step="1" inputmode="numeric" value="${S.people}"></div></div>${btns(false)}`, fd => {
+    const b = r2(Math.max(0, num(fd, "budget") || 0)), p = Math.max(1, Math.round(num(fd, "people") || 1));
+    if (b === S.budget && p === S.people) { D().close(); return false; } S.budget = b; S.people = p; toast("Budget saved"); });
+}
+function monthBudgetDlg(y, m) {
+  const k = ym(y, m), cur = S.mb[k];
+  openDlg(`<h2>${MONTHS[m - 1]} ${y} budget</h2><div class="field"><label for="mB">Budget for this month</label><input id="mB" name="b" type="number" min="0" step="0.01" inputmode="decimal" value="${cur ?? ""}" placeholder="${S.budget || ""}"><small>Leave empty to use your monthly budget (${S.budget ? money(S.budget) : "not set"})</small></div>${btns(false)}`, fd => {
+    const v = num(fd, "b"); if ((v === null && cur === undefined) || v === cur) { D().close(); return false; }
+    if (v === null) delete S.mb[k]; else S.mb[k] = r2(v); });
+}
+
+/* ---------- wiring ---------- */
+document.querySelectorAll(".navbtn").forEach(b => b.onclick = () => go(b.dataset.view));
+document.getElementById("fab").onclick = () => VIEW === "list" ? extraDlg() : VIEW === "pantry" ? pantryDlg() : VIEW === "budget" ? tripDlg() : mealDlg();
+if (DEMO) {
+  document.documentElement.classList.add("isdemo");
+  document.getElementById("demoBar").hidden = false; document.getElementById("buyLink").href = BUY_URL;
+  // Demo: nothing is saved (reload = back to the sample) and backup/restore/CSV are only in the full app.
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  save = function () {};
+  document.addEventListener("click", ev => {
+    const el = ev.target.closest("button, label, a, input[type=file]");
+    if (el && el.id !== "buyLink" && /csv|backup|restore/i.test(el.textContent + " " + (el.id || ""))) {
+      ev.preventDefault(); ev.stopPropagation(); toast("Backup, restore and CSV export are in the full app");
+    }
+  }, true);
+}
+window.__lp = { bkAge, groceries, week, budgetYear, pantryStatus, mealCost, perServing, csvText, sample, cartUnsaved, qtyTxt, get S() { return S; }, set S(v) { S = v; }, get PICK() { return PICK; } };
+go(S.seenNotice ? "week" : "notice");
+</script>
+</body>
+</html>
